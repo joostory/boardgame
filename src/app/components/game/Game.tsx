@@ -3,6 +3,7 @@ import { MooduPlayer, gameOptionsState, gamePlayersState, gameStepState } from "
 import { toNumberFormat } from "@/app/utils/numberformat"
 import { useEffect } from "react"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { v4 as uuid } from 'uuid'
 
 
 function PlayerItem({player}: {player: MooduPlayer}) {
@@ -29,6 +30,7 @@ function PlayerItem({player}: {player: MooduPlayer}) {
 
 function GamePlayers() {
   const players = useRecoilValue(gamePlayersState)
+  console.log(players)
 
   return (
     <div className="flex justify-center items-center my-20">
@@ -52,7 +54,7 @@ export default function Game() {
     const players = gameOptions.players
 
     setPlayers(players.map(it => ({
-      id: crypto.randomUUID(),
+      id: uuid(),
       name: it.name,
       money: money
     })))
