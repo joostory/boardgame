@@ -1,7 +1,6 @@
 'use client'
 
-import MooduApp from '@/app/moodu/moodu-app'
-import Image from 'next/image'
+import MooduApp from '@/app/components/MooduApp'
 
 export default function Moodu() {
   return (

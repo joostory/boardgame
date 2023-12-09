@@ -1,7 +1,7 @@
 import { RecoilRoot, useRecoilState } from 'recoil'
-import { gameStepState } from '@/app/moodu/game-state'
-import Start from '@/app/moodu/moodu-start'
-import Game from '@/app/moodu/moodu-game'
+import { gameStepState } from '@/app/state/game-state'
+import Start from '@/app/components/start/Start'
+import Game from '@/app/components/game/Game'
 
 function App() {
   const [step, setStep] = useRecoilState(gameStepState)
