@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import StartOptionsForm from '@/app/components/start/StartOptionsForm'
-import Modal from '@/app/components/common/Modal'
+import StartOptionsForm from '@/components/modoo/start/StartOptionsForm'
+import Modal from '@/components/common/Modal'
+import { RocketLaunchIcon } from '@heroicons/react/24/solid'
 
 
 export default function Start() {
@@ -10,11 +11,11 @@ export default function Start() {
     <div className='hero'>
       <div className='hero-content'>
         <div className='text-center'>
-          <img src='/moodu.png' className='w-full' />
+          <img src='/modoo.png' className='w-full' />
           <h1 className='text-2xl'>모두의 마블 점수 계산기</h1>
           <div className='mt-10'>
             <button className='btn btn-primary btn-wide' onClick={() => setOpenModal(true)}>
-              시작하기
+              <RocketLaunchIcon className='h-6 w-6' /> 시작하기
             </button>
             <Modal
               title='새로운 게임 시작하기'

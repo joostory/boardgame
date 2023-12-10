@@ -10,8 +10,8 @@ export default function Home() {
             보드게임을 위한 도구들입니다.
           </p>
           <div className='rounded-lg bg-base-300'>
-            <a href="/moodu">
-              <img src='/moodu.png' className='w-full' />
+            <a href="/modoo">
+              <img src='/modoo.png' className='w-full' />
             </a>
           </div>
         </div>

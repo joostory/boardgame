@@ -19,5 +19,8 @@ const config: Config = {
     require("@tailwindcss/typography"),
     require('daisyui')
   ],
+  daisyui: {
+    themes: ['halloween']
+  }
 }
 export default config

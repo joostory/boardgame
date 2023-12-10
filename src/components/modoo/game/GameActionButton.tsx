@@ -1,8 +1,9 @@
-import Form, { FormItem } from "@/app/components/common/Form"
-import Modal from "@/app/components/common/Modal"
-import { MooduPlayer, gamePlayersState } from "@/app/state/game-state"
+import Form, { FormItem } from "@/components/common/Form"
+import Modal from "@/components/common/Modal"
+import { MooduPlayer, gamePlayersState } from "@/state/modoo-state"
 import { FormEvent, useState } from "react"
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil"
+import { ArrowRightOnRectangleIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/solid'
 
 export function SendButton({player}: {player: MooduPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
@@ -43,7 +44,7 @@ export function SendButton({player}: {player: MooduPlayer}) {
   return (
     <>
       <button className="btn btn-sm btn-primary" onClick={() => setOpen(true)}>
-        보내기
+        <ArrowRightOnRectangleIcon className="w-6 h-6" />
       </button>
       {open &&
         <Modal
@@ -71,14 +72,14 @@ export function SendButton({player}: {player: MooduPlayer}) {
                   type='number' className="input input-bordered join-item w-full"
                   value={money} onChange={e => setMoney(e.target.value)}
                 />
-                <div className="join-item flex justify-center items-center w-14 bg-slate-900">
+                <div className="join-item flex justify-center items-center w-14 bg-base-300">
                   원
                 </div>
               </div>
             </FormItem>
             <FormItem>
               <button type='submit' className="btn btn-primary w-full">
-                보내기
+                <ArrowRightOnRectangleIcon className="w-6 h-6" /> 보내기
               </button>
             </FormItem>
           </Form>
@@ -113,8 +114,9 @@ export function ReceiveButton({player}: {player: MooduPlayer}) {
   return (
     <>
       <button className="btn btn-sm btn-accent" onClick={() => setOpen(true)}>
-        받기
+        <ArrowLeftOnRectangleIcon className="w-6 h-6" />
       </button>
+
       {open &&
         <Modal
           title={`${player.name} : 은행에서 돈 받기`}
@@ -127,13 +129,15 @@ export function ReceiveButton({player}: {player: MooduPlayer}) {
                   type='number' className="input input-bordered join-item w-full"
                   value={money} onChange={e => setMoney(e.target.value)}
                 />
-                <div className="join-item flex justify-center items-center w-14 bg-slate-900">
+                <div className="join-item flex justify-center items-center w-14 bg-base-300">
                   원
                 </div>
               </div>
             </FormItem>
             <FormItem>
-              <button type='submit' className="btn btn-primary w-full">받기</button>
+              <button type='submit' className="btn btn-primary w-full">
+                <ArrowLeftOnRectangleIcon className="w-6 h-6" /> 받기
+              </button>
             </FormItem>
           </Form>
         </Modal>

@@ -1,6 +1,6 @@
 'use client'
 
-import MooduApp from '@/app/components/MooduApp'
+import MooduApp from '@/components/modoo/ModooApp'
 
 export default function Moodu() {
   return (
