@@ -2,7 +2,7 @@ import { useRecoilState } from 'recoil'
 import { gameStepState } from '@/state/modoo-state'
 import Form, { FormItem } from '@/components/common/Form'
 import { FormEvent } from 'react'
-import StartPlayersForm from '@/components/modoo/start/StartPalyersForm'
+import StartPlayersForm from '@/components/modoo/start/StartPlayersForm'
 import StartMoneyForm from '@/components/modoo/start/StartMoneyForm'
 import { RocketLaunchIcon } from '@heroicons/react/24/solid'
 

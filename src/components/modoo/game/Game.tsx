@@ -1,10 +1,13 @@
 import { ReceiveButton, SendButton } from "@/components/modoo/game/GameActionButton"
-import { MooduPlayer, gameOptionsState, gamePlayersState, gameStepState } from "@/state/modoo-state"
+import { MooduPlayer, gameHistoriesState, gameOptionsState, gamePlayersState, gameStepState } from "@/state/modoo-state"
 import { toNumberFormat } from "@/utils/numberformat"
 import { useEffect } from "react"
+import { DateTime } from 'luxon'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { v4 as uuid } from 'uuid'
 import { PowerIcon } from '@heroicons/react/24/solid'
+import { toTimeFormat } from "@/utils/dateFormat"
+import { CheckCircleIcon } from "@heroicons/react/24/solid"
 
 
 function PlayerItem({player}: {player: MooduPlayer}) {
@@ -28,12 +31,11 @@ function PlayerItem({player}: {player: MooduPlayer}) {
   )
 }
 
-
 function GamePlayers() {
   const players = useRecoilValue(gamePlayersState)
 
   return (
-    <div className="flex justify-center items-center my-20">
+    <div className="flex justify-center items-center my-5">
       <ul className="divide-y divide-gray-800 w-full max-w-[640px] px-4 py-2 rounded-xl border border-gray-800">
         {players.map(it =>
           <li key={it.id} className="flex justify-between gap-x-6 py-6">
@@ -42,6 +44,30 @@ function GamePlayers() {
         )}
       </ul>
     </div>
+  )
+}
+
+function GameHistories() {
+  const histories = useRecoilValue(gameHistoriesState)
+
+  return (
+    <ul className="timeline timeline-vertical timeline-compact px-10">
+      {histories.map((it, index) =>
+        <li key={index} style={{fontSize: 12}}>
+          <hr style={{height: 10}} />
+          <div className="timeline-start">
+            {toTimeFormat(it.time)}
+          </div>
+          <div className="timeline-middle">
+            <CheckCircleIcon className="h-5 w-5" />
+          </div>
+          <div className="timeline-end ">
+            {it.fromName} -&gt; {it.toName} : <b className="text-success">{toNumberFormat(it.amount)}</b>
+          </div>
+          <hr />
+        </li>
+      )}
+    </ul>
   )
 }
 
@@ -77,6 +103,8 @@ export default function Game() {
       </div>
 
       <GamePlayers />
+
+      <GameHistories />
     </>
   )
 }

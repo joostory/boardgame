@@ -28,6 +28,11 @@ export const gamePlayersState = atom<MooduPlayer[]>({
   default: []
 })
 
+export const gameHistoriesState = atom<MooduHistory[]>({
+  key: 'gameHistories',
+  default: []
+})
+
 export interface MooduGameData {
   players: MooduPlayer[]
 }
@@ -36,4 +41,13 @@ export interface MooduPlayer {
   id: string
   name: string
   money: number
+}
+
+export interface MooduHistory {
+  fromId: string
+  fromName: string
+  toId: string
+  toName: string
+  amount: number
+  time: Date
 }

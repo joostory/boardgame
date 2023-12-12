@@ -1,6 +1,6 @@
 import Form, { FormItem } from "@/components/common/Form"
 import Modal from "@/components/common/Modal"
-import { MooduPlayer, gamePlayersState } from "@/state/modoo-state"
+import { MooduPlayer, gameHistoriesState, gamePlayersState } from "@/state/modoo-state"
 import { FormEvent, useState } from "react"
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil"
 import { ArrowRightOnRectangleIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/solid'
@@ -10,10 +10,11 @@ export function SendButton({player}: {player: MooduPlayer}) {
   const [money, setMoney] = useState('300000')
   const [selectedPlayerId, setSelectedPlayerId] = useState('bank')
   const [players, setPlayers] = useRecoilState(gamePlayersState)
+  const setHistories = useSetRecoilState(gameHistoriesState)
 
   const sendMoney = useRecoilCallback(({snapshot}) => async (to: string, money: number) => {
 
-    function updatePlayer(updatedPlayers: MooduPlayer[], id: string, money: number) {
+    function updatePlayer(updatedPlayers: MooduPlayer[], id: string, money: number): MooduPlayer {
       const index = updatedPlayers.findIndex(it => it.id == id)
       const updatedPlayer = players[index]
 
@@ -21,15 +22,31 @@ export function SendButton({player}: {player: MooduPlayer}) {
         ...updatedPlayer,
         money: updatedPlayer.money + money
       })
+      return updatedPlayer
     }
 
     const updatedPlayers = [...await snapshot.getPromise(gamePlayersState)]
     updatePlayer(updatedPlayers, player.id, -money)
+    let toName
     if (to != 'bank') {
-      updatePlayer(updatedPlayers, to, money)
+      toName = updatePlayer(updatedPlayers, to, money).name
+    } else {
+      toName = '은행'
     }
-
     setPlayers(updatedPlayers)
+
+    const histories = await snapshot.getPromise(gameHistoriesState)
+    setHistories([
+      {
+        fromId: player.id,
+        fromName: player.name,
+        toId: to,
+        toName: toName,
+        amount: money,
+        time: new Date()
+      },
+      ...histories
+    ])
   })
 
   function handleSubmit(e: FormEvent) {
@@ -93,16 +110,32 @@ export function ReceiveButton({player}: {player: MooduPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
   const [money, setMoney] = useState('300000')
   const setPlayers = useSetRecoilState(gamePlayersState)
+  const setHistories = useSetRecoilState(gameHistoriesState)
 
   const updateMoney = useRecoilCallback(({snapshot}) => async () => {
     const players = await snapshot.getPromise(gamePlayersState)
     const index = players.findIndex(it => it.id == player.id)
+    const targetPlayer = players[index]
     const updatedPlayers = [...players]
+    const numberMoney = parseInt(money)
     updatedPlayers.splice(index, 1, {
-      ...players[index],
-      money: players[index].money + parseInt(money)
+      ...targetPlayer,
+      money: targetPlayer.money + numberMoney
     })
     setPlayers(updatedPlayers)
+
+    const histories = await snapshot.getPromise(gameHistoriesState)
+    setHistories([
+      {
+        fromId: 'bank',
+        fromName: '은행',
+        toId: player.id,
+        toName: player.name,
+        amount: numberMoney,
+        time: new Date()
+      },
+      ...histories
+    ])
   })
 
   function handleSubmit(e: FormEvent) {
