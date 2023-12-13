@@ -60,9 +60,10 @@ export function SendButton({player}: {player: MooduPlayer}) {
 
   return (
     <>
-      <button className="btn btn-sm btn-primary" onClick={() => setOpen(true)}>
-        <ArrowRightOnRectangleIcon className="w-6 h-6" />
-      </button>
+      <ArrowRightOnRectangleIcon
+        className="w-8 h-8 p-1 text-primary"
+        onClick={() => setOpen(true)}
+      />
       {open &&
         <Modal
           title={`${player.name} : 돈 보내기`}
@@ -146,9 +147,10 @@ export function ReceiveButton({player}: {player: MooduPlayer}) {
 
   return (
     <>
-      <button className="btn btn-sm btn-accent" onClick={() => setOpen(true)}>
-        <ArrowLeftOnRectangleIcon className="w-6 h-6" />
-      </button>
+      <ArrowLeftOnRectangleIcon
+        className="w-8 h-8 p-1 text-accent"
+        onClick={() => setOpen(true)}
+      />
 
       {open &&
         <Modal
