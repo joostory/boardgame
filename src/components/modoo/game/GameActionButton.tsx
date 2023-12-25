@@ -3,11 +3,12 @@ import Modal from "@/components/common/Modal"
 import { MooduPlayer, gameHistoriesState, gamePlayersState } from "@/state/modoo-state"
 import { FormEvent, useState } from "react"
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil"
-import { ArrowRightOnRectangleIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/solid'
+import { ArrowRightEndOnRectangleIcon, ArrowLeftEndOnRectangleIcon } from '@heroicons/react/24/solid'
+import MoneyInput from "@/components/common/MoneyInput"
 
 export function SendButton({player}: {player: MooduPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
-  const [money, setMoney] = useState('300000')
+  const [money, setMoney] = useState(300000)
   const [selectedPlayerId, setSelectedPlayerId] = useState('bank')
   const [players, setPlayers] = useRecoilState(gamePlayersState)
   const setHistories = useSetRecoilState(gameHistoriesState)
@@ -51,7 +52,7 @@ export function SendButton({player}: {player: MooduPlayer}) {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    sendMoney(selectedPlayerId, parseInt(money))
+    sendMoney(selectedPlayerId, money)
       .then(() => {
         console.log('done')
         setOpen(false)
@@ -60,7 +61,7 @@ export function SendButton({player}: {player: MooduPlayer}) {
 
   return (
     <>
-      <ArrowRightOnRectangleIcon
+      <ArrowRightEndOnRectangleIcon
         className="w-8 h-8 p-1 text-primary"
         onClick={() => setOpen(true)}
       />
@@ -85,19 +86,14 @@ export function SendButton({player}: {player: MooduPlayer}) {
               </select>
             </FormItem>
             <FormItem label="금액">
-              <div className="join">
-                <input
-                  type='number' className="input input-bordered join-item w-full"
-                  value={money} onChange={e => setMoney(e.target.value)}
-                />
-                <div className="join-item flex justify-center items-center w-14 bg-base-300">
-                  원
-                </div>
-              </div>
+              <MoneyInput
+                value={money}
+                onChange={setMoney}
+              />
             </FormItem>
             <FormItem>
               <button type='submit' className="btn btn-primary w-full">
-                <ArrowRightOnRectangleIcon className="w-6 h-6" /> 보내기
+                <ArrowRightEndOnRectangleIcon className="w-6 h-6" /> 보내기
               </button>
             </FormItem>
           </Form>
@@ -109,7 +105,7 @@ export function SendButton({player}: {player: MooduPlayer}) {
 
 export function ReceiveButton({player}: {player: MooduPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
-  const [money, setMoney] = useState('300000')
+  const [money, setMoney] = useState(300000)
   const setPlayers = useSetRecoilState(gamePlayersState)
   const setHistories = useSetRecoilState(gameHistoriesState)
 
@@ -118,10 +114,9 @@ export function ReceiveButton({player}: {player: MooduPlayer}) {
     const index = players.findIndex(it => it.id == player.id)
     const targetPlayer = players[index]
     const updatedPlayers = [...players]
-    const numberMoney = parseInt(money)
     updatedPlayers.splice(index, 1, {
       ...targetPlayer,
-      money: targetPlayer.money + numberMoney
+      money: targetPlayer.money + money
     })
     setPlayers(updatedPlayers)
 
@@ -132,7 +127,7 @@ export function ReceiveButton({player}: {player: MooduPlayer}) {
         fromName: '은행',
         toId: player.id,
         toName: player.name,
-        amount: numberMoney,
+        amount: money,
         time: new Date()
       },
       ...histories
@@ -147,7 +142,7 @@ export function ReceiveButton({player}: {player: MooduPlayer}) {
 
   return (
     <>
-      <ArrowLeftOnRectangleIcon
+      <ArrowLeftEndOnRectangleIcon
         className="w-8 h-8 p-1 text-accent"
         onClick={() => setOpen(true)}
       />
@@ -159,19 +154,14 @@ export function ReceiveButton({player}: {player: MooduPlayer}) {
         >
           <Form onSubmit={handleSubmit}>
             <FormItem label="금액">
-              <div className="join">
-                <input
-                  type='number' className="input input-bordered join-item w-full"
-                  value={money} onChange={e => setMoney(e.target.value)}
-                />
-                <div className="join-item flex justify-center items-center w-14 bg-base-300">
-                  원
-                </div>
-              </div>
+              <MoneyInput
+                value={money}
+                onChange={setMoney}
+              />
             </FormItem>
             <FormItem>
               <button type='submit' className="btn btn-primary w-full">
-                <ArrowLeftOnRectangleIcon className="w-6 h-6" /> 받기
+                <ArrowLeftEndOnRectangleIcon className="w-6 h-6" /> 받기
               </button>
             </FormItem>
           </Form>
