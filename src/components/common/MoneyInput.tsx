@@ -71,7 +71,7 @@ export default function MoneyInput({
         </div>
       </div>
       {usePreset &&
-        <div className="flex flex-wrap gap-1 mt-2">
+        <div className="flex flex-wrap gap-2 mt-4">
           {preset.map(it =>
             <AddMoneyButton
               key={it}

@@ -33,7 +33,7 @@ export default function Modal({
       <div className='modal-box'>
         {title &&
           <div className='px-4 sm:px-0'>
-            <h3 className='leading-7'>{title}</h3>
+            <h3 className='leading-7 text-xl'>{title}</h3>
             {subTitle &&
               <p className='mt-1 leading-6 text-sm text-gray-500'>{subTitle}</p>
             }

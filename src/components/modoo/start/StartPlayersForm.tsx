@@ -1,6 +1,6 @@
 import { gameOptionsState } from "@/state/modoo-state"
 import { useRecoilState } from "recoil"
-import { PlusSmallIcon, MinusSmallIcon } from '@heroicons/react/24/solid'
+import { PlusIcon, MinusIcon } from '@heroicons/react/24/solid'
 
 export default function StartPlayersForm() {
   const [gameOptions, setGameOptions] = useRecoilState(gameOptionsState)
@@ -37,8 +37,8 @@ export default function StartPlayersForm() {
     <div className='text-start grid gap-4'>
       <div className="flex items-center">
         <span>{gameOptions.players.length} 명</span>
-        <button type='button' className='btn btn-xs ml-1 btn-primary' onClick={handleAdd}>
-          <PlusSmallIcon className="w-5 h-5" /> 추가
+        <button type='button' className='btn btn-xs ml-4 btn-primary' onClick={handleAdd}>
+          <PlusIcon className="w-4 h-4" /> 추가
         </button>
       </div>
 
@@ -48,8 +48,8 @@ export default function StartPlayersForm() {
             className='input input-bordered input-sm join-item w-full'
             value={it.name} onChange={e => handleChangeName(index, e.target.value)}
           />
-          <button type='button' className='btn btn-sm btn-error ml-1 join-item' onClick={() => handleRemove(index)}>
-            <MinusSmallIcon className="w-5 h-5" />
+          <button type='button' className='btn btn-sm btn-error join-item' onClick={() => handleRemove(index)}>
+            <MinusIcon className="w-4 h-4" />
           </button>
         </div>
       )}
