@@ -1,9 +1,9 @@
 import MoneyInput from "@/components/common/MoneyInput"
-import { gameOptionsState } from "@/state/modoo-state"
+import { gameOptionState } from "@/state/modoo-state"
 import { useRecoilState } from "recoil"
 
 export default function StartMoneyForm() {
-  const [gameOptions, setGameOptions] = useRecoilState(gameOptionsState)
+  const [gameOptions, setGameOptions] = useRecoilState(gameOptionState)
 
   function handleChange(value: number) {
     setGameOptions({

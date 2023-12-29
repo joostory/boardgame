@@ -1,6 +1,6 @@
 import Form, { FormItem } from "@/components/common/Form"
 import Modal from "@/components/common/Modal"
-import { MooduPlayer, gameHistoriesState, gamePlayersState } from "@/state/modoo-state"
+import { MooduPlayer, currentGameState } from "@/state/modoo-state"
 import { FormEvent, useState } from "react"
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil"
 import { ArrowRightEndOnRectangleIcon, ArrowLeftEndOnRectangleIcon } from '@heroicons/react/24/solid'
@@ -10,23 +10,24 @@ export function SendButton({player}: {player: MooduPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
   const [money, setMoney] = useState(300000)
   const [selectedPlayerId, setSelectedPlayerId] = useState('bank')
-  const [players, setPlayers] = useRecoilState(gamePlayersState)
-  const setHistories = useSetRecoilState(gameHistoriesState)
+  const [currentGame, setCurrentGame] = useRecoilState(currentGameState)
 
   const sendMoney = useRecoilCallback(({snapshot}) => async (to: string, money: number) => {
 
-    function updatePlayer(updatedPlayers: MooduPlayer[], id: string, money: number): MooduPlayer {
-      const index = updatedPlayers.findIndex(it => it.id == id)
+    function updatePlayer(players: MooduPlayer[], id: string, money: number): MooduPlayer {
+      const index = players.findIndex(it => it.id == id)
       const updatedPlayer = players[index]
 
-      updatedPlayers.splice(index, 1, {
+      players.splice(index, 1, {
         ...updatedPlayer,
         money: updatedPlayer.money + money
       })
       return updatedPlayer
     }
 
-    const updatedPlayers = [...await snapshot.getPromise(gamePlayersState)]
+    const currentGame = await snapshot.getPromise(currentGameState)
+
+    const updatedPlayers = [...currentGame.players]
     updatePlayer(updatedPlayers, player.id, -money)
     let toName
     if (to != 'bank') {
@@ -34,10 +35,7 @@ export function SendButton({player}: {player: MooduPlayer}) {
     } else {
       toName = '은행'
     }
-    setPlayers(updatedPlayers)
-
-    const histories = await snapshot.getPromise(gameHistoriesState)
-    setHistories([
+    const updatedHistories = [
       {
         fromId: player.id,
         fromName: player.name,
@@ -46,8 +44,15 @@ export function SendButton({player}: {player: MooduPlayer}) {
         amount: money,
         time: new Date()
       },
-      ...histories
-    ])
+      ...currentGame.histories
+    ]
+
+    setCurrentGame({
+      ...currentGame,
+      players: updatedPlayers,
+      histories: updatedHistories
+    })
+
   })
 
   function handleSubmit(e: FormEvent) {
@@ -77,7 +82,7 @@ export function SendButton({player}: {player: MooduPlayer}) {
                 value={selectedPlayerId} onChange={e => setSelectedPlayerId(e.target.value)}
               >
                 <option value='bank'>은행</option>
-                {players
+                {currentGame.players
                   .filter(it => it.id != player.id)
                   .map(it =>
                     <option key={it.id} value={it.id}>{it.name}</option>
@@ -106,11 +111,11 @@ export function SendButton({player}: {player: MooduPlayer}) {
 export function ReceiveButton({player}: {player: MooduPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
   const [money, setMoney] = useState(300000)
-  const setPlayers = useSetRecoilState(gamePlayersState)
-  const setHistories = useSetRecoilState(gameHistoriesState)
+  const setCurrentGame = useSetRecoilState(currentGameState)
 
   const updateMoney = useRecoilCallback(({snapshot}) => async () => {
-    const players = await snapshot.getPromise(gamePlayersState)
+    const currentGame = await snapshot.getPromise(currentGameState)
+    const players = currentGame.players
     const index = players.findIndex(it => it.id == player.id)
     const targetPlayer = players[index]
     const updatedPlayers = [...players]
@@ -118,10 +123,7 @@ export function ReceiveButton({player}: {player: MooduPlayer}) {
       ...targetPlayer,
       money: targetPlayer.money + money
     })
-    setPlayers(updatedPlayers)
-
-    const histories = await snapshot.getPromise(gameHistoriesState)
-    setHistories([
+    const histories = [
       {
         fromId: 'bank',
         fromName: '은행',
@@ -130,8 +132,14 @@ export function ReceiveButton({player}: {player: MooduPlayer}) {
         amount: money,
         time: new Date()
       },
-      ...histories
-    ])
+      ...currentGame.histories
+    ]
+
+    setCurrentGame({
+      ...currentGame,
+      players: updatedPlayers,
+      histories: histories
+    })
   })
 
   function handleSubmit(e: FormEvent) {
