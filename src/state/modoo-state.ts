@@ -1,6 +1,6 @@
-import { AtomEffect, atom, selector } from 'recoil'
+import { AtomEffect, atom } from 'recoil'
 
-export const gameOptionState = atom<MooduGameOption>({
+export const gameOptionState = atom<ModooGameOption>({
   key: 'gameOptions',
   default: {
     money: 2000000,
@@ -11,65 +11,59 @@ export const gameOptionState = atom<MooduGameOption>({
   }
 })
 
-export function getGames(): MooduGameMeta[] {
-  if (typeof localStorage === 'undefined') {
-    return []
-  }
-  return JSON.parse(localStorage.getItem('mooduGames') || "[]")
-}
-
-export function setGames(value: MooduGameMeta[]) {
-  if (typeof localStorage === 'undefined') {
-    return
-  }
-
-  localStorage.setItem('mooduGames', JSON.stringify(value))
-}
-
 export function getGame(id: string) {
   if (typeof localStorage === 'undefined') {
     return null
   }
 
-  const value = localStorage.getItem(`mooduGame-${id}`)
+  const value = localStorage.getItem(`modooGame-${id}`)
   if (!value) {
     return null
   }
   return JSON.parse(value)
 }
 
-export function setGame(id: string, value: MooduGame) {
+export function setGame(id: string, value: ModooGame) {
   if (typeof localStorage === 'undefined') {
     return
   }
-  localStorage.setItem(`mooduGame-${id}`, JSON.stringify(value))
+  localStorage.setItem(`modooGame-${id}`, JSON.stringify(value))
 }
 
-const currentGameEffect: AtomEffect<MooduGame> = ({setSelf, onSet}) => {
-  onSet((newValue, oldValue, isReset) => {
-    console.log("currentGame", newValue, oldValue, isReset)
-    if (!newValue || isReset) {
-      return
-    }
+export function removeGame(id: string) {
+  if (typeof localStorage === 'undefined') {
+    return
+  }
+  localStorage.removeItem(`modooGame-${id}`)
+}
 
-    if (!oldValue) {
-      const games: MooduGameMeta[] = getGames()
-      if (games.findIndex(it => it.id == newValue.id) < 0) {
-        setGames([
-          ...games,
-          {
-            id: newValue.id,
-            started: newValue.started
-          }
-        ])
-      }
-    }
+const localStorageEffect = <T>(key: string): AtomEffect<T> => ({setSelf, onSet}) => {
+  if (typeof localStorage === 'undefined') {
+    return
+  }
 
-    localStorage.setItem(`mooduGame-${newValue.id}`, JSON.stringify(newValue))
+  const savedValue = localStorage.getItem(key)
+  if (savedValue != null) {
+    setSelf(JSON.parse(savedValue))
+  }
+
+  onSet((newValue, _, isReset) => {
+    isReset
+      ? localStorage.removeItem(key)
+      : localStorage.setItem(key, JSON.stringify(newValue));
   })
 }
 
-export const currentGameState = atom<MooduGame>({
+const currentGameEffect: AtomEffect<ModooGame> = ({setSelf, onSet}) => {
+  onSet((newValue, _, isReset) => {
+    if (!newValue || isReset) {
+      return
+    }
+    setGame(newValue.id, newValue)
+  })
+}
+
+export const currentGameState = atom<ModooGame>({
   key: 'currentGame',
   default: undefined,
   effects: [
@@ -77,27 +71,28 @@ export const currentGameState = atom<MooduGame>({
   ]
 })
 
-export const gamesState = selector<MooduGameMeta[]>({
+export const gamesState = atom<ModooGameMeta[]>({
   key: 'games',
-  get: ({get}) => {
-    return getGames()
-  }
+  default: [],
+  effects: [
+    localStorageEffect('modooGames')
+  ]
 })
 
-export interface MooduGameMeta {
+export interface ModooGameMeta {
   id: string
   started: Date
 }
 
-export interface MooduGame {
+export interface ModooGame {
   id: string
   started: Date
-  option: MooduGameOption
-  players: MooduPlayer[]
-  histories: MooduHistory[]
+  option: ModooGameOption
+  players: ModooPlayer[]
+  histories: ModooHistory[]
 }
 
-export interface MooduGameOption {
+export interface ModooGameOption {
   money: number
   players: OptionPlayer[]
 }
@@ -106,17 +101,17 @@ export interface OptionPlayer {
   name: string
 }
 
-export interface MooduGameData {
-  players: MooduPlayer[]
+export interface ModooGameData {
+  players: ModooPlayer[]
 }
 
-export interface MooduPlayer {
+export interface ModooPlayer {
   id: string
   name: string
   money: number
 }
 
-export interface MooduHistory {
+export interface ModooHistory {
   fromId: string
   fromName: string
   toId: string

@@ -17,7 +17,7 @@ export default function Start() {
             <h1 className='text-2xl'>모두의 마블 점수 계산기</h1>
             <div className='mt-10'>
               <button className='btn btn-primary btn-wide' onClick={() => setOpenModal(true)}>
-                <RocketLaunchIcon className='h-6 w-6' /> 시작하기
+                <RocketLaunchIcon className='h-6 w-6' /> 새로운 게임 시작하기
               </button>
               <Modal
                 title='새로운 게임 시작하기'

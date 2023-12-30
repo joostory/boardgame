@@ -1,17 +1,26 @@
-import { MooduGameMeta, currentGameState, gamesState, getGame } from "@/state/modoo-state"
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { ModooGameMeta, currentGameState, gamesState, getGame, removeGame } from "@/state/modoo-state"
+import { useRecoilState, useSetRecoilState } from "recoil"
 import { toDateTimeFormat } from "@/utils/dateFormat"
+import { TrashIcon } from "@heroicons/react/24/solid"
 
 export default function GameList() {
-  const games = useRecoilValue(gamesState)
+  const [games, setGames] = useRecoilState(gamesState)
   const setCurrentGame = useSetRecoilState(currentGameState)
 
   if (games.length == 0) {
     return <></>
   }
 
-  function handleClick(gameMeta: MooduGameMeta) {
+  function handleView(gameMeta: ModooGameMeta) {
     setCurrentGame(getGame(gameMeta.id))
+  }
+
+  function handleRemove(gameMeta: ModooGameMeta) {
+    if (!confirm('게임기록을 제거하시겠습니까?')) {
+      return
+    }
+    setGames([...games].filter(it => it.id != gameMeta.id))
+    removeGame(gameMeta.id)
   }
 
   return (
@@ -25,9 +34,12 @@ export default function GameList() {
                   {toDateTimeFormat(new Date(it.started))} 에 시작한 게임
                 </p>
               </div>
-              <div className="shrink-0 flex flex-row items-center gap-x-1">
-                <button className="btn btn-sm btn-info" onClick={() => handleClick(it)}>
+              <div className="shrink-0 flex flex-row items-center gap-x-2">
+                <button className="btn btn-sm btn-info text-xs" onClick={() => handleView(it)}>
                   게임보기
+                </button>
+                <button className="btn btn-sm btn-error" onClick={() => handleRemove(it)}>
+                  <TrashIcon className="h-4 w-4" />
                 </button>
               </div>
             </div>

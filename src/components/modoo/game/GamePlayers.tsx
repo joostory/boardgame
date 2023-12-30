@@ -1,9 +1,9 @@
 import { ReceiveButton, SendButton } from "@/components/modoo/game/GameActionButton"
-import { MooduPlayer, currentGameState } from "@/state/modoo-state"
+import { ModooPlayer, currentGameState } from "@/state/modoo-state"
 import { toNumberFormat } from "@/utils/numberformat"
 import { useRecoilValue } from "recoil"
 
-function PlayerItem({player}: {player: MooduPlayer}) {
+function PlayerItem({player}: {player: ModooPlayer}) {
   return (
     <div className="flex min-w-0 gap-x-4 w-full">
       <div className="min-w-0 flex-auto grow">

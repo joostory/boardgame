@@ -1,12 +1,12 @@
 import Form, { FormItem } from "@/components/common/Form"
 import Modal from "@/components/common/Modal"
-import { MooduPlayer, currentGameState } from "@/state/modoo-state"
+import { ModooPlayer, currentGameState } from "@/state/modoo-state"
 import { FormEvent, useState } from "react"
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil"
 import { ArrowRightEndOnRectangleIcon, ArrowLeftEndOnRectangleIcon } from '@heroicons/react/24/solid'
 import MoneyInput from "@/components/common/MoneyInput"
 
-export function SendButton({player}: {player: MooduPlayer}) {
+export function SendButton({player}: {player: ModooPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
   const [money, setMoney] = useState(300000)
   const [selectedPlayerId, setSelectedPlayerId] = useState('bank')
@@ -14,7 +14,7 @@ export function SendButton({player}: {player: MooduPlayer}) {
 
   const sendMoney = useRecoilCallback(({snapshot}) => async (to: string, money: number) => {
 
-    function updatePlayer(players: MooduPlayer[], id: string, money: number): MooduPlayer {
+    function updatePlayer(players: ModooPlayer[], id: string, money: number): ModooPlayer {
       const index = players.findIndex(it => it.id == id)
       const updatedPlayer = players[index]
 
@@ -108,7 +108,7 @@ export function SendButton({player}: {player: MooduPlayer}) {
   )
 }
 
-export function ReceiveButton({player}: {player: MooduPlayer}) {
+export function ReceiveButton({player}: {player: ModooPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
   const [money, setMoney] = useState(300000)
   const setCurrentGame = useSetRecoilState(currentGameState)
