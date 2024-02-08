@@ -1,10 +1,11 @@
 import Form, { FormItem } from "@/components/common/Form"
 import Modal from "@/components/common/Modal"
-import { ModooPlayer, currentGameState } from "@/state/modoo-state"
+import { currentGameState } from "@/state/modoo-state"
 import { FormEvent, useState } from "react"
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil"
 import { ArrowRightEndOnRectangleIcon, ArrowLeftEndOnRectangleIcon } from '@heroicons/react/24/solid'
 import MoneyInput from "@/components/common/MoneyInput"
+import { ModooPlayer } from "@/domain/modoo"
 
 export function SendButton({player}: {player: ModooPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
