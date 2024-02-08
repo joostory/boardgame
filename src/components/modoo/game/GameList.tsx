@@ -1,7 +1,8 @@
-import { ModooGameMeta, currentGameState, gamesState, getGame, removeGame } from "@/state/modoo-state"
+import { currentGameState, gamesState, getGame, removeGame } from "@/state/modoo-state"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import { toDateTimeFormat } from "@/utils/dateFormat"
 import { TrashIcon } from "@heroicons/react/24/solid"
+import { ModooGameMeta } from "@/domain/modoo"
 
 export default function GameList() {
   const [games, setGames] = useRecoilState(gamesState)

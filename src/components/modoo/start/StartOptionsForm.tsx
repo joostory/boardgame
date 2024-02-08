@@ -1,4 +1,4 @@
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { currentGameState, gameOptionState } from '@/state/modoo-state'
 import Form, { FormItem } from '@/components/common/Form'
 import { FormEvent } from 'react'
@@ -11,7 +11,6 @@ import { v4 as uuid } from 'uuid'
 export default function StartOptionsForm() {
   const setCurrentGame = useSetRecoilState(currentGameState)
   const gameOption = useRecoilValue(gameOptionState)
-  const resetGameOption = useResetRecoilState(gameOptionState)
 
   function handleFinish(e: FormEvent) {
     e.preventDefault()
@@ -26,7 +25,6 @@ export default function StartOptionsForm() {
       })),
       histories: []
     })
-    resetGameOption()
   }
 
   return (

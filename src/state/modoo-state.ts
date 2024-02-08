@@ -1,15 +1,5 @@
+import { ModooGame, ModooGameMeta, ModooGameOption } from '@/domain/modoo'
 import { AtomEffect, atom } from 'recoil'
-
-export const gameOptionState = atom<ModooGameOption>({
-  key: 'gameOptions',
-  default: {
-    money: 2000000,
-    players: [
-      {name: '참가자 1'},
-      {name: '참가자 2'},
-    ]
-  }
-})
 
 export function getGame(id: string) {
   if (typeof localStorage === 'undefined') {
@@ -63,6 +53,20 @@ const currentGameEffect: AtomEffect<ModooGame> = ({setSelf, onSet}) => {
   })
 }
 
+export const gameOptionState = atom<ModooGameOption>({
+  key: 'gameOptions',
+  default: {
+    money: 2000000,
+    players: [
+      {name: '참가자 1'},
+      {name: '참가자 2'},
+    ]
+  },
+  effects: [
+    localStorageEffect('modooGameOption')
+  ]
+})
+
 export const currentGameState = atom<ModooGame>({
   key: 'currentGame',
   default: undefined,
@@ -78,44 +82,3 @@ export const gamesState = atom<ModooGameMeta[]>({
     localStorageEffect('modooGames')
   ]
 })
-
-export interface ModooGameMeta {
-  id: string
-  started: Date
-}
-
-export interface ModooGame {
-  id: string
-  started: Date
-  option: ModooGameOption
-  players: ModooPlayer[]
-  histories: ModooHistory[]
-}
-
-export interface ModooGameOption {
-  money: number
-  players: OptionPlayer[]
-}
-
-export interface OptionPlayer {
-  name: string
-}
-
-export interface ModooGameData {
-  players: ModooPlayer[]
-}
-
-export interface ModooPlayer {
-  id: string
-  name: string
-  money: number
-}
-
-export interface ModooHistory {
-  fromId: string
-  fromName: string
-  toId: string
-  toName: string
-  amount: number
-  time: Date
-}

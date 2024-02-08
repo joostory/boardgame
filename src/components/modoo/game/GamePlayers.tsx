@@ -1,5 +1,6 @@
 import { ReceiveButton, SendButton } from "@/components/modoo/game/GameActionButton"
-import { ModooPlayer, currentGameState } from "@/state/modoo-state"
+import { ModooPlayer } from "@/domain/modoo"
+import { currentGameState } from "@/state/modoo-state"
 import { toNumberFormat } from "@/utils/numberformat"
 import { SparklesIcon } from "@heroicons/react/24/solid"
 import { useMemo } from "react"
