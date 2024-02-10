@@ -1,6 +1,6 @@
 import { currentGameState, gamesState, getGame, removeGame } from "@/state/modoo-state"
 import { useRecoilState, useSetRecoilState } from "recoil"
-import { toDateTimeFormat } from "@/utils/dateFormat"
+import { toDateFormat, toTimeFormat } from "@/utils/dateFormat"
 import { TrashIcon } from "@heroicons/react/24/solid"
 import { ModooGameMeta } from "@/domain/modoo"
 
@@ -26,13 +26,15 @@ export default function GameList() {
 
   return (
     <div className="flex justify-center items-center my-5 mx-5">
-      <ul className="divide-y divide-gray-800 w-full max-w-[640px] px-4 py-2 rounded-xl border border-gray-800">
-        {games.map(it =>
-          <li key={it.id} className="flex justify-between gap-x-6 py-6">
+      <ul className="w-full max-w-[640px]">
+        {games.toReversed().map(it =>
+          <li key={it.id} className="flex justify-between rounded-xl py-6 px-6 text-slate-400 transition-all shadow-lg hover:shadow-neutral-900 mb-4">
             <div className="flex min-w-0 w-full">
               <div className="min-w-0 flex-auto grow">
                 <p className="text-xl font-semibold leading-6">
-                  {toDateTimeFormat(new Date(it.started))} 에 시작한 게임
+                  <span className="mr-1 text-3xl text-yellow-600">{toDateFormat(new Date(it.started))}</span>
+                  <span className="text-sm mr-1 text-yellow-700">{toTimeFormat(new Date(it.started))}</span>
+                  <span className="text-md">에 시작한 게임</span>
                 </p>
               </div>
               <div className="shrink-0 flex flex-row items-center gap-x-2">
