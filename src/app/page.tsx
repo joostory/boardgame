@@ -11,7 +11,7 @@ export default function Home() {
           </p>
           <div className='rounded-lg bg-base-300'>
             <a href="/modoo">
-              <img src='/modoo.png' className='w-full' />
+              <img src='/modoo.png' className='w-full' alt='모두의 마블' />
             </a>
           </div>
         </div>

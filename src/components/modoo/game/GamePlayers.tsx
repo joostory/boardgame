@@ -8,16 +8,20 @@ import { useMemo } from "react"
 
 function PlayerItem({player}: {player: ModooPlayer}) {
   const currentGame = useAtomValue(currentGameAtom)
-  if (!currentGame) {
-    return <></>
-  }
 
   const isWinner = useMemo(() => {
+    if (!currentGame) {
+      return false
+    }
     const sorted = [...currentGame.players].sort((a, b) => b.money - a.money)
     const winner = sorted[0]
     const looser = sorted[sorted.length - 1]
     return player.money == winner.money && player.money > looser.money
   }, [currentGame, player])
+
+  if (!currentGame) {
+    return <></>
+  }
 
   return (
     <div className="flex min-w-0 gap-x-4 w-full">

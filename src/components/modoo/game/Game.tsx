@@ -12,7 +12,7 @@ export default function Game() {
       <div className='hero'>
         <div className='hero-content'>
           <div className='text-center'>
-            <img src='/modoo.png' className='w-full' />
+            <img src='/modoo.png' className='w-full' alt='모두의 마블' />
             <h1 className='text-2xl font-bold'>모두의 마블 점수 계산기</h1>
             <div className='mt-10'>
               <button className='btn btn-warning btn-wide' onClick={resetCurrentGame}>

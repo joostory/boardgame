@@ -4,7 +4,7 @@ import { FormEvent, useCallback, useState } from "react"
 import { ArrowRightEndOnRectangleIcon, ArrowLeftEndOnRectangleIcon } from '@heroicons/react/24/solid'
 import MoneyInput from "@/components/common/MoneyInput"
 import { ModooPlayer } from "@/domain/modoo"
-import { useAtom, useAtomValue } from "jotai"
+import { useAtomValue } from "jotai"
 import { currentGameAtom } from "@/atom/modoo-atom"
 import { useAtomCallback } from "jotai/utils"
 
@@ -58,7 +58,7 @@ export function SendButton({player}: {player: ModooPlayer}) {
         players: updatedPlayers,
         histories: updatedHistories
       })
-    }, [currentGame])
+    }, [player])
   )
 
   function handleSubmit(e: FormEvent) {
@@ -114,7 +114,6 @@ export function SendButton({player}: {player: ModooPlayer}) {
 export function ReceiveButton({player}: {player: ModooPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
   const [money, setMoney] = useState(300000)
-  const currentGame = useAtomValue(currentGameAtom)
 
   const updateMoney = useAtomCallback(
     useCallback((get, set) => {
@@ -149,7 +148,7 @@ export function ReceiveButton({player}: {player: ModooPlayer}) {
         players: updatedPlayers,
         histories: histories
       })
-    }, [currentGame])
+    }, [player, money])
   )
 
   function handleSubmit(e: FormEvent) {
