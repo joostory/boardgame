@@ -53,20 +53,6 @@ const currentGameEffect: AtomEffect<ModooGame> = ({setSelf, onSet}) => {
   })
 }
 
-export const gameOptionState = atom<ModooGameOption>({
-  key: 'gameOptions',
-  default: {
-    money: 2000000,
-    players: [
-      {name: '참가자 1'},
-      {name: '참가자 2'},
-    ]
-  },
-  effects: [
-    localStorageEffect('modooGameOption')
-  ]
-})
-
 export const currentGameState = atom<ModooGame>({
   key: 'currentGame',
   default: undefined,

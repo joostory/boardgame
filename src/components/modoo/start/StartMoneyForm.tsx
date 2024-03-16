@@ -1,9 +1,9 @@
+import { gameOptionAtom } from "@/atom/modoo-atom"
 import MoneyInput from "@/components/common/MoneyInput"
-import { gameOptionState } from "@/state/modoo-state"
-import { useRecoilState } from "recoil"
+import { useAtom } from "jotai"
 
 export default function StartMoneyForm() {
-  const [gameOptions, setGameOptions] = useRecoilState(gameOptionState)
+  const [gameOptions, setGameOptions] = useAtom(gameOptionAtom)
 
   function handleChange(value: number) {
     setGameOptions({

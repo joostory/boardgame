@@ -1,4 +1,5 @@
 import { RecoilRoot, useRecoilValue } from 'recoil'
+import { Provider } from 'jotai'
 import { currentGameState } from '@/state/modoo-state'
 import Start from '@/components/modoo/start/Start'
 import Game from '@/components/modoo/game/Game'
@@ -16,9 +17,11 @@ function App() {
 
 export default function ModooApp() {
   return (
-    <RecoilRoot>
-      <ModooGameEffect />
-      <App />
-    </RecoilRoot>
+    <Provider>
+      <RecoilRoot>
+        <ModooGameEffect />
+        <App />
+      </RecoilRoot>
+    </Provider>
   )
 }

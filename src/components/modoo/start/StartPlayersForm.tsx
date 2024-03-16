@@ -1,9 +1,9 @@
-import { gameOptionState } from "@/state/modoo-state"
-import { useRecoilState } from "recoil"
 import { PlusIcon, MinusIcon } from '@heroicons/react/24/solid'
+import { useAtom } from "jotai"
+import { gameOptionAtom } from "@/atom/modoo-atom"
 
 export default function StartPlayersForm() {
-  const [gameOptions, setGameOptions] = useRecoilState(gameOptionState)
+  const [gameOptions, setGameOptions] = useAtom(gameOptionAtom)
 
   function handleAdd() {
     setGameOptions({

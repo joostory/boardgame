@@ -1,16 +1,18 @@
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { currentGameState, gameOptionState } from '@/state/modoo-state'
+import { useSetRecoilState } from 'recoil'
+import { currentGameState } from '@/state/modoo-state'
 import Form, { FormItem } from '@/components/common/Form'
 import { FormEvent } from 'react'
 import StartPlayersForm from '@/components/modoo/start/StartPlayersForm'
 import StartMoneyForm from '@/components/modoo/start/StartMoneyForm'
 import { RocketLaunchIcon } from '@heroicons/react/24/solid'
 import { v4 as uuid } from 'uuid'
+import { useAtomValue } from 'jotai'
+import { gameOptionAtom } from '@/atom/modoo-atom'
 
 
 export default function StartOptionsForm() {
   const setCurrentGame = useSetRecoilState(currentGameState)
-  const gameOption = useRecoilValue(gameOptionState)
+  const gameOption = useAtomValue(gameOptionAtom)
 
   function handleFinish(e: FormEvent) {
     e.preventDefault()
