@@ -1,12 +1,13 @@
-import { currentGameState, gamesState, getGame, removeGame } from "@/state/modoo-state"
-import { useRecoilState, useSetRecoilState } from "recoil"
 import { toDateFormat, toTimeFormat } from "@/utils/dateFormat"
 import { TrashIcon } from "@heroicons/react/24/solid"
 import { ModooGameMeta } from "@/domain/modoo"
+import { useAtom, useSetAtom } from "jotai"
+import { currentGameAtom, gamesAtom } from "@/atom/modoo-atom"
+import { getGame, removeGame } from "@/storage/modoo-storage"
 
 export default function GameList() {
-  const [games, setGames] = useRecoilState(gamesState)
-  const setCurrentGame = useSetRecoilState(currentGameState)
+  const [games, setGames] = useAtom(gamesAtom)
+  const setCurrentGame = useSetAtom(currentGameAtom)
 
   if (games.length == 0) {
     return <></>

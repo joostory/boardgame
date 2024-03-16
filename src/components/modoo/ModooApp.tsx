@@ -1,12 +1,12 @@
-import { RecoilRoot, useRecoilValue } from 'recoil'
-import { Provider } from 'jotai'
-import { currentGameState } from '@/state/modoo-state'
+import { Provider, useAtom, useAtomValue } from 'jotai'
 import Start from '@/components/modoo/start/Start'
 import Game from '@/components/modoo/game/Game'
-import ModooGameEffect from '@/components/modoo/ModooGameEffect'
+import { currentGameAtom, currentGameEffect, gamesEffect } from '@/atom/modoo-atom'
 
 function App() {
-  const currentGame = useRecoilValue(currentGameState)
+  useAtom(currentGameEffect)
+  useAtom(gamesEffect)
+  const currentGame = useAtomValue(currentGameAtom)
 
   if (currentGame) {
     return <Game />
@@ -18,10 +18,7 @@ function App() {
 export default function ModooApp() {
   return (
     <Provider>
-      <RecoilRoot>
-        <ModooGameEffect />
-        <App />
-      </RecoilRoot>
+      <App />
     </Provider>
   )
 }

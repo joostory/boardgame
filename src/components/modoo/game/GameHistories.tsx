@@ -1,11 +1,14 @@
-import { currentGameState } from "@/state/modoo-state"
+import { currentGameAtom } from "@/atom/modoo-atom"
 import { toTimeFormat } from "@/utils/dateFormat"
 import { toNumberFormat } from "@/utils/numberformat"
 import { CheckCircleIcon } from "@heroicons/react/24/solid"
-import { useRecoilValue } from "recoil"
+import { useAtomValue } from "jotai"
 
 export default function GameHistories() {
-  const currentGame = useRecoilValue(currentGameState)
+  const currentGame = useAtomValue(currentGameAtom)
+  if (!currentGame) {
+    return <></>
+  }
 
   return (
     <div className="flex justify-center my-10 mx-5">
