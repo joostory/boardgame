@@ -1,11 +1,11 @@
-import { currentGameState } from "@/state/modoo-state"
-import { useResetRecoilState } from "recoil"
 import { PowerIcon } from '@heroicons/react/24/solid'
 import GameHistories from "@/components/modoo/game/GameHistories"
 import GamePlayers from "@/components/modoo/game/GamePlayers"
+import { useResetAtom } from "jotai/utils"
+import { currentGameAtom } from "@/atom/modoo-atom"
 
 export default function Game() {
-  const resetCurrentGame = useResetRecoilState(currentGameState)
+  const resetCurrentGame = useResetAtom(currentGameAtom)
 
   return (
     <>

@@ -1,13 +1,17 @@
+import { currentGameAtom } from "@/atom/modoo-atom"
 import { ReceiveButton, SendButton } from "@/components/modoo/game/GameActionButton"
 import { ModooPlayer } from "@/domain/modoo"
-import { currentGameState } from "@/state/modoo-state"
 import { toNumberFormat } from "@/utils/numberformat"
 import { SparklesIcon } from "@heroicons/react/24/solid"
+import { useAtomValue } from "jotai"
 import { useMemo } from "react"
-import { useRecoilValue } from "recoil"
 
 function PlayerItem({player}: {player: ModooPlayer}) {
-  const currentGame = useRecoilValue(currentGameState)
+  const currentGame = useAtomValue(currentGameAtom)
+  if (!currentGame) {
+    return <></>
+  }
+
   const isWinner = useMemo(() => {
     const sorted = [...currentGame.players].sort((a, b) => b.money - a.money)
     const winner = sorted[0]
@@ -39,7 +43,10 @@ function PlayerItem({player}: {player: ModooPlayer}) {
 }
 
 export default function GamePlayers() {
-  const currentGame = useRecoilValue(currentGameState)
+  const currentGame = useAtomValue(currentGameAtom)
+  if (!currentGame) {
+    return <></>
+  }
 
   return (
     <div className="flex justify-center items-center my-5 mx-5">

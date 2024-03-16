@@ -14,11 +14,12 @@
     "@types/luxon": "^3.3.7",
     "@types/uuid": "^9.0.7",
     "daisyui": "^4.4.18",
+    "jotai": "^2.7.1",
+    "jotai-effect": "^0.6.0",
     "luxon": "^3.4.4",
     "next": "^14.0.4",
     "react": "^18",
     "react-dom": "^18",
-    "recoil": "^0.7.7",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
