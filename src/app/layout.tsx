@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Poor_Story } from 'next/font/google'
 import './globals.css'
+import { BoardgameThemeProvider } from '@/components/theme-provider'
 
 const font = Poor_Story({
   weight: '400',
@@ -18,8 +19,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={font.className}>{children}</body>
+    <html lang="ko">
+      <body className={font.className}>
+        <BoardgameThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </BoardgameThemeProvider>
+      </body>
     </html>
   )
 }

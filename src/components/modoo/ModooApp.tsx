@@ -1,3 +1,5 @@
+'use client'
+
 import { Provider, useAtom, useAtomValue } from 'jotai'
 import Start from '@/components/modoo/start/Start'
 import Game from '@/components/modoo/game/Game'

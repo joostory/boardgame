@@ -6,6 +6,7 @@ import { RocketLaunchIcon } from '@heroicons/react/24/solid'
 import { v4 as uuid } from 'uuid'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { currentGameAtom, gameOptionAtom } from '@/atom/modoo-atom'
+import { Button } from '@/components/ui/button'
 
 
 export default function StartOptionsForm() {
@@ -36,9 +37,9 @@ export default function StartOptionsForm() {
         <StartPlayersForm />
       </FormItem>
       <FormItem>
-        <button type='submit' className='btn btn-primary w-full'>
+        <Button type='submit' className='w-full'>
           <RocketLaunchIcon className='h-6 w-6' /> 시작하기
-        </button>
+        </Button>
       </FormItem>
     </Form>
   )

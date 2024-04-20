@@ -1,6 +1,8 @@
 import { PlusIcon, MinusIcon } from '@heroicons/react/24/solid'
 import { useAtom } from "jotai"
 import { gameOptionAtom } from "@/atom/modoo-atom"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 export default function StartPlayersForm() {
   const [gameOptions, setGameOptions] = useAtom(gameOptionAtom)
@@ -37,20 +39,19 @@ export default function StartPlayersForm() {
     <div className='text-start grid gap-4'>
       <div className="flex items-center">
         <span>{gameOptions.players.length} 명</span>
-        <button type='button' className='btn btn-xs ml-4 btn-primary' onClick={handleAdd}>
+        <Button type='button' size={'sm'} className='ml-4' onClick={handleAdd}>
           <PlusIcon className="w-4 h-4" /> 추가
-        </button>
+        </Button>
       </div>
 
       {gameOptions.players.map((it, index) =>
-        <div key={index} className="join">
-          <input
-            className='input input-bordered input-sm join-item w-full'
+        <div key={index} className="flex items-center justify-center w-full">
+          <Input
             value={it.name} onChange={e => handleChangeName(index, e.target.value)}
           />
-          <button type='button' className='btn btn-sm btn-error join-item' onClick={() => handleRemove(index)}>
+          <Button type='button' onClick={() => handleRemove(index)}>
             <MinusIcon className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       )}
     </div>
