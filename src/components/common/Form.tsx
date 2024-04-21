@@ -9,7 +9,7 @@ export function FormItem({
 }) {
   return (
     <div className='px-0 py-6 grid grid-cols-3 gap-4 text-sm'>
-      <dt className='flex justify-center items-start pt-3'>{label}</dt>
+      <dt className='flex justify-center items-start pt-2'>{label}</dt>
       <dd className='col-span-2 text-start'>
         {children}
       </dd>

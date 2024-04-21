@@ -4,6 +4,7 @@ import { ModooGameMeta } from "@/domain/modoo"
 import { useAtom, useSetAtom } from "jotai"
 import { currentGameAtom, gamesAtom } from "@/atom/modoo-atom"
 import { getGame, removeGame } from "@/storage/modoo-storage"
+import { Button } from "@/components/ui/button"
 
 export default function GameList() {
   const [games, setGames] = useAtom(gamesAtom)
@@ -26,8 +27,8 @@ export default function GameList() {
   }
 
   return (
-    <div className="flex justify-center items-center my-5 mx-5">
-      <ul className="w-full max-w-[640px]">
+    <div className="my-5 mx-5">
+      <ul className="w-full">
         {games.toReversed().map(it =>
           <li key={it.id} className="flex justify-between rounded-xl py-6 px-6 text-slate-400 transition-all shadow-lg hover:shadow-neutral-900 mb-4">
             <div className="flex min-w-0 w-full">
@@ -39,12 +40,12 @@ export default function GameList() {
                 </p>
               </div>
               <div className="shrink-0 flex flex-row items-center gap-x-2">
-                <button className="btn btn-sm btn-info text-xs" onClick={() => handleView(it)}>
+                <Button size={'sm'} className="text-xs" onClick={() => handleView(it)}>
                   게임보기
-                </button>
-                <button className="btn btn-sm btn-error" onClick={() => handleRemove(it)}>
+                </Button>
+                <Button size={'sm'} variant={'danger'} onClick={() => handleRemove(it)}>
                   <TrashIcon className="h-4 w-4" />
-                </button>
+                </Button>
               </div>
             </div>
           </li>

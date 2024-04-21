@@ -7,6 +7,11 @@ import { ModooPlayer } from "@/domain/modoo"
 import { useAtomValue } from "jotai"
 import { currentGameAtom } from "@/atom/modoo-atom"
 import { useAtomCallback } from "jotai/utils"
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
+import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog"
+import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
+import { SelectValue } from "@radix-ui/react-select"
 
 export function SendButton({player}: {player: ModooPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
@@ -69,29 +74,32 @@ export function SendButton({player}: {player: ModooPlayer}) {
 
   return (
     <>
-      <ArrowRightEndOnRectangleIcon
-        className="w-8 h-8 p-1 text-primary"
-        onClick={() => setOpen(true)}
-      />
-      {open &&
-        <Modal
-          title={`${player.name} : 돈 보내기`}
-          open={open} onClose={() => setOpen(false)}
-        >
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger>
+          <ArrowRightEndOnRectangleIcon
+            className="w-8 h-8 p-1 text-primary text-blue-400 hover:text-blue-600"
+          />
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{player.name} : 돈 보내기</DialogTitle>
+          </DialogHeader>
           <Form onSubmit={handleSubmit}>
             <FormItem label='보낼 곳'>
-              <select
-                className="select select-bordered w-full"
-                value={selectedPlayerId} onChange={e => setSelectedPlayerId(e.target.value)}
-              >
-                <option value='bank'>은행</option>
-                {currentGame && currentGame.players
-                  .filter(it => it.id != player.id)
-                  .map(it =>
-                    <option key={it.id} value={it.id}>{it.name}</option>
-                  )
-                }
-              </select>
+              <Select value={selectedPlayerId} onValueChange={v => setSelectedPlayerId(v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder='보낼 곳' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='bank'>은행</SelectItem>
+                  {currentGame && currentGame.players
+                    .filter(it => it.id != player.id)
+                    .map(it =>
+                      <SelectItem key={it.id} value={it.id}>{it.name}</SelectItem>
+                    )
+                  }
+                </SelectContent>
+              </Select>
             </FormItem>
             <FormItem label="금액">
               <MoneyInput
@@ -100,13 +108,13 @@ export function SendButton({player}: {player: ModooPlayer}) {
               />
             </FormItem>
             <FormItem>
-              <button type='submit' className="btn btn-primary w-full">
+              <Button type='submit' className="w-full" size={'lg'} variant={'primary'}>
                 <ArrowRightEndOnRectangleIcon className="w-6 h-6" /> 보내기
-              </button>
+              </Button>
             </FormItem>
           </Form>
-        </Modal>
-      }
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
@@ -159,16 +167,16 @@ export function ReceiveButton({player}: {player: ModooPlayer}) {
 
   return (
     <>
-      <ArrowLeftEndOnRectangleIcon
-        className="w-8 h-8 p-1 text-accent"
-        onClick={() => setOpen(true)}
-      />
-
-      {open &&
-        <Modal
-          title={`${player.name} : 은행에서 돈 받기`}
-          open={open} onClose={() => setOpen(false)}
-        >
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger>
+          <ArrowLeftEndOnRectangleIcon
+            className="w-8 h-8 p-1 text-red-400 hover:text-red-600"
+          />
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{player.name} : 은행에서 돈 받기</DialogTitle>
+          </DialogHeader>
           <Form onSubmit={handleSubmit}>
             <FormItem label="금액">
               <MoneyInput
@@ -177,13 +185,13 @@ export function ReceiveButton({player}: {player: ModooPlayer}) {
               />
             </FormItem>
             <FormItem>
-              <button type='submit' className="btn btn-accent w-full">
+              <Button type='submit' className="w-full" variant={'primary'} size='lg'>
                 <ArrowLeftEndOnRectangleIcon className="w-6 h-6" /> 받기
-              </button>
+              </Button>
             </FormItem>
           </Form>
-        </Modal>
-      }
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

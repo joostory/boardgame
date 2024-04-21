@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { useMemo } from "react"
 
 function ResetButton({
@@ -6,9 +8,9 @@ function ResetButton({
   onClick: {(): void}
 }) {
   return (
-    <button type='button' className="btn btn-sm btn-warning" onClick={onClick}>
+    <Button type="button" size={'sm'} onClick={onClick}>
       0 원
-    </button>
+    </Button>
   )
 }
 
@@ -29,16 +31,17 @@ function AddMoneyButton({
 
   const className = useMemo(() => {
     if (value > 0) {
-      return `btn btn-sm btn-info`
+      return `bg-blue-400 hover:bg-blue-600`
     } else {
-      return `btn btn-sm btn-error`
+      return `bg-red-400 hover:bg-red-600`
     }
   }, [value])
 
+
   return (
-    <button type='button' className={className} onClick={() => onClick(value)}>
+    <Button type="button" size={'sm'} className={className} onClick={() => onClick(value)}>
       {text}원
-    </button>
+    </Button>
   )
 }
 
@@ -61,12 +64,12 @@ export default function MoneyInput({
 
   return (
     <div className="w-full">
-      <div className="join">
-        <input
-          type='text' className="input input-bordered join-item w-full text-xl"
+      <div className="flex w-full items-center">
+        <Input
+          type='text' className="text-xl"
           value={displayValue} onChange={e => handleChange(e.target.value)}
         />
-        <div className="join-item flex justify-center items-center w-14 bg-base-300">
+        <div className="flex justify-center items-center w-14 bg-base-300">
           원
         </div>
       </div>
