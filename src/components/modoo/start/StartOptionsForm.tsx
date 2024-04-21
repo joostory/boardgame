@@ -37,7 +37,7 @@ export default function StartOptionsForm() {
         <StartPlayersForm />
       </FormItem>
       <FormItem>
-        <Button type='submit' className='w-full'>
+        <Button type='submit' className='w-full' variant={'primary'} size={'lg'}>
           <RocketLaunchIcon className='h-6 w-6' /> 시작하기
         </Button>
       </FormItem>

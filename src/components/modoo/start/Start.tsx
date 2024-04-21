@@ -3,9 +3,11 @@ import { RocketLaunchIcon } from '@heroicons/react/24/solid'
 import GameList from '@/components/modoo/game/GameList'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { useState } from 'react'
 
 
 export default function Start() {
+  const [open, setOpen] = useState<boolean>(false)
   return (
     <div className='max-w-[640px] mx-auto'>
       <div className='text-center'>
@@ -14,9 +16,9 @@ export default function Start() {
         </div>
         <h1 className='text-2xl'>모두의 마블 점수 계산기</h1>
         <div className='mt-10'>
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
-              <Button size={'lg'}>
+              <Button size={'xl'} variant={'primary'}>
                 <RocketLaunchIcon className='h-6 w-6' /> 새로운 게임 시작하기
               </Button>
             </DialogTrigger>

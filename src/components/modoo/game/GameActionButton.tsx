@@ -74,10 +74,10 @@ export function SendButton({player}: {player: ModooPlayer}) {
 
   return (
     <>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <ArrowRightEndOnRectangleIcon
-            className="w-8 h-8 p-1 text-primary"
+            className="w-8 h-8 p-1 text-primary text-blue-400 hover:text-blue-600"
           />
         </DialogTrigger>
         <DialogContent>
@@ -108,7 +108,7 @@ export function SendButton({player}: {player: ModooPlayer}) {
               />
             </FormItem>
             <FormItem>
-              <Button type='submit' className="w-full">
+              <Button type='submit' className="w-full" size={'lg'} variant={'primary'}>
                 <ArrowRightEndOnRectangleIcon className="w-6 h-6" /> 보내기
               </Button>
             </FormItem>
@@ -167,10 +167,10 @@ export function ReceiveButton({player}: {player: ModooPlayer}) {
 
   return (
     <>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <ArrowLeftEndOnRectangleIcon
-            className="w-8 h-8 p-1"
+            className="w-8 h-8 p-1 text-red-400 hover:text-red-600"
           />
         </DialogTrigger>
         <DialogContent>
@@ -185,7 +185,7 @@ export function ReceiveButton({player}: {player: ModooPlayer}) {
               />
             </FormItem>
             <FormItem>
-              <Button type='submit' className="w-full">
+              <Button type='submit' className="w-full" variant={'primary'} size='lg'>
                 <ArrowLeftEndOnRectangleIcon className="w-6 h-6" /> 받기
               </Button>
             </FormItem>

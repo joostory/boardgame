@@ -31,14 +31,15 @@ function AddMoneyButton({
 
   const className = useMemo(() => {
     if (value > 0) {
-      return `btn btn-sm btn-info`
+      return `bg-blue-400 hover:bg-blue-600`
     } else {
-      return `btn btn-sm btn-error`
+      return `bg-red-400 hover:bg-red-600`
     }
   }, [value])
 
+
   return (
-    <Button type="button" className={className} onClick={() => onClick(value)}>
+    <Button type="button" size={'sm'} className={className} onClick={() => onClick(value)}>
       {text}원
     </Button>
   )

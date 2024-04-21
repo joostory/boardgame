@@ -4,6 +4,15 @@ import { toNumberFormat } from "@/utils/numberformat"
 import { CheckCircleIcon } from "@heroicons/react/24/solid"
 import { useAtomValue } from "jotai"
 
+function Amount({amount}: {amount: number}) {
+  const className = amount > 0? "text-blue-400" : "text-red-400"
+  return (
+    <b className={className}>
+      {toNumberFormat(amount)}
+    </b>
+  )
+}
+
 export default function GameHistories() {
   const currentGame = useAtomValue(currentGameAtom)
   if (!currentGame) {
@@ -24,7 +33,7 @@ export default function GameHistories() {
             }>
             <hr
               style={{height: 10, width: '0.25rem'}}
-              className="col-start-1 row-start-1 justify-self-center"
+              className="col-start-1 row-start-1 justify-self-center bg-black opacity-80"
             />
             <div className="col-start-2 row-start-2 p-1">
               {toTimeFormat(new Date(it.time))}
@@ -33,11 +42,11 @@ export default function GameHistories() {
               <CheckCircleIcon className="h-5 w-5" />
             </div>
             <div className="col-start-2 row-start-4 p-1">
-              {it.fromName} -&gt; {it.toName} : <b className="text-success">{toNumberFormat(it.amount)}</b>
+              {it.fromName} -&gt; {it.toName} : <Amount amount={it.amount} />
             </div>
             <hr
               style={{height: '100%', width: '0.25rem'}}
-              className="col-start-1 row-start-3 row-end-5 justify-self-center"
+              className="col-start-1 row-start-3 row-end-5 justify-self-center bg-black opacity-80"
             />
           </li>
         )}

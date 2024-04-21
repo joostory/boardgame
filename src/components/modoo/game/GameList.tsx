@@ -43,7 +43,7 @@ export default function GameList() {
                 <Button size={'sm'} className="text-xs" onClick={() => handleView(it)}>
                   게임보기
                 </Button>
-                <Button size={'sm'} onClick={() => handleRemove(it)}>
+                <Button size={'sm'} variant={'danger'} onClick={() => handleRemove(it)}>
                   <TrashIcon className="h-4 w-4" />
                 </Button>
               </div>

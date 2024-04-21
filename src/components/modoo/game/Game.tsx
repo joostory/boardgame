@@ -16,7 +16,7 @@ export default function Game() {
         </div>
         <h1 className='text-2xl'>모두의 마블 점수 계산기</h1>
         <div className='mt-10'>
-          <Button type='button' size='lg' onClick={resetCurrentGame}>
+          <Button type='button' size={'xl'} variant={'primary'} onClick={resetCurrentGame}>
             <PowerIcon className="h-6 w-6" /> 게임 종료
           </Button>
         </div>

@@ -39,7 +39,7 @@ export default function StartPlayersForm() {
     <div className='text-start grid gap-4'>
       <div className="flex items-center">
         <span>{gameOptions.players.length} 명</span>
-        <Button type='button' size={'sm'} className='ml-4' onClick={handleAdd}>
+        <Button type='button' size={'xs'} variant={'primary'} className='ml-4' onClick={handleAdd}>
           <PlusIcon className="w-4 h-4" /> 추가
         </Button>
       </div>
@@ -49,7 +49,7 @@ export default function StartPlayersForm() {
           <Input
             value={it.name} onChange={e => handleChangeName(index, e.target.value)}
           />
-          <Button type='button' onClick={() => handleRemove(index)}>
+          <Button type='button' size={'sm'} variant={'danger'} onClick={() => handleRemove(index)}>
             <MinusIcon className="w-4 h-4" />
           </Button>
         </div>
