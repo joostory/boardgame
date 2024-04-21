@@ -66,7 +66,7 @@ export default function MoneyInput({
     <div className="w-full">
       <div className="flex w-full items-center">
         <Input
-          type='text' className="text-xl"
+          type='text' className="text-xl" tabIndex={-1}
           value={displayValue} onChange={e => handleChange(e.target.value)}
         />
         <div className="flex justify-center items-center w-14 bg-base-300">
