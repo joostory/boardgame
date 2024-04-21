@@ -77,7 +77,7 @@ export function SendButton({player}: {player: ModooPlayer}) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <ArrowRightEndOnRectangleIcon
-            className="w-8 h-8 p-1 text-primary text-blue-400 hover:text-blue-600"
+            className="w-8 h-8 p-1 text-blue-400 hover:text-blue-600"
           />
         </DialogTrigger>
         <DialogContent>
