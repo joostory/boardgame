@@ -37,15 +37,15 @@ export default function StartPlayersForm() {
 
   return (
     <div className='text-start grid gap-4'>
-      <div className="flex items-center">
+      <div className="flex items-center gap-4">
         <span>{gameOptions.players.length} 명</span>
-        <Button type='button' size={'xs'} variant={'primary'} className='ml-4' onClick={handleAdd}>
+        <Button type='button' size={'xs'} onClick={handleAdd}>
           <PlusIcon className="w-4 h-4" /> 추가
         </Button>
       </div>
 
       {gameOptions.players.map((it, index) =>
-        <div key={index} className="flex items-center justify-center w-full">
+        <div key={index} className="flex items-center justify-center w-full gap-1">
           <Input
             value={it.name} onChange={e => handleChangeName(index, e.target.value)}
           />

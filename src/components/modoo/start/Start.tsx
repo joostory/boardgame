@@ -17,7 +17,7 @@ export default function Start() {
         <h1 className='text-2xl'>모두의 마블 점수 계산기</h1>
         <div className='mt-10'>
           <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild={true}>
+            <DialogTrigger asChild>
               <Button size={'xl'} variant={'primary'}>
                 <RocketLaunchIcon className='h-6 w-6' /> 새로운 게임 시작하기
               </Button>

@@ -5,6 +5,33 @@ import { useAtom, useSetAtom } from "jotai"
 import { currentGameAtom, gamesAtom } from "@/atom/modoo-atom"
 import { getGame, removeGame } from "@/storage/modoo-storage"
 import { Button } from "@/components/ui/button"
+import { AlertDialog, AlertDialogTrigger } from "@radix-ui/react-alert-dialog"
+import { AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogTitle } from "@/components/ui/alert-dialog"
+
+function RemoveGameButton({onRemove}: {onRemove: {(): void}}) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button size={'sm'} variant={'danger'}>
+          <TrashIcon className="h-4 w-4" />
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogTitle>
+          게임기록을 제거하시겠습니까?
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          게임기록 제거는 되돌릴 수 없습니다.
+        </AlertDialogDescription>
+
+        <AlertDialogFooter>
+          <AlertDialogAction onClick={onRemove}>확인</AlertDialogAction>
+          <AlertDialogCancel>취소</AlertDialogCancel>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}
 
 export default function GameList() {
   const [games, setGames] = useAtom(gamesAtom)
@@ -19,9 +46,6 @@ export default function GameList() {
   }
 
   function handleRemove(gameMeta: ModooGameMeta) {
-    if (!confirm('게임기록을 제거하시겠습니까?')) {
-      return
-    }
     setGames([...games].filter(it => it.id != gameMeta.id))
     removeGame(gameMeta.id)
   }
@@ -40,12 +64,12 @@ export default function GameList() {
                 </p>
               </div>
               <div className="shrink-0 flex flex-row items-center gap-x-2">
-                <Button size={'sm'} className="text-xs" onClick={() => handleView(it)}>
+                <Button size={'sm'} className="text-xs" variant={'secondary'} onClick={() => handleView(it)}>
                   게임보기
                 </Button>
-                <Button size={'sm'} variant={'danger'} onClick={() => handleRemove(it)}>
-                  <TrashIcon className="h-4 w-4" />
-                </Button>
+                <RemoveGameButton
+                  onRemove={() => handleRemove(it)}
+                />
               </div>
             </div>
           </li>

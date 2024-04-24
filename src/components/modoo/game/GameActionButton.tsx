@@ -1,5 +1,4 @@
 import Form, { FormItem } from "@/components/common/Form"
-import Modal from "@/components/common/Modal"
 import { FormEvent, useCallback, useState } from "react"
 import { ArrowRightEndOnRectangleIcon, ArrowLeftEndOnRectangleIcon } from '@heroicons/react/24/solid'
 import MoneyInput from "@/components/common/MoneyInput"
