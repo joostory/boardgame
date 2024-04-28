@@ -9,6 +9,13 @@ export interface ModooGame {
   option: ModooGameOption
   players: ModooPlayer[]
   histories: ModooHistory[]
+  status?: ModooGameStatus
+  topPlayerId?: string
+  message?: string
+}
+
+export enum ModooGameStatus {
+  STARTED, ENDED
 }
 
 export interface ModooGameOption {

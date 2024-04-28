@@ -12,6 +12,12 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { SelectValue } from "@radix-ui/react-select"
 
+function getTopPlayer(players: ModooPlayer[]): ModooPlayer {
+  return players.reduce((prev, current) => {
+    return prev.money > current.money? prev : current
+  })
+}
+
 export function SendButton({player}: {player: ModooPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
   const [money, setMoney] = useState(300000)
@@ -57,10 +63,13 @@ export function SendButton({player}: {player: ModooPlayer}) {
         ...currentGame.histories
       ]
 
+      const topPlayer = getTopPlayer(updatedPlayers)
+
       set(currentGameAtom, {
         ...currentGame,
         players: updatedPlayers,
-        histories: updatedHistories
+        histories: updatedHistories,
+        topPlayerId: topPlayer.id
       })
     }, [player])
   )
@@ -150,10 +159,13 @@ export function ReceiveButton({player}: {player: ModooPlayer}) {
         ...currentGame.histories
       ]
 
+      const topPlayer = getTopPlayer(updatedPlayers)
+
       set(currentGameAtom, {
         ...currentGame,
         players: updatedPlayers,
-        histories: histories
+        histories: histories,
+        topPlayerId: topPlayer.id
       })
     }, [player, money])
   )

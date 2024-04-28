@@ -3,10 +3,11 @@ import { FormEvent } from 'react'
 import StartPlayersForm from '@/components/modoo/start/StartPlayersForm'
 import StartMoneyForm from '@/components/modoo/start/StartMoneyForm'
 import { RocketLaunchIcon } from '@heroicons/react/24/solid'
-import { v4 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { currentGameAtom, gameOptionAtom } from '@/atom/modoo-atom'
 import { Button } from '@/components/ui/button'
+import { ModooGameStatus } from '@/domain/modoo'
 
 
 export default function StartOptionsForm() {
@@ -16,15 +17,16 @@ export default function StartOptionsForm() {
   function handleFinish(e: FormEvent) {
     e.preventDefault()
     setCurrentGame({
-      id: uuid(),
+      id: nanoid(),
       started: new Date(),
       option: gameOption,
       players: gameOption.players.map(it => ({
-        id: uuid(),
+        id: nanoid(),
         money: gameOption.money,
         name: it.name
       })),
-      histories: []
+      histories: [],
+      status: ModooGameStatus.STARTED,
     })
   }
 

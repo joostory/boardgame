@@ -1,6 +1,5 @@
 import { ModooGame, ModooGameMeta, ModooGameOption } from '@/domain/modoo'
 import { setGame } from '@/storage/modoo-storage'
-import { atom } from 'jotai'
 import { atomEffect } from 'jotai-effect'
 import { atomWithStorage, atomWithReset } from 'jotai/utils'
 

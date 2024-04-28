@@ -25,8 +25,8 @@ export default function Form({
   onSubmit?: {(e: FormEvent): void}
 }) {
   return (
-    <form className='mt-6 border-t border-gray-900' onSubmit={onSubmit}>
-      <dl className='divide-y divide-gray-900'>
+    <form className='mt-6 border-t' onSubmit={onSubmit}>
+      <dl className='divide-y'>
         {children}
       </dl>
     </form>
