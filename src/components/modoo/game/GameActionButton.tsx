@@ -2,7 +2,7 @@ import Form, { FormItem } from "@/components/common/Form"
 import { FormEvent, useCallback, useState } from "react"
 import { ArrowRightEndOnRectangleIcon, ArrowLeftEndOnRectangleIcon } from '@heroicons/react/24/solid'
 import MoneyInput from "@/components/common/MoneyInput"
-import { ModooPlayer } from "@/domain/modoo"
+import { ModooPlayer, getTopPlayer, updatePlayer } from "@/domain/modoo"
 import { useAtomValue } from "jotai"
 import { currentGameAtom } from "@/atom/modoo-atom"
 import { useAtomCallback } from "jotai/utils"
@@ -12,12 +12,6 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { SelectValue } from "@radix-ui/react-select"
 
-function getTopPlayer(players: ModooPlayer[]): ModooPlayer {
-  return players.reduce((prev, current) => {
-    return prev.money > current.money? prev : current
-  })
-}
-
 export function SendButton({player}: {player: ModooPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
   const [money, setMoney] = useState(300000)
@@ -26,17 +20,6 @@ export function SendButton({player}: {player: ModooPlayer}) {
 
   const sendMoney = useAtomCallback(
     useCallback((get, set, to: string, money: number) => {
-      function updatePlayer(players: ModooPlayer[], id: string, money: number): ModooPlayer {
-        const index = players.findIndex(it => it.id == id)
-        const updatedPlayer = players[index]
-
-        players.splice(index, 1, {
-          ...updatedPlayer,
-          money: updatedPlayer.money + money
-        })
-        return updatedPlayer
-      }
-
       const currentGame = get(currentGameAtom)
       if (!currentGame) {
         console.log("NO currentGame")
@@ -140,13 +123,9 @@ export function ReceiveButton({player}: {player: ModooPlayer}) {
       }
 
       const players = currentGame.players
-      const index = players.findIndex(it => it.id == player.id)
-      const targetPlayer = players[index]
       const updatedPlayers = [...players]
-      updatedPlayers.splice(index, 1, {
-        ...targetPlayer,
-        money: targetPlayer.money + money
-      })
+      updatePlayer(updatedPlayers, player.id, money)
+
       const histories = [
         {
           fromId: 'bank',

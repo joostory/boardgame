@@ -4,7 +4,7 @@ import GameHeader from '@/components/modoo/game/GameHeader'
 
 export default function Game() {
   return (
-    <div className='max-w-[640px] mx-auto mb-20'>
+    <div className='max-w-[640px] mx-auto pb-20'>
       <GameHeader />
 
       <GamePlayers />

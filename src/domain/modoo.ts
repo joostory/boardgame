@@ -45,3 +45,20 @@ export interface ModooHistory {
   amount: number
   time: Date
 }
+
+export function updatePlayer(players: ModooPlayer[], id: string, money: number): ModooPlayer {
+  const index = players.findIndex(it => it.id == id)
+  const updatedPlayer = players[index]
+
+  players.splice(index, 1, {
+    ...updatedPlayer,
+    money: updatedPlayer.money + money
+  })
+  return updatedPlayer
+}
+
+export function getTopPlayer(players: ModooPlayer[]): ModooPlayer {
+  return players.reduce((prev, current) => {
+    return prev.money > current.money? prev : current
+  })
+}

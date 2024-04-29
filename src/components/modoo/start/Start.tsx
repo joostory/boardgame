@@ -9,7 +9,7 @@ import { useState } from 'react'
 export default function Start() {
   const [open, setOpen] = useState<boolean>(false)
   return (
-    <div className='max-w-[640px] mx-auto mb-20'>
+    <div className='max-w-[640px] mx-auto pb-20'>
       <div className='text-center'>
         <div className='px-10'>
           <img src='/modoo.png' className='w-full' alt='모두의 마블' />
