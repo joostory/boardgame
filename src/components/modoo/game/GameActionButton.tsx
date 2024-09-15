@@ -1,5 +1,5 @@
 import Form, { FormItem } from "@/components/common/Form"
-import { FormEvent, useCallback, useState } from "react"
+import { FormEvent, useCallback, useMemo, useState } from "react"
 import { ArrowRightEndOnRectangleIcon, ArrowLeftEndOnRectangleIcon } from '@heroicons/react/24/solid'
 import MoneyInput from "@/components/common/MoneyInput"
 import { ModooPlayer, getTopPlayer, updatePlayer } from "@/domain/modoo"
@@ -17,6 +17,7 @@ export function SendButton({player}: {player: ModooPlayer}) {
   const [money, setMoney] = useState(300000)
   const [selectedPlayerId, setSelectedPlayerId] = useState('bank')
   const currentGame = useAtomValue(currentGameAtom)
+  const validated = money > 0
 
   const sendMoney = useAtomCallback(
     useCallback((get, set, to: string, money: number) => {
@@ -99,7 +100,7 @@ export function SendButton({player}: {player: ModooPlayer}) {
               />
             </FormItem>
             <FormItem>
-              <Button type='submit' className="w-full" size={'lg'} variant={'primary'}>
+              <Button type='submit' className="w-full" size={'lg'} variant={'primary'} disabled={!validated}>
                 <ArrowRightEndOnRectangleIcon className="w-6 h-6" /> 보내기
               </Button>
             </FormItem>
@@ -113,6 +114,7 @@ export function SendButton({player}: {player: ModooPlayer}) {
 export function ReceiveButton({player}: {player: ModooPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
   const [money, setMoney] = useState(300000)
+  const validated = money > 0
 
   const updateMoney = useAtomCallback(
     useCallback((get, set) => {
@@ -175,7 +177,7 @@ export function ReceiveButton({player}: {player: ModooPlayer}) {
               />
             </FormItem>
             <FormItem>
-              <Button type='submit' className="w-full" variant={'primary'} size='lg'>
+              <Button type='submit' className="w-full" variant={'primary'} size='lg' disabled={!validated}>
                 <ArrowLeftEndOnRectangleIcon className="w-6 h-6" /> 받기
               </Button>
             </FormItem>
