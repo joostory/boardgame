@@ -12,6 +12,19 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { SelectValue } from "@radix-ui/react-select"
 
+function MoneyTitle({remain}: {remain?: number}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="text-center">금액</div>
+      {remain &&
+        <div className="text-center text-foreground/60">
+          ({Number(remain).toLocaleString()} 원)
+        </div>
+      }
+    </div>
+  )
+}
+
 export function SendButton({player}: {player: ModooPlayer}) {
   const [open, setOpen] = useState<boolean>(false)
   const [money, setMoney] = useState(300000)
@@ -93,7 +106,7 @@ export function SendButton({player}: {player: ModooPlayer}) {
                 </SelectContent>
               </Select>
             </FormItem>
-            <FormItem label="금액">
+            <FormItem label={<MoneyTitle remain={player.money - money} />}>
               <MoneyInput
                 value={money}
                 onChange={setMoney}
@@ -170,7 +183,7 @@ export function ReceiveButton({player}: {player: ModooPlayer}) {
             <DialogTitle>{player.name} : 은행에서 돈 받기</DialogTitle>
           </DialogHeader>
           <Form onSubmit={handleSubmit}>
-            <FormItem label="금액">
+            <FormItem label={<MoneyTitle remain={player.money + money} />}>
               <MoneyInput
                 value={money}
                 onChange={setMoney}

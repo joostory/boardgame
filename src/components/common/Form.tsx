@@ -4,7 +4,7 @@ export function FormItem({
   label,
   children
 }: {
-  label?: string,
+  label?: ReactNode,
   children: ReactNode
 }) {
   return (
