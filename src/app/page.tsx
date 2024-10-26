@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -10,9 +11,9 @@ export default function Home() {
             보드게임을 위한 도구들입니다.
           </p>
           <div className='rounded-lg bg-base-300'>
-            <a href="/modoo">
+            <Link href="/modoo">
               <img src='/modoo.png' className='w-full' alt='모두의 마블' />
-            </a>
+            </Link>
           </div>
         </div>
       </div>
