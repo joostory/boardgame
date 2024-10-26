@@ -18,20 +18,19 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@tailwindcss/typography": "^0.5.10",
     "@types/luxon": "^3.3.7",
-    "@types/nanoid": "^3.0.0",
-    "@types/uuid": "^10.0.0",
+    "@types/nanoid": "^2.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "jotai": "^2.7.1",
     "jotai-effect": "^1.0.0",
     "luxon": "^3.4.4",
+    "nanoid": "^5.0.7",
     "next": "^14.0.4",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7",
-    "uuid": "^10.0.0"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^22.5.5",
