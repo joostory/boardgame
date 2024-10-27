@@ -1,0 +1,140 @@
+[
+  {
+      "id": "dubai",
+      "name": "두바이",
+      "type": "city",
+      "color": "green"
+  },
+  {
+      "id": "cairo",
+      "name": "카이로",
+      "type": "city",
+      "color": "green"
+  },
+  {
+      "id": "taipei",
+      "name": "타이페이",
+      "type": "city",
+      "color": "green"
+  },
+  {
+      "id": "newyork",
+      "name": "뉴욕",
+      "type": "city",
+      "color": "red"
+  },
+  {
+      "id": "seoul",
+      "name": "서울",
+      "type": "city",
+      "color": "red"
+  },
+  {
+      "id": "paris",
+      "name": "파리",
+      "type": "city",
+      "color": "orange"
+  },
+  {
+      "id": "london",
+      "name": "런던",
+      "type": "city",
+      "color": "orange"
+  },
+  {
+      "id": "berlin",
+      "name": "베를린",
+      "type": "city",
+      "color": "deep-pink"
+  },
+  {
+      "id": "prague",
+      "name": "프라하",
+      "type": "city",
+      "color": "deep-pink"
+  },
+  {
+      "id": "geneva",
+      "name": "제네바",
+      "type": "city",
+      "color": "purple"
+  },
+  {
+      "id": "moscow",
+      "name": "모스크바",
+      "type": "city",
+      "color": "purple"
+  },
+  {
+      "id": "rome",
+      "name": "로마",
+      "type": "city",
+      "color": "purple"
+  },
+  {
+      "id": "tokyo",
+      "name": "도쿄",
+      "type": "city",
+      "color": "light-blue"
+  },
+  {
+      "id": "sydney",
+      "name": "시드니",
+      "type": "city",
+      "color": "light-blue"
+  },
+  {
+      "id": "quebec",
+      "name": "퀘백",
+      "type": "city",
+      "color": "blue"
+  },
+  {
+      "id": "saopaulo",
+      "name": "상파울로",
+      "type": "city",
+      "color": "blue"
+  },
+  {
+      "id": "bangkok",
+      "name": "방콕",
+      "type": "city",
+      "color": "light-green"
+  },
+  {
+      "id": "beijing",
+      "name": "베이징",
+      "type": "city",
+      "color": "light-green"
+  },
+  {
+      "id": "tahiti",
+      "name": "타히티",
+      "type": "resort",
+      "color": "pink"
+  },
+  {
+      "id": "bali",
+      "name": "발리",
+      "type": "resort",
+      "color": "pink"
+  },
+  {
+      "id": "hawaii",
+      "name": "하와이",
+      "type": "resort",
+      "color": "sky"
+  },
+  {
+      "id": "phuket",
+      "name": "푸켓",
+      "type": "resort",
+      "color": "sky"
+  },
+  {
+      "id": "dokdo",
+      "name": "독도",
+      "type": "resort",
+      "color": "sky"
+  }
+]

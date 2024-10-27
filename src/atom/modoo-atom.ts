@@ -1,5 +1,6 @@
-import { ModooGame, ModooGameMeta, ModooGameOption } from '@/domain/modoo'
+import { ModooCommand, ModooGame, ModooGameMeta, ModooGameOption } from '@/domain/modoo'
 import { setGame } from '@/storage/modoo-storage'
+import { atom } from 'jotai'
 import { atomEffect } from 'jotai-effect'
 import { atomWithStorage, atomWithReset } from 'jotai/utils'
 
@@ -39,3 +40,5 @@ export const currentGameEffect = atomEffect((get) => {
 export const currentGameAtom = atomWithReset<ModooGame | undefined>(undefined)
 
 export const gamesAtom = atomWithStorage<ModooGameMeta[]>('modooGames', [])
+
+export const commandsAtom = atom<ModooCommand[]>([])

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Poor_Story } from 'next/font/google'
 import '@/styles/globals.css'
+import '@/styles/shape.css'
 import { BoardgameThemeProvider } from '@/components/theme-provider'
 
 const font = Poor_Story({

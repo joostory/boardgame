@@ -1,0 +1,191 @@
+[
+  {
+      "id": 1,
+      "type": "gold",
+      "name": "월급부스터",
+      "description": "출발지를 지나갈때 월급이 2배",
+      "storable": true
+  },
+  {
+      "id": 2,
+      "type": "silver",
+      "name": "방패",
+      "description": "상대의 공격을 모두 방어",
+      "storable": true
+  },
+  {
+      "id": 3,
+      "type": "bronze",
+      "name": "올림픽 관광",
+      "description": "올림픽 관람권 획득! 올림픽 개최지로 이동",
+      "storable": false
+  },
+  {
+      "id": 4,
+      "type": "gold",
+      "name": "전염병",
+      "description": "전염병으로 통행료 50% 하락 동일 컬러 도시에도 발동",
+      "storable": false
+  },
+  {
+      "id": 5,
+      "type": "silver",
+      "name": "도시정전",
+      "description": "도시에 정전을 일으켜 무료통과",
+      "storable": false
+  },
+  {
+      "id": 6,
+      "type": "gold",
+      "name": "천사",
+      "description": "통행료 면제 + 공격방어",
+      "storable": true
+  },
+  {
+      "id": 7,
+      "type": "gold",
+      "name": "외계인 침공",
+      "description": "동일 컬러의 도시에 있는 건물 하나씩을 파괴",
+      "storable": false
+  },
+  {
+      "id": 8,
+      "type": "gold",
+      "name": "도시 체인지",
+      "description": "원하는 상대방 도시와 내 도시 맞교환",
+      "storable": false
+  },
+  {
+      "id": 9,
+      "type": "gold",
+      "name": "천사",
+      "description": "통행료 면제 + 공격방어",
+      "storable": true
+  },
+  {
+      "id": 10,
+      "type": "silver",
+      "name": "할인쿠폰",
+      "description": "통행료 50% 할인",
+      "storable": true
+  },
+  {
+      "id": 11,
+      "type": "bronze",
+      "name": "도시기부",
+      "description": "통 큰 기부! 내 도시를 다른 사람에게 기부",
+      "storable": false
+  },
+  {
+      "id": 12,
+      "type": "silver",
+      "name": "할인쿠폰",
+      "description": "통행료 50% 할인",
+      "storable": true
+  },
+  {
+      "id": 13,
+      "type": "bronze",
+      "name": "도시기부",
+      "description": "통 큰 기부! 내 도시를 다른 사람에게 기부",
+      "storable": false
+  },
+  {
+      "id": 14,
+      "type": "gold",
+      "name": "도시 체인지",
+      "description": "원하는 상대방 도시와 내 도시 맞교환",
+      "storable": false
+  },
+  {
+      "id": 15,
+      "type": "silver",
+      "name": "지진",
+      "description": "도시에 지진을 일으켜 건물 파괴",
+      "storable": false
+  },
+  {
+      "id": 16,
+      "type": "silver",
+      "name": "보너스 게임",
+      "description": "대박 찬스! 지금 즉시 보너스 게임으로 이동",
+      "storable": false
+  },
+  {
+      "id": 17,
+      "type": "silver",
+      "name": "출발지로 GO",
+      "description": "새 마음 새출발! 지금 즉시 출발지로 이동",
+      "storable": false
+  },
+  {
+      "id": 18,
+      "type": "silver",
+      "name": "방패",
+      "description": "상대의 공격을 모두 방어",
+      "storable": true
+  },
+  {
+      "id": 19,
+      "type": "bronze",
+      "name": "강제징수",
+      "description": "납세의 의무! 지금 즉시 국세청으로 이동",
+      "storable": false
+  },
+  {
+      "id": 20,
+      "type": "silver",
+      "name": "황사",
+      "description": "황사를 일으켜 통행료를 50% 하락",
+      "storable": false
+  },
+  {
+      "id": 21,
+      "type": "gold",
+      "name": "강제매각",
+      "description": "원하는 상대방의 도시를 강제매각",
+      "storable": false
+  },
+  {
+      "id": 22,
+      "type": "gold",
+      "name": "후원금",
+      "description": "모두에게서 10만 마블의 후원금 획득",
+      "storable": false
+  },
+  {
+      "id": 23,
+      "type": "bronze",
+      "name": "무인도 탐험",
+      "description": "무인도 탐험의 기회! 지금 즉시 무인도로 이동",
+      "storable": false
+  },
+  {
+      "id": 24,
+      "type": "silver",
+      "name": "무인도 탈출",
+      "description": "무인도에서 즉시 탈출",
+      "storable": false
+  },
+  {
+      "id": 25,
+      "type": "silver",
+      "name": "세계여행 초대장",
+      "description": "여행을 떠나요! 지금 즉시 세계여행으로 이동",
+      "storable": false
+  },
+  {
+      "id": 26,
+      "type": "bronze",
+      "name": "강제징수",
+      "description": "납세의 의무! 지금 즉시 국세청으로 이동",
+      "storable": false
+  },
+  {
+      "id": 27,
+      "type": "silver",
+      "name": "올림픽 개최",
+      "description": "올림픽 즉시 개최! 원하는 곳에 올림픽 개최",
+      "storable": false
+  }
+]

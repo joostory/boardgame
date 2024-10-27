@@ -46,6 +46,14 @@ export interface ModooHistory {
   time: Date
 }
 
+export interface ModooCommand {
+  id: number
+  name: string
+  description: string
+  type: string
+  storable: boolean
+}
+
 export function updatePlayer(players: ModooPlayer[], id: string, money: number): ModooPlayer {
   const index = players.findIndex(it => it.id == id)
   const updatedPlayer = players[index]
