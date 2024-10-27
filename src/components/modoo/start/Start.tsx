@@ -10,7 +10,6 @@ import { useAtom } from 'jotai'
 import { gameOptionAtom, gamesAtom } from '@/atom/modoo-atom'
 import { getGame, setGame } from '@/storage/modoo-storage'
 import { Input } from '@/components/ui/input'
-import CommandButton from '@/components/modoo/shared/CommandButton'
 
 function StartGameButton() {
   const [open, setOpen] = useState<boolean>(false)
@@ -114,9 +113,6 @@ export default function Start() {
         <div className='mt-10 flex justify-center gap-1'>
           <StartGameButton />
           <StartMenuButton />
-        </div>
-        <div className='mt-2 flex justify-center gap-1'>
-          <CommandButton />
         </div>
       </div>
 

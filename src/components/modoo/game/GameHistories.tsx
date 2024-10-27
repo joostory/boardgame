@@ -1,11 +1,10 @@
 import { currentGameAtom } from "@/atom/modoo-atom"
 import { Timeline, TimelineItem } from "@/components/common/Timeline"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { ModooGameStatus, ModooHistory, getTopPlayer, updatePlayer } from "@/domain/modoo"
 import { toTimeFormat } from "@/utils/dateFormat"
 import { toNumberFormat } from "@/utils/numberformat"
-import { ArrowUturnLeftIcon, CheckCircleIcon } from "@heroicons/react/24/solid"
+import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid"
 import { useAtom, useAtomValue } from "jotai"
 
 function Amount({amount}: {amount: number}) {
@@ -25,7 +24,6 @@ function HistoryRollbackButton({history}: {history: ModooHistory}) {
       return
     }
 
-    console.log(`${history.toName} -> ${history.fromName} : ${history.amount}`)
     const updatedPlayers = [...currentGame.players]
 
     if (history.toId != 'bank') {

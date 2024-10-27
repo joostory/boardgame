@@ -5,7 +5,7 @@
       "name": "땅",
       "constcost": 48000,
       "tollfee": 6000,
-      "acquistioncost": 96000,
+      "acquisitioncost": 96000,
       "sellingcost": 24000,
       "acquisitionable": true
   },
@@ -15,7 +15,7 @@
       "name": "빌라",
       "constcost": 20000,
       "tollfee": 18000,
-      "acquistioncost": 40000,
+      "acquisitioncost": 40000,
       "sellingcost": 10000,
       "acquisitionable": true
   },
@@ -25,7 +25,7 @@
       "name": "빌딩",
       "constcost": 60000,
       "tollfee": 46000,
-      "acquistioncost": 120000,
+      "acquisitioncost": 120000,
       "sellingcost": 30000,
       "acquisitionable": true
   },
@@ -35,7 +35,7 @@
       "name": "호텔",
       "constcost": 100000,
       "tollfee": 120000,
-      "acquistioncost": 200000,
+      "acquisitioncost": 200000,
       "sellingcost": 50000,
       "acquisitionable": true
   },
@@ -45,7 +45,7 @@
       "name": "랜드마크",
       "constcost": 100000,
       "tollfee": 450000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 50000,
       "acquisitionable": false
   },
@@ -55,7 +55,7 @@
       "name": "땅",
       "constcost": 54000,
       "tollfee": 8000,
-      "acquistioncost": 108000,
+      "acquisitioncost": 108000,
       "sellingcost": 27000,
       "acquisitionable": true
   },
@@ -65,7 +65,7 @@
       "name": "빌라",
       "constcost": 20000,
       "tollfee": 20000,
-      "acquistioncost": 40000,
+      "acquisitioncost": 40000,
       "sellingcost": 10000,
       "acquisitionable": true
   },
@@ -75,7 +75,7 @@
       "name": "빌딩",
       "constcost": 60000,
       "tollfee": 48000,
-      "acquistioncost": 120000,
+      "acquisitioncost": 120000,
       "sellingcost": 30000,
       "acquisitionable": true
   },
@@ -85,7 +85,7 @@
       "name": "호텔",
       "constcost": 100000,
       "tollfee": 124000,
-      "acquistioncost": 200000,
+      "acquisitioncost": 200000,
       "sellingcost": 50000,
       "acquisitionable": true
   },
@@ -95,7 +95,7 @@
       "name": "랜드마크",
       "constcost": 100000,
       "tollfee": 450000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 50000,
       "acquisitionable": false
   },
@@ -105,7 +105,7 @@
       "name": "땅",
       "constcost": 48000,
       "tollfee": 6000,
-      "acquistioncost": 96000,
+      "acquisitioncost": 96000,
       "sellingcost": 24000,
       "acquisitionable": true
   },
@@ -115,7 +115,7 @@
       "name": "빌라",
       "constcost": 20000,
       "tollfee": 18000,
-      "acquistioncost": 40000,
+      "acquisitioncost": 40000,
       "sellingcost": 10000,
       "acquisitionable": true
   },
@@ -125,7 +125,7 @@
       "name": "빌딩",
       "constcost": 60000,
       "tollfee": 46000,
-      "acquistioncost": 120000,
+      "acquisitioncost": 120000,
       "sellingcost": 30000,
       "acquisitionable": true
   },
@@ -135,7 +135,7 @@
       "name": "호텔",
       "constcost": 100000,
       "tollfee": 120000,
-      "acquistioncost": 200000,
+      "acquisitioncost": 200000,
       "sellingcost": 50000,
       "acquisitionable": true
   },
@@ -145,7 +145,7 @@
       "name": "랜드마크",
       "constcost": 100000,
       "tollfee": 450000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 50000,
       "acquisitionable": false
   },
@@ -155,7 +155,7 @@
       "name": "땅",
       "constcost": 20000,
       "tollfee": 2000,
-      "acquistioncost": 40000,
+      "acquisitioncost": 40000,
       "sellingcost": 10000,
       "acquisitionable": true
   },
@@ -165,7 +165,7 @@
       "name": "빌라",
       "constcost": 10000,
       "tollfee": 6000,
-      "acquistioncost": 20000,
+      "acquisitioncost": 20000,
       "sellingcost": 5000,
       "acquisitionable": true
   },
@@ -175,7 +175,7 @@
       "name": "빌딩",
       "constcost": 30000,
       "tollfee": 20000,
-      "acquistioncost": 60000,
+      "acquisitioncost": 60000,
       "sellingcost": 15000,
       "acquisitionable": true
   },
@@ -185,7 +185,7 @@
       "name": "호텔",
       "constcost": 50000,
       "tollfee": 56000,
-      "acquistioncost": 100000,
+      "acquisitioncost": 100000,
       "sellingcost": 25000,
       "acquisitionable": true
   },
@@ -195,7 +195,7 @@
       "name": "랜드마크",
       "constcost": 50000,
       "tollfee": 250000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 25000,
       "acquisitionable": false
   },
@@ -205,7 +205,7 @@
       "name": "땅",
       "constcost": 26000,
       "tollfee": 2000,
-      "acquistioncost": 52000,
+      "acquisitioncost": 52000,
       "sellingcost": 13000,
       "acquisitionable": true
   },
@@ -215,7 +215,7 @@
       "name": "빌라",
       "constcost": 10000,
       "tollfee": 8000,
-      "acquistioncost": 20000,
+      "acquisitioncost": 20000,
       "sellingcost": 5000,
       "acquisitionable": true
   },
@@ -225,7 +225,7 @@
       "name": "빌딩",
       "constcost": 30000,
       "tollfee": 22000,
-      "acquistioncost": 60000,
+      "acquisitioncost": 60000,
       "sellingcost": 15000,
       "acquisitionable": true
   },
@@ -235,7 +235,7 @@
       "name": "호텔",
       "constcost": 50000,
       "tollfee": 60000,
-      "acquistioncost": 100000,
+      "acquisitioncost": 100000,
       "sellingcost": 25000,
       "acquisitionable": true
   },
@@ -245,7 +245,7 @@
       "name": "랜드마크",
       "constcost": 50000,
       "tollfee": 250000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 25000,
       "acquisitionable": false
   },
@@ -255,7 +255,7 @@
       "name": "땅",
       "constcost": 72000,
       "tollfee": 14000,
-      "acquistioncost": 144000,
+      "acquisitioncost": 144000,
       "sellingcost": 36000,
       "acquisitionable": true
   },
@@ -265,7 +265,7 @@
       "name": "빌라",
       "constcost": 30000,
       "tollfee": 32000,
-      "acquistioncost": 60000,
+      "acquisitioncost": 60000,
       "sellingcost": 15000,
       "acquisitionable": true
   },
@@ -275,7 +275,7 @@
       "name": "빌딩",
       "constcost": 90000,
       "tollfee": 84000,
-      "acquistioncost": 180000,
+      "acquisitioncost": 180000,
       "sellingcost": 45000,
       "acquisitionable": true
   },
@@ -285,7 +285,7 @@
       "name": "호텔",
       "constcost": 150000,
       "tollfee": 220000,
-      "acquistioncost": 300000,
+      "acquisitioncost": 300000,
       "sellingcost": 75000,
       "acquisitionable": true
   },
@@ -295,7 +295,7 @@
       "name": "랜드마크",
       "constcost": 150000,
       "tollfee": 600000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 75000,
       "acquisitionable": false
   },
@@ -305,7 +305,7 @@
       "name": "땅",
       "constcost": 72000,
       "tollfee": 14000,
-      "acquistioncost": 144000,
+      "acquisitioncost": 144000,
       "sellingcost": 36000,
       "acquisitionable": true
   },
@@ -315,7 +315,7 @@
       "name": "빌라",
       "constcost": 30000,
       "tollfee": 32000,
-      "acquistioncost": 60000,
+      "acquisitioncost": 60000,
       "sellingcost": 15000,
       "acquisitionable": true
   },
@@ -325,7 +325,7 @@
       "name": "빌딩",
       "constcost": 90000,
       "tollfee": 84000,
-      "acquistioncost": 180000,
+      "acquisitioncost": 180000,
       "sellingcost": 45000,
       "acquisitionable": true
   },
@@ -335,7 +335,7 @@
       "name": "호텔",
       "constcost": 150000,
       "tollfee": 220000,
-      "acquistioncost": 300000,
+      "acquisitioncost": 300000,
       "sellingcost": 75000,
       "acquisitionable": true
   },
@@ -345,7 +345,7 @@
       "name": "랜드마크",
       "constcost": 150000,
       "tollfee": 600000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 75000,
       "acquisitionable": false
   },
@@ -355,7 +355,7 @@
       "name": "땅",
       "constcost": 94000,
       "tollfee": 20000,
-      "acquistioncost": 188000,
+      "acquisitioncost": 188000,
       "sellingcost": 47000,
       "acquisitionable": true
   },
@@ -365,7 +365,7 @@
       "name": "빌라",
       "constcost": 40000,
       "tollfee": 46000,
-      "acquistioncost": 80000,
+      "acquisitioncost": 80000,
       "sellingcost": 20000,
       "acquisitionable": true
   },
@@ -375,7 +375,7 @@
       "name": "빌딩",
       "constcost": 120000,
       "tollfee": 114000,
-      "acquistioncost": 240000,
+      "acquisitioncost": 240000,
       "sellingcost": 60000,
       "acquisitionable": true
   },
@@ -385,7 +385,7 @@
       "name": "호텔",
       "constcost": 200000,
       "tollfee": 270000,
-      "acquistioncost": 400000,
+      "acquisitioncost": 400000,
       "sellingcost": 100000,
       "acquisitionable": true
   },
@@ -395,7 +395,7 @@
       "name": "랜드마크",
       "constcost": 200000,
       "tollfee": 700000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 100000,
       "acquisitionable": false
   },
@@ -405,7 +405,7 @@
       "name": "땅",
       "constcost": 100000,
       "tollfee": 24000,
-      "acquistioncost": 200000,
+      "acquisitioncost": 200000,
       "sellingcost": 50000,
       "acquisitionable": true
   },
@@ -415,7 +415,7 @@
       "name": "빌라",
       "constcost": 40000,
       "tollfee": 48000,
-      "acquistioncost": 80000,
+      "acquisitioncost": 80000,
       "sellingcost": 20000,
       "acquisitionable": true
   },
@@ -425,7 +425,7 @@
       "name": "빌딩",
       "constcost": 120000,
       "tollfee": 118000,
-      "acquistioncost": 240000,
+      "acquisitioncost": 240000,
       "sellingcost": 60000,
       "acquisitionable": true
   },
@@ -435,7 +435,7 @@
       "name": "호텔",
       "constcost": 200000,
       "tollfee": 280000,
-      "acquistioncost": 400000,
+      "acquisitioncost": 400000,
       "sellingcost": 100000,
       "acquisitionable": true
   },
@@ -445,7 +445,7 @@
       "name": "랜드마크",
       "constcost": 200000,
       "tollfee": 700000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 100000,
       "acquisitionable": false
   },
@@ -455,7 +455,7 @@
       "name": "땅",
       "constcost": 124000,
       "tollfee": 34000,
-      "acquistioncost": 248000,
+      "acquisitioncost": 248000,
       "sellingcost": 62000,
       "acquisitionable": true
   },
@@ -465,7 +465,7 @@
       "name": "빌라",
       "constcost": 50000,
       "tollfee": 74000,
-      "acquistioncost": 100000,
+      "acquisitioncost": 100000,
       "sellingcost": 25000,
       "acquisitionable": true
   },
@@ -475,7 +475,7 @@
       "name": "빌딩",
       "constcost": 150000,
       "tollfee": 172000,
-      "acquistioncost": 300000,
+      "acquisitioncost": 300000,
       "sellingcost": 75000,
       "acquisitionable": true
   },
@@ -485,7 +485,7 @@
       "name": "호텔",
       "constcost": 250000,
       "tollfee": 390000,
-      "acquistioncost": 500000,
+      "acquisitioncost": 500000,
       "sellingcost": 125000,
       "acquisitionable": true
   },
@@ -495,7 +495,7 @@
       "name": "랜드마크",
       "constcost": 250000,
       "tollfee": 750000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 125000,
       "acquisitionable": false
   },
@@ -505,7 +505,7 @@
       "name": "땅",
       "constcost": 118000,
       "tollfee": 32000,
-      "acquistioncost": 236000,
+      "acquisitioncost": 236000,
       "sellingcost": 59000,
       "acquisitionable": true
   },
@@ -515,7 +515,7 @@
       "name": "빌라",
       "constcost": 50000,
       "tollfee": 70000,
-      "acquistioncost": 100000,
+      "acquisitioncost": 100000,
       "sellingcost": 25000,
       "acquisitionable": true
   },
@@ -525,7 +525,7 @@
       "name": "빌딩",
       "constcost": 150000,
       "tollfee": 168000,
-      "acquistioncost": 300000,
+      "acquisitioncost": 300000,
       "sellingcost": 75000,
       "acquisitionable": true
   },
@@ -535,7 +535,7 @@
       "name": "호텔",
       "constcost": 250000,
       "tollfee": 380000,
-      "acquistioncost": 500000,
+      "acquisitioncost": 500000,
       "sellingcost": 125000,
       "acquisitionable": true
   },
@@ -545,7 +545,7 @@
       "name": "랜드마크",
       "constcost": 250000,
       "tollfee": 750000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 125000,
       "acquisitionable": false
   },
@@ -555,7 +555,7 @@
       "name": "땅",
       "constcost": 146000,
       "tollfee": 48000,
-      "acquistioncost": 292000,
+      "acquisitioncost": 292000,
       "sellingcost": 73000,
       "acquisitionable": true
   },
@@ -565,7 +565,7 @@
       "name": "빌라",
       "constcost": 60000,
       "tollfee": 92000,
-      "acquistioncost": 120000,
+      "acquisitioncost": 120000,
       "sellingcost": 30000,
       "acquisitionable": true
   },
@@ -575,7 +575,7 @@
       "name": "빌딩",
       "constcost": 180000,
       "tollfee": 220000,
-      "acquistioncost": 360000,
+      "acquisitioncost": 360000,
       "sellingcost": 90000,
       "acquisitionable": true
   },
@@ -585,7 +585,7 @@
       "name": "호텔",
       "constcost": 300000,
       "tollfee": 470000,
-      "acquistioncost": 600000,
+      "acquisitioncost": 600000,
       "sellingcost": 150000,
       "acquisitionable": true
   },
@@ -595,7 +595,7 @@
       "name": "랜드마크",
       "constcost": 300000,
       "tollfee": 750000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 150000,
       "acquisitionable": false
   },
@@ -605,7 +605,7 @@
       "name": "땅",
       "constcost": 140000,
       "tollfee": 44000,
-      "acquistioncost": 280000,
+      "acquisitioncost": 280000,
       "sellingcost": 70000,
       "acquisitionable": true
   },
@@ -615,7 +615,7 @@
       "name": "빌라",
       "constcost": 60000,
       "tollfee": 86000,
-      "acquistioncost": 120000,
+      "acquisitioncost": 120000,
       "sellingcost": 30000,
       "acquisitionable": true
   },
@@ -625,7 +625,7 @@
       "name": "빌딩",
       "constcost": 180000,
       "tollfee": 200000,
-      "acquistioncost": 360000,
+      "acquisitioncost": 360000,
       "sellingcost": 90000,
       "acquisitionable": true
   },
@@ -635,7 +635,7 @@
       "name": "호텔",
       "constcost": 300000,
       "tollfee": 460000,
-      "acquistioncost": 600000,
+      "acquisitioncost": 600000,
       "sellingcost": 150000,
       "acquisitionable": true
   },
@@ -645,7 +645,7 @@
       "name": "랜드마크",
       "constcost": 300000,
       "tollfee": 750000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 150000,
       "acquisitionable": false
   },
@@ -655,7 +655,7 @@
       "name": "땅",
       "constcost": 146000,
       "tollfee": 48000,
-      "acquistioncost": 292000,
+      "acquisitioncost": 292000,
       "sellingcost": 73000,
       "acquisitionable": true
   },
@@ -665,7 +665,7 @@
       "name": "빌라",
       "constcost": 60000,
       "tollfee": 92000,
-      "acquistioncost": 120000,
+      "acquisitioncost": 120000,
       "sellingcost": 30000,
       "acquisitionable": true
   },
@@ -675,7 +675,7 @@
       "name": "빌딩",
       "constcost": 180000,
       "tollfee": 220000,
-      "acquistioncost": 360000,
+      "acquisitioncost": 360000,
       "sellingcost": 90000,
       "acquisitionable": true
   },
@@ -685,7 +685,7 @@
       "name": "호텔",
       "constcost": 300000,
       "tollfee": 470000,
-      "acquistioncost": 600000,
+      "acquisitioncost": 600000,
       "sellingcost": 150000,
       "acquisitionable": true
   },
@@ -695,7 +695,7 @@
       "name": "랜드마크",
       "constcost": 300000,
       "tollfee": 750000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 150000,
       "acquisitionable": false
   },
@@ -705,7 +705,7 @@
       "name": "땅",
       "constcost": 170000,
       "tollfee": 60000,
-      "acquistioncost": 340000,
+      "acquisitioncost": 340000,
       "sellingcost": 85000,
       "acquisitionable": true
   },
@@ -715,7 +715,7 @@
       "name": "빌라",
       "constcost": 70000,
       "tollfee": 130000,
-      "acquistioncost": 140000,
+      "acquisitioncost": 140000,
       "sellingcost": 35000,
       "acquisitionable": true
   },
@@ -725,7 +725,7 @@
       "name": "빌딩",
       "constcost": 210000,
       "tollfee": 290000,
-      "acquistioncost": 420000,
+      "acquisitioncost": 420000,
       "sellingcost": 105000,
       "acquisitionable": true
   },
@@ -735,7 +735,7 @@
       "name": "호텔",
       "constcost": 350000,
       "tollfee": 620000,
-      "acquistioncost": 700000,
+      "acquisitioncost": 700000,
       "sellingcost": 175000,
       "acquisitionable": true
   },
@@ -745,7 +745,7 @@
       "name": "랜드마크",
       "constcost": 350000,
       "tollfee": 700000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 175000,
       "acquisitionable": false
   },
@@ -755,7 +755,7 @@
       "name": "땅",
       "constcost": 164000,
       "tollfee": 56000,
-      "acquistioncost": 328000,
+      "acquisitioncost": 328000,
       "sellingcost": 82000,
       "acquisitionable": true
   },
@@ -765,7 +765,7 @@
       "name": "빌라",
       "constcost": 70000,
       "tollfee": 124000,
-      "acquistioncost": 140000,
+      "acquisitioncost": 140000,
       "sellingcost": 35000,
       "acquisitionable": true
   },
@@ -775,7 +775,7 @@
       "name": "빌딩",
       "constcost": 210000,
       "tollfee": 280000,
-      "acquistioncost": 420000,
+      "acquisitioncost": 420000,
       "sellingcost": 105000,
       "acquisitionable": true
   },
@@ -785,7 +785,7 @@
       "name": "호텔",
       "constcost": 350000,
       "tollfee": 600000,
-      "acquistioncost": 700000,
+      "acquisitioncost": 700000,
       "sellingcost": 175000,
       "acquisitionable": true
   },
@@ -795,7 +795,7 @@
       "name": "랜드마크",
       "constcost": 350000,
       "tollfee": 700000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 175000,
       "acquisitionable": false
   },
@@ -805,7 +805,7 @@
       "name": "땅",
       "constcost": 192000,
       "tollfee": 72000,
-      "acquistioncost": 384000,
+      "acquisitioncost": 384000,
       "sellingcost": 96000,
       "acquisitionable": true
   },
@@ -815,7 +815,7 @@
       "name": "빌라",
       "constcost": 80000,
       "tollfee": 148000,
-      "acquistioncost": 160000,
+      "acquisitioncost": 160000,
       "sellingcost": 40000,
       "acquisitionable": true
   },
@@ -825,7 +825,7 @@
       "name": "빌딩",
       "constcost": 240000,
       "tollfee": 320000,
-      "acquistioncost": 480000,
+      "acquisitioncost": 480000,
       "sellingcost": 120000,
       "acquisitionable": true
   },
@@ -835,7 +835,7 @@
       "name": "호텔",
       "constcost": 400000,
       "tollfee": 680000,
-      "acquistioncost": 800000,
+      "acquisitioncost": 800000,
       "sellingcost": 200000,
       "acquisitionable": true
   },
@@ -845,7 +845,7 @@
       "name": "랜드마크",
       "constcost": 400000,
       "tollfee": 600000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 200000,
       "acquisitionable": false
   },
@@ -855,7 +855,7 @@
       "name": "땅",
       "constcost": 200000,
       "tollfee": 80000,
-      "acquistioncost": 400000,
+      "acquisitioncost": 400000,
       "sellingcost": 100000,
       "acquisitionable": true
   },
@@ -865,7 +865,7 @@
       "name": "빌라",
       "constcost": 80000,
       "tollfee": 160000,
-      "acquistioncost": 160000,
+      "acquisitioncost": 160000,
       "sellingcost": 40000,
       "acquisitionable": true
   },
@@ -875,7 +875,7 @@
       "name": "빌딩",
       "constcost": 240000,
       "tollfee": 340000,
-      "acquistioncost": 480000,
+      "acquisitioncost": 480000,
       "sellingcost": 120000,
       "acquisitionable": true
   },
@@ -885,7 +885,7 @@
       "name": "호텔",
       "constcost": 400000,
       "tollfee": 700000,
-      "acquistioncost": 800000,
+      "acquisitioncost": 800000,
       "sellingcost": 200000,
       "acquisitionable": true
   },
@@ -895,7 +895,7 @@
       "name": "랜드마크",
       "constcost": 400000,
       "tollfee": 600000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 200000,
       "acquisitionable": false
   },
@@ -905,7 +905,7 @@
       "name": "땅",
       "constcost": 100000,
       "tollfee": 80000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 50000,
       "acquisitionable": false
   },
@@ -915,7 +915,7 @@
       "name": "파라솔",
       "constcost": 0,
       "tollfee": 160000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 0,
       "acquisitionable": false
   },
@@ -925,7 +925,7 @@
       "name": "방갈로",
       "constcost": 0,
       "tollfee": 320000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 0,
       "acquisitionable": false
   },
@@ -935,7 +935,7 @@
       "name": "땅",
       "constcost": 100000,
       "tollfee": 80000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 50000,
       "acquisitionable": false
   },
@@ -945,7 +945,7 @@
       "name": "파라솔",
       "constcost": 0,
       "tollfee": 160000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 0,
       "acquisitionable": false
   },
@@ -955,7 +955,7 @@
       "name": "방갈로",
       "constcost": 0,
       "tollfee": 320000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 0,
       "acquisitionable": false
   },
@@ -965,7 +965,7 @@
       "name": "땅",
       "constcost": 100000,
       "tollfee": 80000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 50000,
       "acquisitionable": false
   },
@@ -975,7 +975,7 @@
       "name": "파라솔",
       "constcost": 0,
       "tollfee": 160000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 0,
       "acquisitionable": false
   },
@@ -985,7 +985,7 @@
       "name": "방갈로",
       "constcost": 0,
       "tollfee": 320000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 0,
       "acquisitionable": false
   },
@@ -995,7 +995,7 @@
       "name": "땅",
       "constcost": 100000,
       "tollfee": 80000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 50000,
       "acquisitionable": false
   },
@@ -1005,7 +1005,7 @@
       "name": "파라솔",
       "constcost": 0,
       "tollfee": 160000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 0,
       "acquisitionable": false
   },
@@ -1015,7 +1015,7 @@
       "name": "방갈로",
       "constcost": 0,
       "tollfee": 320000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 0,
       "acquisitionable": false
   },
@@ -1025,7 +1025,7 @@
       "name": "땅",
       "constcost": 100000,
       "tollfee": 80000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 50000,
       "acquisitionable": false
   },
@@ -1035,7 +1035,7 @@
       "name": "파라솔",
       "constcost": 0,
       "tollfee": 160000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 0,
       "acquisitionable": false
   },
@@ -1045,7 +1045,7 @@
       "name": "방갈로",
       "constcost": 0,
       "tollfee": 320000,
-      "acquistioncost": 0,
+      "acquisitioncost": 0,
       "sellingcost": 0,
       "acquisitionable": false
   }
