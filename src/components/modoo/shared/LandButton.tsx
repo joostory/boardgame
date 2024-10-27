@@ -36,9 +36,13 @@ function LandCard({land}: {land: ModooLand}) {
   }, [land, allBuildings])
   const buildingCost = useMemo(() => {
     const currentBuildings = selectedBuildings.filter(it => it.landid == land.id)
+    let tollfee = currentBuildings.map(it => it.tollfee).reduce(sum, 0)
+    if (land.type != 'city') {
+      tollfee = currentBuildings.length > 0 ? currentBuildings.map(it => it.tollfee).sort((a, b) => b - a)[0] : 0
+    }
     return {
       constcost: currentBuildings.map(it => it.constcost).reduce(sum, 0),
-      tollfee: currentBuildings.map(it => it.tollfee).reduce(sum, 0),
+      tollfee: tollfee,
       acquisitioncost: currentBuildings.map(it => it.acquisitioncost).reduce(sum, 0),
       sellingcost: currentBuildings.map(it => it.sellingcost).reduce(sum, 0),
       inacquisitionable: currentBuildings.findIndex(it => !it.acquisitionable) >= 0,

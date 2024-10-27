@@ -55,6 +55,7 @@ export interface ModooCommand {
 }
 
 export interface ModooLand {
+  seq: number
   id: string
   name: string
   type: string
