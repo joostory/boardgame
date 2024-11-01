@@ -4,3 +4,14 @@
   mask: radial-gradient(calc(var(--c)*1%) 100% at 50% calc(100% + 100%*cos(asin(50/var(--c)))),#0000 calc(100% - 1px),#000);
   clip-path: ellipse(calc(var(--c)*1%) 100% at bottom);
 }
+
+.hflip {
+  animation-name: hflip;
+  animation-duration: 2s;
+}
+
+@keyframes hflip {
+  50% {
+    transform: rotate3d(0, 1, 0, 180deg)
+  }
+}

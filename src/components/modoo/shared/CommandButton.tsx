@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 
 function CommandCard({command}: {command: ModooCommand}) {
+  const [animationName, setAnimationName] = useState('hflip')
+
   const cardBackground = useMemo(() => {
     switch(command.type) {
       case 'gold':
@@ -21,9 +23,16 @@ function CommandCard({command}: {command: ModooCommand}) {
     }
   }, [command])
 
+  useEffect(() => {
+    setAnimationName('hflip')
+    setTimeout(() => {
+      setAnimationName('')
+    }, 2000)
+  }, [command])
+
   return (
     <div className="flex justify-center py-5">
-      <div className={cn("rounded-md w-[240px] h-[320px] shadow-lg p-4 relative", cardBackground)}>
+      <div className={cn("rounded-md w-[240px] h-[320px] shadow-lg p-4 relative", cardBackground, animationName)}>
         <div className="curved-rectangle absolute top-5 w-[208px] py-3 bg-white bg-opacity-30 text-center rounded shadow">
           <b className='text-lg text-black'>{command.name}</b>
         </div>
