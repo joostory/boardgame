@@ -3,6 +3,7 @@ import GamePlayers from "@/components/modoo/game/GamePlayers"
 import GameHeader from '@/components/modoo/game/GameHeader'
 import LandButton from "@/components/modoo/shared/LandButton"
 import CommandButton from "@/components/modoo/shared/CommandButton"
+import CubeButton from "@/components/modoo/shared/CubeButton"
 
 export default function Game() {
   return (
@@ -12,6 +13,7 @@ export default function Game() {
       <div className="flex justify-center gap-2 my-5">
         <LandButton />
         <CommandButton />
+        <CubeButton />
       </div>
 
       <GamePlayers />
