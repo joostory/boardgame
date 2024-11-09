@@ -1,4 +1,4 @@
-import { buildingsAtom, landsAtom } from "@/atom/modoo-atom"
+import { buildingsAtom, landsAtom, selectedBuildingsAtom } from "@/atom/modoo-atom"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -30,7 +30,7 @@ function ContentItem({label, children}: {label: string, children: ReactNode}) {
 
 function LandCard({land}: {land: ModooLand}) {
   const allBuildings = useAtomValue(buildingsAtom)
-  const [selectedBuildings, setSelectedBuildings] = useState<ModooBuilding[]>([])
+  const [selectedBuildings, setSelectedBuildings] = useAtom(selectedBuildingsAtom)
   const buildings = useMemo(() => {
     return allBuildings.filter(it => it.landid == land.id)
   }, [land, allBuildings])

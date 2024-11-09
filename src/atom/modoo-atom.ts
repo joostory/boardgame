@@ -46,3 +46,5 @@ export const commandsAtom = atom<ModooCommand[]>([])
 export const landsAtom = atom<ModooLand[]>([])
 
 export const buildingsAtom = atom<ModooBuilding[]>([])
+
+export const selectedBuildingsAtom = atom<ModooBuilding[]>([])
