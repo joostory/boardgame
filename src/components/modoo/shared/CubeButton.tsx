@@ -12,15 +12,11 @@ function Cube({value}: {value: number}) {
   const [showClass, setShowClass] = useState<string>(`show-${value}`)
 
   useEffect(() => {
-    [...Array(12)].forEach((_, index) => {
+    [...Array(6)].forEach((_, index) => {
       setTimeout(() => {
         setShowClass(`show-${getRandomCubeValue()}`)
       }, index * 300)
     })
-    setTimeout(() => {
-      setShowClass(`show-${value}`)
-    }, 3600)
-
   }, [value])
 
   return (
@@ -41,12 +37,15 @@ function CubeSpace() {
   const [cubeNumber, setCubeNumber] = useState<number>(1)
 
   function handleReset() {
-    setCubeNumber(getRandomCubeValue())
+    setCubeNumber(Math.random())
   }
 
   return (
     <>
-      <Cube value={cubeNumber}/>
+      <div className="flex">
+        <Cube value={cubeNumber}/>
+        <Cube value={cubeNumber}/>
+      </div>
 
       <Button variant={'secondary'} onClick={handleReset}>
         <ResetIcon /> 다시 던지기
