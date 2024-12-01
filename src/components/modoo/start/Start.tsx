@@ -107,7 +107,7 @@ export default function Start() {
     <div className='max-w-[640px] mx-auto pb-20'>
       <div className='text-center'>
         <div className='px-10'>
-          <img src='/modoo.png' className='w-full' alt='모두의 마블' />
+          <img src='/modoo/modoo.png' className='w-full' alt='모두의 마블' />
         </div>
         <h1 className='text-2xl'>모두의 마블 점수 계산기</h1>
         <div className='mt-10 flex justify-center gap-1'>

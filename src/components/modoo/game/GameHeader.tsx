@@ -124,7 +124,7 @@ export default function GameHeader() {
     <div className="mx-5 mb-10">
       <div className='flex flex-col items-center'>
         <div className='px-10'>
-          <img src='/modoo.png' className='w-full' alt='모두의 마블' />
+          <img src='/modoo/modoo.png' className='w-full' alt='모두의 마블' />
         </div>
         <h1 className='text-2xl mt-2'>
           모두의 마블 점수 계산기
