@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { memoryCardsAtom, revealedCardValuesAtom, selectedCardsAtom } from "@/atom/memory-atom"
 import { MemoryCard } from "@/domain/memory"
 import { cn } from "@/lib/utils"
@@ -6,6 +6,7 @@ import { useAtom } from "jotai"
 import { nanoid } from "nanoid"
 import { Button } from "@/components/ui/button"
 import { RocketLaunchIcon } from "@heroicons/react/24/solid"
+import { DateTime } from 'luxon'
 
 const VALUES = "🐵🐶🦁🐏🐯🐱🐔🐻🐢🐧🦄🐘🐇🐸🐭🐮"
 
@@ -40,10 +41,36 @@ function FlipCard({item}: {item: MemoryCard}) {
   )
 }
 
+function Timer({startTime}: {startTime: DateTime}) {
+  const [diff, setDiff] = useState("")
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setDiff(DateTime.now().diff(startTime).toFormat("hh:mm:ss"))
+    }, 1000)
+
+    setDiff(DateTime.now().diff(startTime).toFormat("hh:mm:ss"))
+
+    return () => {
+      clearInterval(id)
+    }
+  }, [startTime])
+
+  return (
+    <div className='flex flex-col justify-center m-2 items-center'>
+      <div className="text-4xl">
+        {diff}
+      </div>
+    </div>
+  )
+}
+
 export default function MemoryGame() {
   const [cards, setCards] = useAtom(memoryCardsAtom)
   const [selectedCards, setSelectedCards] = useAtom(selectedCardsAtom)
   const [revealedValues, setRevealedValues] = useAtom(revealedCardValuesAtom)
+  const [gameState, setGameState] = useState('READY')
+  const [startTime, setStartTime] = useState<DateTime>()
 
   function resetGame() {
     let list: MemoryCard[] = []
@@ -65,9 +92,11 @@ export default function MemoryGame() {
     setSelectedCards([])
   }
 
-  useEffect(() => {
+  function startGame() {
     resetGame()
-  }, [])
+    setGameState('STARTED')
+    setStartTime(DateTime.now())
+  }
 
   useEffect(() => {
     if (selectedCards.length < 2) {
@@ -83,7 +112,7 @@ export default function MemoryGame() {
   }, [selectedCards])
 
   return (
-    <div className="mt-5 mb-10">
+    <div className="mt-5 mb-10 mx-auto">
       <div className="mb-10">
         <div className='flex gap-4 justify-center items-center mb-5'>
           <div>
@@ -94,17 +123,24 @@ export default function MemoryGame() {
           </h1>
         </div>
         <div className='flex justify-center'>
-          <Button size={'lg'} variant={'primary'} onClick={() => resetGame()}>
+          <Button size={'lg'} variant={'primary'} onClick={() => startGame()}>
             <RocketLaunchIcon className='h-5 w-5' /> 새로운 게임 시작하기
           </Button>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-4 max-w-[528px] mx-auto">
-        {cards.map(it =>
-          <FlipCard key={it.id} item={it} />
-        )}
-      </div>
+      {gameState == 'STARTED' &&
+        <div>
+          <div>
+            <Timer startTime={startTime} />
+          </div>
+          <div className="flex flex-wrap gap-4 justify-center mx-5">
+            {cards.map(it =>
+              <FlipCard key={it.id} item={it} />
+            )}
+          </div>
+        </div>
+      }
     </div>
 
   )
