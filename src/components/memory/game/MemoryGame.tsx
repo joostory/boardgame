@@ -129,7 +129,7 @@ export default function MemoryGame() {
         </div>
       </div>
 
-      {gameState == 'STARTED' &&
+      {gameState == 'STARTED' && !!startTime &&
         <div>
           <div>
             <Timer startTime={startTime} />
