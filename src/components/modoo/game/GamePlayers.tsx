@@ -45,7 +45,7 @@ export default function GamePlayers() {
 
   return (
     <div className="flex justify-center items-center my-5 mx-5">
-      <ul className="divide-y w-full max-w-[640px] px-4 py-2 rounded-xl border">
+      <ul className="divide-y w-full px-4 py-2 rounded-xl border">
         {currentGame.players.map(it =>
           <li key={it.id} className="flex justify-between gap-x-6 py-6">
             <PlayerItem player={it} />
