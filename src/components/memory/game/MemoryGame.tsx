@@ -1,76 +1,44 @@
-import { useEffect, useMemo, useState } from "react"
-import { memoryCardsAtom, revealedCardValuesAtom, selectedCardsAtom } from "@/atom/memory-atom"
+import { useEffect, useState } from "react"
+import { gameStartTimeAtom, gameStateAtom, memoryCardsAtom, revealedCardValuesAtom, selectedCardsAtom, selectedCountAtom } from "@/atom/memory-atom"
 import { MemoryCard } from "@/domain/memory"
 import { cn } from "@/lib/utils"
-import { useAtom } from "jotai"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { nanoid } from "nanoid"
 import { Button } from "@/components/ui/button"
 import { RocketLaunchIcon } from "@heroicons/react/24/solid"
 import { DateTime } from 'luxon'
+import FlipCard from "@/components/memory/game/FlipCard"
+import Timer from "@/components/memory/game/Timer"
+import Counter from "@/components/memory/game/Counter"
 
 const VALUES = "🐵🐶🦁🐏🐯🐱🐔🐻🐢🐧🦄🐘🐇🐸🐭🐮"
 
-function FlipCard({item}: {item: MemoryCard}) {
-  const [selectedCards, setSelectedCards] = useAtom(selectedCardsAtom)
-  const [revealedValues, setRevealedValues] = useAtom(revealedCardValuesAtom)
-  const selected = selectedCards.findIndex(it => it.id == item.id) >= 0
-  const revealed = revealedValues.findIndex(it => it == item.value) >= 0
 
-
-  function handleSelect() {
-    if (selectedCards.length >= 2) {
-      return
-    }
-
-    setSelectedCards([...selectedCards, item])
-  }
+function GameContent() {
+  const cards = useAtomValue(memoryCardsAtom)
 
   return (
-    <div className={cn("rounded-md w-[120px] h-[160px] transition-all flip-card cursor-pointer", (selected || revealed) && "flip")} onClick={handleSelect}>
-      <div className="flip-card-inner rounded-md">
-        <div className="flip-card-back rounded-md flex items-center justify-center bg-neutral-800 shadow-md">
-          <img src="/memory/memory_background.png" className="w-24 h-24" />
-        </div>
-        <div className={cn("flip-card-front rounded-md bg-neutral-600 shadow-md", revealed && "bg-blue-500")}>
-          <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-7xl">
-            {item.value}
-          </span>
-        </div>
+    <div>
+      <div className='flex justify-center items-center m-2 gap-5'>
+        <Timer />
+        <Counter />
       </div>
-    </div>
-  )
-}
-
-function Timer({startTime}: {startTime: DateTime}) {
-  const [diff, setDiff] = useState("")
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setDiff(DateTime.now().diff(startTime).toFormat("hh:mm:ss"))
-    }, 1000)
-
-    setDiff(DateTime.now().diff(startTime).toFormat("hh:mm:ss"))
-
-    return () => {
-      clearInterval(id)
-    }
-  }, [startTime])
-
-  return (
-    <div className='flex flex-col justify-center m-2 items-center'>
-      <div className="text-4xl">
-        {diff}
+      <div className="flex flex-wrap gap-4 justify-center mx-5">
+        {cards.map(it =>
+          <FlipCard key={it.id} item={it} />
+        )}
       </div>
     </div>
   )
 }
 
 export default function MemoryGame() {
-  const [cards, setCards] = useAtom(memoryCardsAtom)
+  const setCards = useSetAtom(memoryCardsAtom)
   const [selectedCards, setSelectedCards] = useAtom(selectedCardsAtom)
   const [revealedValues, setRevealedValues] = useAtom(revealedCardValuesAtom)
-  const [gameState, setGameState] = useState('READY')
-  const [startTime, setStartTime] = useState<DateTime>()
+  const setSelectedCount = useSetAtom(selectedCountAtom)
+  const [gameState, setGameState] = useAtom(gameStateAtom)
+  const [startTime, setStartTime] = useAtom(gameStartTimeAtom)
 
   function resetGame() {
     let list: MemoryCard[] = []
@@ -88,6 +56,7 @@ export default function MemoryGame() {
     }
     list.sort(() => Math.random() - 0.5)
     setCards(list)
+    setSelectedCount(0)
     setRevealedValues([])
     setSelectedCards([])
   }
@@ -97,6 +66,12 @@ export default function MemoryGame() {
     setGameState('STARTED')
     setStartTime(DateTime.now())
   }
+
+  useEffect(() => {
+    if (revealedValues.length * 2 == VALUES.length) {
+      setGameState("DONE")
+    }
+  }, [revealedValues])
 
   useEffect(() => {
     if (selectedCards.length < 2) {
@@ -129,19 +104,9 @@ export default function MemoryGame() {
         </div>
       </div>
 
-      {gameState == 'STARTED' && !!startTime &&
-        <div>
-          <div>
-            <Timer startTime={startTime} />
-          </div>
-          <div className="flex flex-wrap gap-4 justify-center mx-5">
-            {cards.map(it =>
-              <FlipCard key={it.id} item={it} />
-            )}
-          </div>
-        </div>
+      {(gameState == 'STARTED' || gameState == 'DONE') && !!startTime &&
+        <GameContent />
       }
     </div>
-
   )
 }
