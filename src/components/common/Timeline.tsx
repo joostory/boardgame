@@ -19,7 +19,7 @@ export function TimelineItem({
 }) {
   return (
     <li
-      className="grid justify-center items-center flex-shrink-0"
+      className="grid justify-center items-center shrink-0"
       style={{
         fontSize: 12,
         gridTemplateRows: '10px 20px 10px 1fr',

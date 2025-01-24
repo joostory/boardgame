@@ -15,11 +15,11 @@ function CommandCard({command}: {command: ModooCommand}) {
   const cardBackground = useMemo(() => {
     switch(command.type) {
       case 'gold':
-        return 'bg-gradient-to-r from-amber-200 to-yellow-500'
+        return 'bg-linear-to-r from-amber-200 to-yellow-500'
       case 'silver':
-        return 'bg-gradient-to-r from-slate-300 to-slate-500'
+        return 'bg-linear-to-r from-slate-300 to-slate-500'
       case 'bronze':
-        return 'bg-gradient-to-r from-red-500 to-orange-500'
+        return 'bg-linear-to-r from-red-500 to-orange-500'
     }
   }, [command])
 
@@ -33,14 +33,14 @@ function CommandCard({command}: {command: ModooCommand}) {
   return (
     <div className="flex justify-center py-5">
       <div className={cn("rounded-md w-[240px] h-[320px] shadow-lg p-4 relative", cardBackground, animationName)}>
-        <div className="curved-rectangle absolute top-5 w-[208px] py-3 bg-white bg-opacity-30 text-center rounded shadow">
+        <div className="curved-rectangle absolute top-5 w-[208px] py-3 bg-white bg-opacity-30 text-center rounded shadow-sm">
           <b className='text-lg text-black'>{command.name}</b>
         </div>
         <img
           src='/modoo/chance_background.png'
           className="opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-20"
         />
-        <div className="rounded-md py-2 px-5 bg-slate-100 flex justify-center text-center items-center w-[208px] h-[100px] absolute bottom-5 bg-opacity-70 shadow">
+        <div className="rounded-md py-2 px-5 bg-slate-100 flex justify-center text-center items-center w-[208px] h-[100px] absolute bottom-5 bg-opacity-70 shadow-sm">
           <span className="text-sm text-slate-900">{command.description}</span>
         </div>
         {command.storable &&

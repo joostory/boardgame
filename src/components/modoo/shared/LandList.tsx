@@ -12,7 +12,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai"
 
 function LandItem({land, onSelect}: {land: ModooLand, onSelect: {(land: ModooLand): void}}) {
   return (
-    <Button variant={'outline'} className={cn("py-1 px-2 shadow-sm rounded text-slate-900", getLandColorBgClass(land.color))} onClick={() => onSelect(land)}>
+    <Button variant={'outline'} className={cn("py-1 px-2 shadow-xs rounded text-slate-900", getLandColorBgClass(land.color))} onClick={() => onSelect(land)}>
       {land.name}
     </Button>
   )
@@ -60,7 +60,7 @@ function LandCard({land}: {land: ModooLand}) {
   const bgClass = getLandColorBgClass(land.color)
 
   return (
-    <div className={cn("rounded shadow bg-opacity-10", bgClass)}>
+    <div className={cn("rounded shadow-sm bg-opacity-10", bgClass)}>
       <div className={cn("px-4 py-2 rounded-t text-slate-900 font-bold text-lg", bgClass)}>
         {land.name}
       </div>
