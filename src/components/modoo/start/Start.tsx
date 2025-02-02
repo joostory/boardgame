@@ -1,15 +1,16 @@
 import StartOptionsForm from '@/components/modoo/start/StartOptionsForm'
-import { EllipsisVerticalIcon, RocketLaunchIcon } from '@heroicons/react/24/solid'
+import { EllipsisVerticalIcon, RocketLaunchIcon, ChartBarIcon } from '@heroicons/react/24/solid'
 import GameList from '@/components/modoo/game/GameList'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { ChangeEvent, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { downlaodFile } from '@/lib/downloadFile'
 import { useAtom } from 'jotai'
 import { gameOptionAtom, gamesAtom } from '@/atom/modoo-atom'
 import { getGame, setGame } from '@/storage/modoo-storage'
 import { Input } from '@/components/ui/input'
+import GameStatistics from '@/components/modoo/game/GameStatistics'
 
 function StartGameButton() {
   const [open, setOpen] = useState<boolean>(false)
@@ -27,6 +28,28 @@ function StartGameButton() {
         </DialogHeader>
 
         <StartOptionsForm />
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function GameStatisticsButton() {
+  const [open, setOpen] = useState<boolean>(false)
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size='xl' variant={'outline'} className='px-3'>
+          <ChartBarIcon className='w-6 h-full'/>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>게임 통계</DialogTitle>
+          <DialogDescription>지난 게임 통계를 살펴봅니다.</DialogDescription>
+        </DialogHeader>
+
+        <GameStatistics />
       </DialogContent>
     </Dialog>
   )
@@ -112,6 +135,7 @@ export default function Start() {
         <h1 className='text-2xl'>모두의 마블 점수 계산기</h1>
         <div className='mt-10 flex justify-center gap-1'>
           <StartGameButton />
+          <GameStatisticsButton />
           <StartMenuButton />
         </div>
       </div>
