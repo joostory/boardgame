@@ -32,6 +32,15 @@ function GameContent() {
   )
 }
 
+// Fisher-Yates Shuffle Algorithm
+function shuffleArray<T>(array: T[]): T[] {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 export default function MemoryGame() {
   const setCards = useSetAtom(memoryCardsAtom)
   const [selectedCards, setSelectedCards] = useAtom(selectedCardsAtom)
@@ -54,8 +63,9 @@ export default function MemoryGame() {
         revealed: false
       })
     }
-    list.sort(() => Math.random() - 0.5)
-    setCards(list)
+    // 피셔-예이츠 셔플 알고리즘을 사용하여 배열을 섞음
+    const shuffledList = shuffleArray(list);
+    setCards(shuffledList)
     setSelectedCount(0)
     setRevealedValues([])
     setSelectedCards([])
