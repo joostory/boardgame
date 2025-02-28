@@ -10,6 +10,7 @@ interface BoardGame {
 const GAME_LIST: BoardGame[] = [
   {title: '모두의 마블', iconPath: '/modoo/modoo.png', path: '/modoo'},
   {title: '메모리 게임', iconPath: '/memory/memory_icon.png', path: '/memory'},
+  {title: '사다리 타기', iconPath: '/ladder/ladder_icon.png', path: '/ladder'},
 ]
 
 export default function Home() {
