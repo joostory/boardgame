@@ -1,0 +1,3 @@
+:HL["/_next/static/chunks/871705b74da887f9.css","style"]
+:HL["/_next/static/media/752a8bf7d0017e24-s.p.c5da10ec.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"buildId":"9k9jd7TkaFEUcgK2Ln3Sq","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"sky-jumper","paramType":null,"paramKey":"sky-jumper","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
