@@ -92,7 +92,6 @@ export default function GameStatistics() {
         <Bar
           dataKey="value"
           fill="var(--color-value)"
-          layout='vertical'
           radius={4}
         >
           <LabelList
