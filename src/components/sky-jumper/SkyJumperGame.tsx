@@ -54,6 +54,7 @@ export default function SkyJumperGame() {
     const scoreRef = useRef(0)
     const cameraYRef = useRef(0)
     const playingRef = useRef(false)
+    const lastTimeRef = useRef<number>(0)
 
     // Refs for direct DOM manipulation
     const playerElemRef = useRef<HTMLDivElement>(null)
@@ -77,6 +78,7 @@ export default function SkyJumperGame() {
         scoreRef.current = 0
         cameraYRef.current = 0
         playingRef.current = true
+        lastTimeRef.current = performance.now()
 
         // Initial platforms
         const initialPlatforms = [
@@ -128,16 +130,24 @@ export default function SkyJumperGame() {
         }
     }
 
-    const gameLoop = () => {
+    const gameLoop = (time: number) => {
         if (!playingRef.current) return
+
+        // Calculate delta time
+        // Target 60 FPS (16.67ms per frame)
+        const deltaTime = (time - lastTimeRef.current) / (1000 / 60)
+        lastTimeRef.current = time
+
+        // Cap deltaTime to prevent huge jumps
+        const cappedDeltaTime = Math.min(deltaTime, 3)
 
         const player = playerRef.current
         const currentPlatforms = platformsRef.current
 
         // Physics
-        player.vy += GRAVITY
-        player.y += player.vy
-        player.x += player.vx
+        player.vy += GRAVITY * cappedDeltaTime
+        player.y += player.vy * cappedDeltaTime
+        player.x += player.vx * cappedDeltaTime
 
         // Wall collision (wrap around)
         if (player.x < -PLAYER_SIZE / 2) player.x = GAME_WIDTH - PLAYER_SIZE / 2
