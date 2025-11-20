@@ -4,4 +4,4 @@
 :HL["/memory/memory_icon.png","image"]
 :HL["/ladder/ladder_icon.png","image"]
 :HL["/sky-jumper/icon.png","image"]
-0:{"buildId":"9k9jd7TkaFEUcgK2Ln3Sq","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"JfJCCU2uVO9wd21C3ODdX","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
