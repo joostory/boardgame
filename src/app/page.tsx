@@ -25,9 +25,9 @@ export default function Home() {
           </p>
         </div>
 
-        <div className='flex gap-4 max-w-[620px]'>
+        <div className='flex gap-4 max-w-[620px] flex-wrap justify-center'>
           {GAME_LIST.map(it =>
-            <Link key={it.path} href={it.path} className='transition-all flex items-center justify-center rounded-lg bg-neutral-800 w-[200px] h-[200px] shadow-xs hover:shadow-lg hover:scale-105 hover:bg-neutral-700'>
+            <Link key={it.path} href={it.path} className='transition-all flex items-center justify-center rounded-lg bg-neutral-800 w-[150px] h-[150px] shadow-xs hover:shadow-lg hover:scale-105 hover:bg-neutral-700'>
               <img src={it.iconPath} className='w-[180px]' alt={it.title} />
             </Link>
           )}
