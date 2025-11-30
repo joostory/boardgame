@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[74878,["/_next/static/chunks/585b0255444f2cfe.js","/_next/static/chunks/48bfb1d26a9381b3.js","/_next/static/chunks/c2b5d3e4b1117a4b.js","/_next/static/chunks/3c82ccbfe51462ec.js"],"default"]
+3:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/64c0a5e3a0354479.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"buildId":"EyyqAXxTLh2h1ncQcOlBO","rsc":["$","$1","c",{"children":[["$","div",null,{"className":"container mx-auto py-8 min-h-screen","children":[["$","h1",null,{"className":"text-3xl font-bold mb-6 text-center","children":"직소 퍼즐 (Jigsaw Puzzle)"}],["$","$L2",null,{}]]}],[["$","script","script-0",{"src":"/_next/static/chunks/48bfb1d26a9381b3.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/c2b5d3e4b1117a4b.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/3c82ccbfe51462ec.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"loading":null,"isPartial":false}
+5:null
