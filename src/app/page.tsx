@@ -12,6 +12,7 @@ const GAME_LIST: BoardGame[] = [
   { title: '메모리 게임', iconPath: '/memory/memory_icon.png', path: '/memory' },
   { title: '사다리 타기', iconPath: '/ladder/ladder_icon.png', path: '/ladder' },
   { title: '스카이 점퍼', iconPath: '/sky-jumper/icon.png', path: '/sky-jumper' },
+  { title: '직소 퍼즐', iconPath: '/jigsaw/icon.png', path: '/jigsaw' },
 ]
 
 export default function Home() {
