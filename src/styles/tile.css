@@ -40,24 +40,14 @@
   height: 100%;
   border-radius: 6px;
   background: #fdfcf7; /* Creamy Ivory color */
-  border: 2px solid #e7e3d4;
+  border: 1px solid #dcd8c8;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 3.8rem; /* Scaled up icon font size */
   line-height: 1;
   color: #111;
-  
-  /* 3D Side extrusion represented using negative offsets (Top-Left direction) */
-  box-shadow: 
-    -1px -1px 0px #e0dbcb,
-    -2px -2px 0px #ccc7b6,
-    -3px -3px 0px #b8b2a1,
-    -4px -4px 0px #1e5a36,  /* Jade Layer 1 */
-    -5px -5px 0px #1a5030,  /* Jade Layer 2 */
-    -6px -6px 0px #17472a,  /* Jade Layer 3 */
-    -7px -7px 0px #11351f,  /* Jade Layer 4 */
-    -8px -8px 8px rgba(0, 0, 0, 0.65); /* Bottom Shadow offset also adjusted */
+  transition: all 0.15s ease;
 }
 
 /* Open/Selectable tile interaction states */
@@ -67,49 +57,110 @@
 
 .mahjong-tile.tile-open:hover .mahjong-tile-inner {
   background: #ffffff;
-  /* Lift up effect in 3D (towards Top-Left) */
-  transform: translate(3px, 3px);
-  box-shadow: 
-    -2px -2px 0px #e0dbcb,
-    -3px -3px 0px #ccc7b6,
-    -4px -4px 0px #b8b2a1,
-    -5px -5px 0px #246d41,
-    -6px -6px 0px #1d5734,
-    -7px -7px 0px #17472a,
-    -8px -8px 0px #123d24,
-    -11px -11px 16px rgba(0, 0, 0, 0.75);
+  transform: translateY(-2px); /* Gentle float up */
 }
 
-/* Tile Selection state - Vibrant golden glow and highlight */
+/* Tile Selection state - Elegant thin border highlight and flat yellow glow */
 .mahjong-tile.tile-selected .mahjong-tile-inner {
   background: #fffdf5;
-  border-color: #ffd700;
-  transform: translate(4px, 4px);
-  box-shadow: 
-    0 0 16px #ffd700,
-    -4px -4px 0px #e6c200,
-    -5px -5px 0px #246d41,
-    -6px -6px 0px #1d5734,
-    -7px -7px 0px #17472a,
-    -8px -8px 0px #11351f,
-    -12px -12px 20px rgba(255, 215, 0, 0.65);
+  border-color: #f59e0b;
+  outline: 2px solid #f59e0b;
+  transform: translateY(-3px);
 }
 
-/* Locked/Blocked tile visual presentation */
+/* Locked/Blocked tile visual presentation - subtle grey tint and low contrast */
 .mahjong-tile.tile-locked {
-  filter: brightness(0.7) contrast(0.95);
+  filter: brightness(0.8) contrast(0.9) grayscale(0.2);
   pointer-events: none; /* Make unclickable */
 }
 
 .mahjong-tile.tile-locked .mahjong-tile-inner {
-  background: #eae7db;
-  border-color: #d2cebf;
-  box-shadow: 
-    -1px -1px 0px #c0bcb0,
-    -2px -2px 0px #aea99b,
-    -3px -3px 0px #133c24,
-    -4px -4px 0px #0e2a19,
-    -5px -5px 6px rgba(0, 0, 0, 0.5);
+  background: #f1ede2;
+  border-color: #d1ccbc;
+}
+
+/* Hint Animation - Pulsating Golden Aura */
+@keyframes hint-pulse {
+  0% {
+    transform: translateY(0);
+    outline: 0px solid #3b82f6;
+  }
+  50% {
+    transform: translateY(-3px);
+    outline: 3px solid #3b82f6;
+  }
+  100% {
+    transform: translateY(0);
+    outline: 0px solid #3b82f6;
+  }
+}
+
+.mahjong-tile.tile-hint .mahjong-tile-inner {
+  animation: hint-pulse 1.2s infinite ease-in-out;
+}
+
+/* Custom styles for tile unicode symbols depending on group */
+.tile-symbol-character {
+  color: #c2185b; /* Reddish tone for characters */
+}
+
+.tile-symbol-bamboo {
+  color: #2e7d32; /* Greenish tone for bamboo */
+}
+
+.tile-symbol-circle {
+  color: #1565c0; /* Bluish tone for circles */
+}
+
+.tile-symbol-wind {
+  color: #37474f; /* Slate color for winds */
+}
+
+.tile-symbol-dragon {
+  color: #d32f2f; /* Deep red for dragons (some might be green/white styled inside unicode) */
+}
+
+.tile-symbol-flower {
+  color: #8e24aa; /* Purple for flower */
+}
+
+.tile-symbol-season {
+  color: #e65100; /* Orange for seasons */
+}
+
+/* Dynamic Z-Layer shadows to represent physical heights organically */
+/* Higher layers have larger, softer shadows and slightly brighter faces */
+.z-layer-0 {
+  filter: brightness(0.9);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+.z-layer-1 {
+  filter: brightness(0.95);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.45);
+}
+.z-layer-2 {
+  filter: brightness(1.0);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+.z-layer-3 {
+  filter: brightness(1.03);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.55);
+}
+.z-layer-4 {
+  filter: brightness(1.06);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+}
+.z-layer-5 {
+  filter: brightness(1.09);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65);
+}
+.z-layer-6 {
+  filter: brightness(1.12);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
+}
+.z-layer-7 {
+  filter: brightness(1.15);
+  box-shadow: 0 28px 56px rgba(0, 0, 0, 0.75);
 }
 
 /* Hint Animation - Pulsating Golden Aura */
