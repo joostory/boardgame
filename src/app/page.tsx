@@ -13,6 +13,7 @@ const GAME_LIST: BoardGame[] = [
   { title: '사다리 타기', iconPath: '/ladder/ladder_icon.png', path: '/ladder' },
   { title: '스카이 점퍼', iconPath: '/sky-jumper/icon.png', path: '/sky-jumper' },
   { title: '직소 퍼즐', iconPath: '/jigsaw/icon.png', path: '/jigsaw' },
+  { title: '마작 솔리테어', iconPath: '/mahjongg/icon.png', path: '/mahjongg' },
 ]
 
 export default function Home() {

@@ -1,0 +1,255 @@
+/* Mahjongg Board & Tile 3D Styling */
+
+.mahjong-board-container {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.mahjong-board {
+  position: relative;
+  background: radial-gradient(circle, #1a4a2f 0%, #0c2618 100%);
+  border: 12px solid #2e1d11;
+  border-radius: 16px;
+  box-shadow: 
+    inset 0 0 40px rgba(0, 0, 0, 0.8),
+    0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transition: transform 0.5s ease;
+}
+
+/* Base Mahjong Tile structure */
+.mahjong-tile {
+  position: absolute;
+  width: 72px;  /* Resized from 44px to 72px */
+  height: 96px; /* Resized from 56px to 96px */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  cursor: default;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform-style: preserve-3d;
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+}
+
+/* Tile Material Design (Ivory Front + Jade Green Back) */
+.mahjong-tile-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  background: #fdfcf7; /* Creamy Ivory color */
+  border: 1px solid #dcd8c8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.8rem; /* Scaled up icon font size */
+  line-height: 1;
+  color: #111;
+  transition: all 0.15s ease;
+}
+
+/* Open/Selectable tile interaction states */
+.mahjong-tile.tile-open {
+  cursor: pointer;
+}
+
+.mahjong-tile.tile-open:hover .mahjong-tile-inner {
+  background: #ffffff;
+  transform: translateY(-2px); /* Gentle float up */
+}
+
+/* Tile Selection state - Elegant thin border highlight and flat yellow glow */
+.mahjong-tile.tile-selected .mahjong-tile-inner {
+  background: #fffdf5;
+  border-color: #f59e0b;
+  outline: 2px solid #f59e0b;
+  transform: translateY(-3px);
+}
+
+/* Locked/Blocked tile visual presentation - subtle grey tint and low contrast */
+.mahjong-tile.tile-locked {
+  filter: brightness(0.8) contrast(0.9) grayscale(0.2);
+  pointer-events: none; /* Make unclickable */
+}
+
+.mahjong-tile.tile-locked .mahjong-tile-inner {
+  background: #f1ede2;
+  border-color: #d1ccbc;
+}
+
+/* Hint Animation - Pulsating Golden Aura */
+@keyframes hint-pulse {
+  0% {
+    transform: translateY(0);
+    outline: 0px solid #3b82f6;
+  }
+  50% {
+    transform: translateY(-3px);
+    outline: 3px solid #3b82f6;
+  }
+  100% {
+    transform: translateY(0);
+    outline: 0px solid #3b82f6;
+  }
+}
+
+.mahjong-tile.tile-hint .mahjong-tile-inner {
+  animation: hint-pulse 1.2s infinite ease-in-out;
+}
+
+/* Custom styles for tile unicode symbols depending on group */
+.tile-symbol-character {
+  color: #c2185b; /* Reddish tone for characters */
+}
+
+.tile-symbol-bamboo {
+  color: #2e7d32; /* Greenish tone for bamboo */
+}
+
+.tile-symbol-circle {
+  color: #1565c0; /* Bluish tone for circles */
+}
+
+.tile-symbol-wind {
+  color: #37474f; /* Slate color for winds */
+}
+
+.tile-symbol-dragon {
+  color: #d32f2f; /* Deep red for dragons (some might be green/white styled inside unicode) */
+}
+
+.tile-symbol-flower {
+  color: #8e24aa; /* Purple for flower */
+}
+
+.tile-symbol-season {
+  color: #e65100; /* Orange for seasons */
+}
+
+/* Dynamic Z-Layer shadows to represent physical heights organically */
+/* Higher layers have larger, softer shadows and slightly brighter faces */
+.z-layer-0 {
+  filter: brightness(0.9);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+.z-layer-1 {
+  filter: brightness(0.95);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.45);
+}
+.z-layer-2 {
+  filter: brightness(1.0);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+.z-layer-3 {
+  filter: brightness(1.03);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.55);
+}
+.z-layer-4 {
+  filter: brightness(1.06);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+}
+.z-layer-5 {
+  filter: brightness(1.09);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65);
+}
+.z-layer-6 {
+  filter: brightness(1.12);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
+}
+.z-layer-7 {
+  filter: brightness(1.15);
+  box-shadow: 0 28px 56px rgba(0, 0, 0, 0.75);
+}
+
+/* Hint Animation - Pulsating Golden Aura */
+@keyframes hint-pulse {
+  0% {
+    box-shadow: 
+      0 0 0px #3b82f6,
+      1px 1px 0px #e0dbcb,
+      2px 2px 0px #ccc7b6,
+      3px 3px 0px #1e5a36,
+      4px 4px 0px #17472a,
+      5px 5px 0px #0e2f1b,
+      6px 6px 4px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 
+      0 0 20px #3b82f6,
+      0 0 35px rgba(59, 130, 246, 0.6),
+      1px 1px 0px #ffffff,
+      2px 2px 0px #e0dbcb,
+      3px 3px 0px #246d41,
+      4px 4px 0px #1d5734,
+      5px 5px 0px #123d24,
+      8px 8px 10px rgba(59, 130, 246, 0.4);
+    transform: translate(-2px, -2px);
+  }
+  100% {
+    box-shadow: 
+      0 0 0px #3b82f6,
+      1px 1px 0px #e0dbcb,
+      2px 2px 0px #ccc7b6,
+      3px 3px 0px #1e5a36,
+      4px 4px 0px #17472a,
+      5px 5px 0px #0e2f1b,
+      6px 6px 4px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.mahjong-tile.tile-hint .mahjong-tile-inner {
+  border-color: #3b82f6;
+  animation: hint-pulse 1.2s infinite ease-in-out;
+}
+
+/* Custom styles for tile unicode symbols depending on group */
+.tile-symbol-character {
+  color: #c2185b; /* Reddish tone for characters */
+}
+
+.tile-symbol-bamboo {
+  color: #2e7d32; /* Greenish tone for bamboo */
+}
+
+.tile-symbol-circle {
+  color: #1565c0; /* Bluish tone for circles */
+}
+
+.tile-symbol-wind {
+  color: #37474f; /* Slate color for winds */
+}
+
+.tile-symbol-dragon {
+  color: #d32f2f; /* Deep red for dragons (some might be green/white styled inside unicode) */
+}
+
+.tile-symbol-flower {
+  color: #8e24aa; /* Purple for flower */
+}
+
+.tile-symbol-season {
+  color: #e65100; /* Orange for seasons */
+}
+
+/* Dynamic Z-Layer offset adjustment to make higher tiles physically pop out more */
+/* Using transform-style standard offsets */
+.z-layer-0 { transform: translate3d(0, 0, 0px); }
+.z-layer-1 { transform: translate3d(-2px, -2px, 8px); }
+.z-layer-2 { transform: translate3d(-4px, -4px, 16px); }
+.z-layer-3 { transform: translate3d(-6px, -6px, 24px); }
+.z-layer-4 { transform: translate3d(-8px, -8px, 32px); }
+.z-layer-5 { transform: translate3d(-10px, -10px, 40px); }
+.z-layer-6 { transform: translate3d(-12px, -12px, 48px); }
+.z-layer-7 { transform: translate3d(-14px, -14px, 56px); }
+
+/* Shimmer shine effect overlay on the tiles */
+.mahjong-tile-inner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.03) 100%);
+  border-radius: 4px;
+  pointer-events: none;
+}
