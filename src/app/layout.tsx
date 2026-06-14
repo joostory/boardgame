@@ -9,7 +9,10 @@ const font = Poor_Story({
   subsets: ['latin']
 })
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://boardgame.joostory.net'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(baseUrl),
   title: '보드게임 도우미',
   description: '보드게임을 위한 도구들입니다.',
   openGraph: {
