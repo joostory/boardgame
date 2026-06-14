@@ -14,6 +14,7 @@ const GAME_LIST: BoardGame[] = [
   { title: '스카이 점퍼', iconPath: '/sky-jumper/icon.png', path: '/sky-jumper' },
   { title: '직소 퍼즐', iconPath: '/jigsaw/icon.png', path: '/jigsaw' },
   { title: '마작 솔리테어', iconPath: '/mahjongg/icon.png', path: '/mahjongg' },
+  { title: '단어 추리', iconPath: '/wordle/icon.png', path: '/wordle' },
 ]
 
 export default function Home() {
