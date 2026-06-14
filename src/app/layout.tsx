@@ -12,6 +12,13 @@ const font = Poor_Story({
 export const metadata: Metadata = {
   title: '보드게임 도우미',
   description: '보드게임을 위한 도구들입니다.',
+  openGraph: {
+    title: '보드게임 도우미',
+    description: '보드게임을 위한 다양한 도구들을 제공합니다.',
+    siteName: '보드게임 도우미',
+    locale: 'ko_KR',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
