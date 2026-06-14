@@ -28,6 +28,7 @@ export default function WordleGame() {
   const [gameStatus, setGameStatus] = useState<'playing' | 'won' | 'lost'>('playing');
 
   // UI 상태
+  const [isMobile, setIsMobile] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [shakeRow, setShakeRow] = useState<number | null>(null);
@@ -35,6 +36,15 @@ export default function WordleGame() {
   const [message, setMessage] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // 모바일 터치 디바이스 체크
+  useEffect(() => {
+    const checkMobile = () => {
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      setIsMobile(isTouch);
+    };
+    checkMobile();
+  }, []);
 
   // 게임 시작 시 단어 선정
   const startNewGame = () => {
@@ -51,9 +61,11 @@ export default function WordleGame() {
     setShowResult(false);
     setFlipRow(null);
     
-    // 약간의 딜레이 후 인풋 포커스
+    // 약간의 딜레이 후 인풋 포커스 (모바일 제외)
     setTimeout(() => {
-      inputRef.current?.focus();
+      if (inputRef.current && !isMobile) {
+        inputRef.current.focus();
+      }
     }, 50);
   };
 
@@ -61,11 +73,11 @@ export default function WordleGame() {
     startNewGame();
     // 최초 실행 시 안내창 띄우기
     setShowGuide(true);
-  }, []);
+  }, [isMobile]); // isMobile 값 설정 후 새 게임 처리 재확인
 
-  // 화면 클릭 시 항상 인풋 포커스 유지
+  // 화면 클릭 시 항상 인풋 포커스 유지 (모바일 제외)
   const keepFocus = () => {
-    if (gameStatus === 'playing' && !showGuide && !showResult) {
+    if (gameStatus === 'playing' && !showGuide && !showResult && !isMobile) {
       inputRef.current?.focus();
     }
   };
@@ -75,7 +87,7 @@ export default function WordleGame() {
     return () => {
       document.removeEventListener('click', keepFocus);
     };
-  }, [gameStatus, showGuide, showResult]);
+  }, [gameStatus, showGuide, showResult, isMobile]);
 
   // 실제 물리 키보드 입력 동기화
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,7 +134,7 @@ export default function WordleGame() {
         setInputValue(assembled);
         setCurrentGuess(nextGuess);
       }
-      inputRef.current?.focus();
+      if (!isMobile) inputRef.current?.focus();
       return;
     }
 
@@ -133,7 +145,7 @@ export default function WordleGame() {
       setInputValue(assembled);
       setCurrentGuess(nextGuess);
     }
-    inputRef.current?.focus();
+    if (!isMobile) inputRef.current?.focus();
   };
 
   // 단어 제출 로직
@@ -248,7 +260,7 @@ export default function WordleGame() {
 
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col items-center justify-between p-4 font-sans select-none">
-      {/* 투명 한글 입력 필드 (IME 완벽 연동용) */}
+      {/* 투명 한글 입력 필드 (IME 완벽 연동용, 모바일은 가상키보드 팝업 방지) */}
       <input
         ref={inputRef}
         type="text"
@@ -257,7 +269,8 @@ export default function WordleGame() {
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         disabled={gameStatus !== 'playing'}
-        autoFocus
+        autoFocus={!isMobile}
+        inputMode={isMobile ? "none" : "text"}
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
