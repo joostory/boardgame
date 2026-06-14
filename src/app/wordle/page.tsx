@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { 
-  getRandomWord, 
-  disassembleHangul, 
-  assembleHangul, 
-  CHO_SUNG, 
-  JUNG_SUNG, 
-  JONG_SUNG 
+import {
+  getRandomWord,
+  disassembleHangul,
+  assembleHangul,
+  CHO_SUNG,
+  JUNG_SUNG,
+  JONG_SUNG
 } from './words';
 import { HelpCircle, RefreshCw, Home, Check, AlertCircle } from 'lucide-react';
 
@@ -60,7 +60,7 @@ export default function WordleGame() {
     setMessage(null);
     setShowResult(false);
     setFlipRow(null);
-    
+
     // 약간의 딜레이 후 인풋 포커스 (모바일 제외)
     setTimeout(() => {
       if (inputRef.current && !isMobile) {
@@ -186,11 +186,11 @@ export default function WordleGame() {
 
     // 히스토리 업데이트 및 플립 애니메이션 시작
     setFlipRow(currentAttempt);
-    
+
     // 상태 업데이트 애니메이션 타이밍 조절
     const nextGuesses = [...guesses];
     nextGuesses[currentAttempt] = currentGuess;
-    
+
     const nextResults = [...guessResults];
     nextResults[currentAttempt] = result;
 
@@ -202,7 +202,7 @@ export default function WordleGame() {
 
     setTimeout(() => {
       setFlipRow(null);
-      
+
       if (isCorrect) {
         setGameStatus('won');
         setShowResult(true);
@@ -253,9 +253,10 @@ export default function WordleGame() {
 
   // 한글 가상 키보드 레이아웃 (이중 자모가 없는 기본 단일 자모 키 배열)
   const keyboardRows = [
-    ['ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ'],
-    ['ㅋ', 'ㅌ', 'ㅍ', 'ㅎ', 'ㅏ', 'ㅑ', 'ㅓ', 'ㅕ', 'ㅗ'],
-    ['ENTER', 'ㅛ', 'ㅜ', 'ㅠ', 'ㅡ', 'ㅣ', 'BACK']
+    ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ'],
+    [ 'ㅁ','ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ'],
+    [ 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ', 'BACK'],
+    ['ENTER']
   ];
 
   return (
@@ -286,15 +287,15 @@ export default function WordleGame() {
           단어 자소 추리 <span className="text-xs px-2 py-0.5 bg-neutral-800 text-neutral-300 rounded-full">5자소</span>
         </h1>
         <div className="flex gap-1">
-          <button 
-            onClick={() => setShowGuide(true)} 
+          <button
+            onClick={() => setShowGuide(true)}
             className="p-2 hover:bg-neutral-800 rounded-full transition-colors"
             title="게임 가이드"
           >
             <HelpCircle className="w-6 h-6 text-neutral-400" />
           </button>
-          <button 
-            onClick={startNewGame} 
+          <button
+            onClick={startNewGame}
             className="p-2 hover:bg-neutral-800 rounded-full transition-colors"
             title="새 게임 시작"
           >
@@ -316,7 +317,7 @@ export default function WordleGame() {
         {Array(5).fill(null).map((_, rowIndex) => {
           const isCurrentRow = rowIndex === currentAttempt;
           const isSubmitted = rowIndex < currentAttempt;
-          
+
           // 현재 행은 입력 상태 실시간 반영, 이미 제출된 행은 저장된 추측 값, 그 외엔 빈 값
           let rowJasos = Array(5).fill('');
           if (isCurrentRow) {
@@ -329,8 +330,8 @@ export default function WordleGame() {
           const isFlipping = flipRow === rowIndex;
 
           return (
-            <div 
-              key={rowIndex} 
+            <div
+              key={rowIndex}
               className={`grid grid-cols-5 gap-2 ${isShaking ? 'animate-shake' : ''}`}
               style={{
                 animation: isShaking ? 'shake 0.5s ease-in-out' : undefined
@@ -338,7 +339,7 @@ export default function WordleGame() {
             >
               {rowJasos.map((jaso, colIndex) => {
                 const status = isSubmitted ? guessResults[rowIndex][colIndex] : 'empty';
-                
+
                 // 타일 색상 클래스
                 let borderBgClass = 'border-neutral-800 bg-neutral-900/50 text-neutral-100';
                 if (status === 'correct') {
@@ -379,7 +380,7 @@ export default function WordleGame() {
           <div key={rowIndex} className="flex justify-center gap-1 w-full">
             {row.map((key) => {
               const status = getKeyStatus(key);
-              
+
               let keyBg = 'bg-neutral-800 hover:bg-neutral-700 active:bg-neutral-600 text-neutral-100';
               if (status === 'correct') {
                 keyBg = 'bg-emerald-600 text-white font-semibold';
@@ -417,7 +418,7 @@ export default function WordleGame() {
                 게임 방법 안내
               </h2>
             </div>
-            
+
             <div className="text-sm text-neutral-300 flex flex-col gap-3 leading-relaxed">
               <p>
                 <strong>5개의 한글 자소(자음/모음)</strong>로 구성된 비밀 단어를 <strong>5번의 기회</strong> 내에 추리하는 게임입니다.
@@ -430,9 +431,9 @@ export default function WordleGame() {
               <p>
                 실제 키보드로 바로 한글을 타이핑하거나, 화면의 자모 키보드를 눌러 입력할 수 있습니다.
               </p>
-              
+
               <hr className="border-neutral-800" />
-              
+
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
                   <span className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center font-bold text-white text-xs">ㅂ</span>
@@ -501,7 +502,7 @@ export default function WordleGame() {
                 <RefreshCw className="w-5 h-5 animate-spin-slow" />
                 새로운 게임 시작하기
               </button>
-              
+
               <button
                 onClick={() => setShowResult(false)}
                 className="w-full py-2.5 bg-neutral-800 hover:bg-neutral-750 text-neutral-300 font-medium rounded-xl text-xs transition-colors cursor-pointer"
