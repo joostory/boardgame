@@ -1,10 +1,92 @@
-보드게임을 쉽게 하기 위해 필요한 것들
+# 🎲 보드게임 도우미 (Board Game Helper)
 
-## 모두의 마블 자산관리
+보드게임을 즐길 때 유용한 보조 도구들과 재미있는 웹 보드게임/퍼즐들을 한곳에 모아둔 프로젝트입니다.
 
-![모두의마블](./public/modoo/modoo.png)
+---
 
-모두의 마블 보드게임을 하면 돈 계산을 하는 과정에 가장 많은 시간이 소요됩니다. 이를 간소화 하기 위해서 사용하는 자산을 관리하는 기능입니다.
+## 🚀 제공하는 게임 및 도구 목록
 
-서로의 돈을 주고받고, 은행으로부터 돈을 받을 수도 있습니다.
+### 💸 모두의 마블 자산관리 (`/modoo`)
 
+<img src="./public/modoo/modoo.png" width="120" alt="모두의 마블" />
+
+- **설명:** 모두의 마블 게임 진행 시 번거로운 지폐 계산을 대신해주는 디지털 자산 관리 도구입니다.
+- **주요 기능:**
+  - 플레이어 간 자금 이체 및 거래
+  - 은행을 통한 예금/출금/월급 지급 기능
+  - 실시간 자산 총액 및 거래 히스토리 기록
+
+### 🧠 카드 뒤집기 메모리 게임 (`/memory`)
+
+<img src="./public/memory/memory_icon.png" width="120" alt="메모리 게임" />
+
+- **설명:** 무작위로 배치된 카드의 짝을 찾아내는 두뇌 트레이닝 미니게임입니다.
+- **주요 기능:**
+  - 제한된 기회 안에 모든 카드 쌍 맞추기
+  - 직관적이고 깔끔한 매칭 인터페이스 제공
+
+### 🪜 사다리 타기 (`/ladder`)
+
+<img src="./public/ladder/ladder_icon.png" width="120" alt="사다리 타기" />
+
+- **설명:** 벌칙 수행자 선정이나 내기 등 공평한 무작위 결정을 돕는 사다리 타기 도구입니다.
+- **주요 기능:**
+  - 인원 수 조정 및 사다리 자동 생성
+  - 시각적으로 결과를 확인하는 실시간 추적 기능
+
+### 🪂 스카이 점퍼 (`/sky-jumper`)
+
+<img src="./public/sky-jumper/icon.png" width="120" alt="스카이 점퍼" />
+
+- **설명:** 하늘을 향해 끊임없이 점프하여 장애물을 피하고 고득점을 노리는 캐주얼 아케이드 게임입니다.
+
+### 🧩 직소 퍼즐 (`/jigsaw`)
+
+<img src="./public/jigsaw/icon.png" width="120" alt="직소 퍼즐" />
+
+- **설명:** 조각난 이미지들을 드래그 앤 드롭으로 맞추어 원래의 그림으로 복원하는 퍼즐 게임입니다.
+
+### 🀄 마작 솔리테어 (`/mahjongg`)
+
+<img src="./public/mahjongg/icon.png" width="120" alt="마작 솔리테어" />
+
+- **설명:** 쌓여 있는 마작 패들 중 같은 무늬의 짝을 찾아 지워나가는 1인용 두뇌 퍼즐 게임입니다.
+
+### 📝 단어 추리 - Wordle (`/wordle`)
+
+<img src="./public/wordle/icon.png" width="120" alt="단어 추리" />
+
+- **설명:** 6번의 시도 안에 숨겨진 5글자 단어를 찾아내는 워들(Wordle) 스타일의 단어 추리 게임입니다.
+- **주요 기능:**
+  - 가상 키보드 및 컬러 힌트 피드백 (초록/노랑/회색)
+  - 게임 가이드 및 통계 결과 팝업
+
+---
+
+## 🛠 기술 스택 (Tech Stack)
+
+- **Framework:** Next.js (App Router)
+- **Library:** React, TypeScript
+- **Styling:** TailwindCSS
+- **State Management:** Jotai
+- **UI Components:** Radix UI
+
+---
+
+## 💻 시작 가이드 (Getting Started)
+
+### 의존성 설치
+```bash
+npm install
+```
+
+### 개발 서버 실행
+```bash
+npm run dev
+```
+
+### 빌드 및 배포용 실행
+```bash
+npm run build
+npm start
+```
