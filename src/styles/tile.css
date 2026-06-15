@@ -129,38 +129,109 @@
 }
 
 /* Dynamic Z-Layer shadows to represent physical heights organically */
-/* Higher layers have larger, softer shadows and slightly brighter faces */
+/* Tight 1px-step solid shadows create smooth tile thickness */
+/* Higher layers get progressively brighter with deeper drop shadows */
 .z-layer-0 {
-  filter: brightness(0.9);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  filter: brightness(0.88) saturate(0.95);
 }
+.z-layer-0 .mahjong-tile-inner {
+  box-shadow:
+    1px 1px 0px #bbb6a4,
+    2px 2px 1px #a09b8a,
+    0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
 .z-layer-1 {
-  filter: brightness(0.95);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.45);
+  filter: brightness(0.93) saturate(0.98);
 }
+.z-layer-1 .mahjong-tile-inner {
+  box-shadow:
+    1px 1px 0px #ccc7b4,
+    2px 2px 0px #b5b09e,
+    3px 3px 1px #9a9588,
+    0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
 .z-layer-2 {
-  filter: brightness(1.0);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  filter: brightness(0.98);
 }
+.z-layer-2 .mahjong-tile-inner {
+  box-shadow:
+    1px 1px 0px #d8d3c0,
+    2px 2px 0px #c4bfac,
+    3px 3px 0px #b0ab98,
+    4px 4px 1px #989384,
+    0 6px 14px rgba(0, 0, 0, 0.4);
+}
+
 .z-layer-3 {
-  filter: brightness(1.03);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.55);
+  filter: brightness(1.04);
 }
+.z-layer-3 .mahjong-tile-inner {
+  box-shadow:
+    1px 1px 0px #e2ddcc,
+    2px 2px 0px #cec9b8,
+    3px 3px 0px #bab5a4,
+    4px 4px 0px #a6a192,
+    5px 5px 1px #928d7e,
+    0 8px 18px rgba(0, 0, 0, 0.4);
+}
+
 .z-layer-4 {
-  filter: brightness(1.06);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+  filter: brightness(1.10);
 }
+.z-layer-4 .mahjong-tile-inner {
+  box-shadow:
+    1px 1px 0px #ece7d8,
+    2px 2px 0px #d8d3c4,
+    3px 3px 0px #c4bfb0,
+    4px 4px 0px #b0ab9c,
+    5px 5px 0px #9c9788,
+    6px 6px 1px #888374,
+    0 10px 22px rgba(0, 0, 0, 0.4);
+}
+
 .z-layer-5 {
-  filter: brightness(1.09);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65);
+  filter: brightness(1.14);
 }
+.z-layer-5 .mahjong-tile-inner {
+  box-shadow:
+    1px 1px 0px #f0ebe0,
+    2px 2px 0px #dcd7c8,
+    3px 3px 0px #c8c3b4,
+    4px 4px 0px #b4afa0,
+    5px 5px 0px #a09b8c,
+    6px 6px 0px #8c877a,
+    7px 7px 1px #787368,
+    0 12px 26px rgba(0, 0, 0, 0.4);
+}
+
 .z-layer-6 {
-  filter: brightness(1.12);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
+  filter: brightness(1.18);
 }
+.z-layer-6 .mahjong-tile-inner {
+  box-shadow:
+    1px 1px 0px #f4efe4,
+    2px 2px 0px #e0dbcc,
+    3px 3px 0px #ccc7b8,
+    4px 4px 0px #b8b3a4,
+    5px 5px 0px #a4a090,
+    6px 6px 1px #908b7c,
+    0 14px 30px rgba(0, 0, 0, 0.45);
+}
+
 .z-layer-7 {
-  filter: brightness(1.15);
-  box-shadow: 0 28px 56px rgba(0, 0, 0, 0.75);
+  filter: brightness(1.22);
+}
+.z-layer-7 .mahjong-tile-inner {
+  box-shadow:
+    1px 1px 0px #f8f3e8,
+    2px 2px 0px #e4dfd0,
+    3px 3px 0px #d0cbbc,
+    4px 4px 0px #bcb7a8,
+    5px 5px 0px #a8a394,
+    6px 6px 1px #949080,
+    0 16px 34px rgba(0, 0, 0, 0.45);
 }
 
 /* Hint Animation - Pulsating Golden Aura */
@@ -233,16 +304,16 @@
   color: #e65100; /* Orange for seasons */
 }
 
-/* Dynamic Z-Layer offset adjustment to make higher tiles physically pop out more */
-/* Using transform-style standard offsets */
+/* Dynamic Z-Layer offset - enhanced depth with larger step for clear layer separation */
+/* Each layer lifts -3px in X/Y to create isometric stacking effect */
 .z-layer-0 { transform: translate3d(0, 0, 0px); }
-.z-layer-1 { transform: translate3d(-2px, -2px, 8px); }
-.z-layer-2 { transform: translate3d(-4px, -4px, 16px); }
-.z-layer-3 { transform: translate3d(-6px, -6px, 24px); }
-.z-layer-4 { transform: translate3d(-8px, -8px, 32px); }
-.z-layer-5 { transform: translate3d(-10px, -10px, 40px); }
-.z-layer-6 { transform: translate3d(-12px, -12px, 48px); }
-.z-layer-7 { transform: translate3d(-14px, -14px, 56px); }
+.z-layer-1 { transform: translate3d(-3px, -3px, 10px); }
+.z-layer-2 { transform: translate3d(-6px, -6px, 20px); }
+.z-layer-3 { transform: translate3d(-9px, -9px, 30px); }
+.z-layer-4 { transform: translate3d(-12px, -12px, 40px); }
+.z-layer-5 { transform: translate3d(-15px, -15px, 50px); }
+.z-layer-6 { transform: translate3d(-18px, -18px, 60px); }
+.z-layer-7 { transform: translate3d(-21px, -21px, 70px); }
 
 /* Shimmer shine effect overlay on the tiles */
 .mahjong-tile-inner::before {
