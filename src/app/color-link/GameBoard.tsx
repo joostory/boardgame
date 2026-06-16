@@ -146,6 +146,21 @@ export default function GameBoard({
     // 포인트 과밀 적재 방지 (최소 4px 이상 이동했을 때만 계산)
     if (getDistance(lastPoint, coords) < 4) return;
 
+    // --- 0. 되돌아가기(Backtrack) 검사 ---
+    // 왔던 길로 드래그 궤적을 꺾어 뒤로 가져가는 경우, 그 지점까지 선을 지우면서 단축(pop) 처리합니다.
+    const BACKTRACK_THRESHOLD = 14; 
+    if (activePath.length >= 2) {
+      // 최근 2~5개 이전의 점들을 역순 검사
+      const maxBacktrackCheck = Math.max(0, activePath.length - 5);
+      for (let i = activePath.length - 2; i >= maxBacktrackCheck; i--) {
+        if (getDistance(coords, activePath[i]) <= BACKTRACK_THRESHOLD) {
+          // 되돌아가기 감지: 해당 포인트 이후의 궤적을 잘라내고 즉시 리턴
+          setActivePath(activePath.slice(0, i + 1));
+          return;
+        }
+      }
+    }
+
     const targetDot = dots.find((d) => d.color === dragColor);
     if (!targetDot) return;
 
@@ -168,8 +183,9 @@ export default function GameBoard({
     const newSegment = { p1: lastPoint, p2: coords };
 
     // 2-a) 자기 자신의 이전 선분들과 교차하는지 검사
-    if (activePath.length >= 3) {
-      for (let i = 0; i < activePath.length - 2; i++) {
+    // 되돌아가기(Backtrack) 처리가 최근 3개 포인트까지 커버하므로, 오탐지 방지를 위해 4개 이전 선분부터 검사합니다.
+    if (activePath.length >= 5) {
+      for (let i = 0; i < activePath.length - 4; i++) {
         if (isSegmentIntersecting(newSegment.p1, newSegment.p2, activePath[i], activePath[i + 1])) {
           forceStopDrag(e);
           onCrash(); // 충돌 탈락!
