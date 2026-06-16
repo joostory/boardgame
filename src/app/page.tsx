@@ -15,6 +15,7 @@ const GAME_LIST: BoardGame[] = [
   { title: '직소 퍼즐', iconPath: '/jigsaw/icon.png', path: '/jigsaw' },
   { title: '마작 솔리테어', iconPath: '/mahjongg/icon.png', path: '/mahjongg' },
   { title: '단어 추리', iconPath: '/wordle/icon.png', path: '/wordle' },
+  { title: '색상 선 연결', iconPath: '/color-link/icon.png', path: '/color-link' },
 ]
 
 export default function Home() {
