@@ -1,4 +1,4 @@
-:HL["/_next/static/chunks/0b4f7nmk5el_f.css","style"]
+:HL["/_next/static/chunks/0xhgrj16np9zx.css","style"]
 :HL["/_next/static/media/752a8bf7d0017e24-s.p.0gsz347qw314p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/modoo/modoo.png","image"]
 :HL["/memory/memory_icon.png","image"]
@@ -7,4 +7,5 @@
 :HL["/jigsaw/icon.png","image"]
 :HL["/mahjongg/icon.png","image"]
 :HL["/wordle/icon.png","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"2G_kfP5EAljXk_AKcPpL3"}
+:HL["/color-link/icon.png","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"-9ktNbeapO-wS-MaJxVDQ"}
