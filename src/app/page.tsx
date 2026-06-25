@@ -16,6 +16,7 @@ const GAME_LIST: BoardGame[] = [
   { title: '마작 솔리테어', iconPath: '/mahjongg/icon.png', path: '/mahjongg' },
   { title: '단어 추리', iconPath: '/wordle/icon.png', path: '/wordle' },
   { title: '색상 선 연결', iconPath: '/color-link/icon.png', path: '/color-link' },
+  { title: '블록 정렬', iconPath: '/block-sort/icon.png', path: '/block-sort' },
 ]
 
 export default function Home() {

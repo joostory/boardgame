@@ -21,6 +21,14 @@ export const metadata: Metadata = {
     siteName: '보드게임 도우미',
     locale: 'ko_KR',
     type: 'website',
+    images: [
+      {
+        url: '/app.png',
+        width: 1200,
+        height: 630,
+        alt: '보드게임 도우미 대표 이미지',
+      },
+    ],
   },
 }
 
