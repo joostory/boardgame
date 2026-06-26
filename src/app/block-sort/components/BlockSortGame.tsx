@@ -303,7 +303,7 @@ export default function BlockSortGame() {
   }
 
   // 5. 전체 승리 조건 검사
-  const checkVictory = (currentTubes: string[][]) => {
+  const checkVictory = useCallback((currentTubes: string[][]) => {
     const config = DIFFICULTY_CONFIGS[difficulty]
     const won = currentTubes.every(tube => 
       tube.length === 0 || isTubeCompleteState(tube, config.capacity)
@@ -319,7 +319,89 @@ export default function BlockSortGame() {
       // 다음 레벨 저장
       localStorage.setItem(`block-sort-level-${difficulty}`, String(level + 1))
     }
-  }
+  }, [difficulty, level, playSound, toast])
+
+  // 실제 블록 이동 비행 애니메이션 및 상태 반영 함수 (공통 사용)
+  const executeMove = useCallback((srcIndex: number, destIndex: number, blockToMove: string) => {
+    const boardEl = boardRef.current
+    const srcEl = document.getElementById(`tube-wrapper-${srcIndex}`)
+    const destEl = document.getElementById(`tube-wrapper-${destIndex}`)
+
+    if (boardEl && srcEl && destEl) {
+      const boardRect = boardEl.getBoundingClientRect()
+      const srcRect = srcEl.getBoundingClientRect()
+      const destRect = destEl.getBoundingClientRect()
+
+      const tubeWidth = srcRect.width
+      const blockWidth = 56 // sm:w-16 기준 대략적인 블록 넓이
+
+      const startX = srcRect.left - boardRect.left + (tubeWidth - blockWidth) / 2
+      const startY = srcRect.top - boardRect.top - 24
+
+      const endX = destRect.left - boardRect.left + (tubeWidth - blockWidth) / 2
+      const endY = destRect.top - boardRect.top - 24
+
+      // 1) 비행 데이터 및 임시 숨김 설정
+      setFlyingBlock({
+        color: blockToMove,
+        start: { x: startX, y: startY },
+        end: { x: endX, y: endY }
+      })
+      setAnimatingMove({ src: srcIndex, dest: destIndex, color: blockToMove })
+      setSelectedTubeIndex(null)
+      playSound('move')
+
+      // 2) 브라우저 렌더 큐에 맞춰 즉시 transition 시작
+      setTimeout(() => {
+        setIsFlying(true)
+      }, 10)
+
+      // 3) 300ms 비행 후 실제 튜브 상태 업데이트
+      setTimeout(() => {
+        setTubes(prevTubes => {
+          const newTubes = prevTubes.map((tube, idx) => {
+            if (idx === srcIndex) {
+              return tube.slice(0, -1)
+            }
+            if (idx === destIndex) {
+              return [...tube, blockToMove]
+            }
+            return tube
+          })
+
+          setHistory(prevHist => [...prevHist, JSON.parse(JSON.stringify(prevTubes))])
+          
+          // 승리 검사는 다음 틱에 수행
+          setTimeout(() => checkVictory(newTubes), 10)
+
+          return newTubes
+        })
+
+        // 상태 복구
+        setFlyingBlock(null)
+        setIsFlying(false)
+        setAnimatingMove(null)
+      }, 300)
+    } else {
+      // DOM을 못 찾았을 경우 Fallback
+      setTubes(prevTubes => {
+        const newTubes = prevTubes.map((tube, idx) => {
+          if (idx === srcIndex) {
+            return tube.slice(0, -1)
+          }
+          if (idx === destIndex) {
+            return [...tube, blockToMove]
+          }
+          return tube
+        })
+        setHistory(prevHist => [...prevHist, JSON.parse(JSON.stringify(prevTubes))])
+        setSelectedTubeIndex(null)
+        playSound('move')
+        setTimeout(() => checkVictory(newTubes), 10)
+        return newTubes
+      })
+    }
+  }, [playSound, checkVictory])
 
   // 6. 블록 선택 및 이동 핸들러
   const handleTubeClick = (index: number) => {
@@ -328,17 +410,67 @@ export default function BlockSortGame() {
     const config = DIFFICULTY_CONFIGS[difficulty]
     const activeTube = tubes[index]
 
-    // 1) 아무것도 선택하지 않은 상태
+    // 1) 아무것도 선택하지 않은 상태 (첫 번째 터치)
     if (selectedTubeIndex === null) {
       if (activeTube.length === 0) {
         playSound('error')
         return // 빈 튜브 선택 불가
       }
-      
-      setSelectedTubeIndex(index)
-      playSound('select')
+
+      const blockToMove = activeTube[activeTube.length - 1]
+
+      // 이동 가능한 적법한 대상 튜브 목록 탐색
+      const candidates: { idx: number; type: 'same-pure' | 'same-dirty' | 'empty' }[] = []
+
+      for (let i = 0; i < tubes.length; i++) {
+        if (i === index) continue // 자기 자신 제외
+        const targetTube = tubes[i]
+        if (targetTube.length >= config.capacity) continue // 가득 찬 튜브 제외
+
+        if (targetTube.length === 0) {
+          candidates.push({ idx: i, type: 'empty' })
+        } else if (targetTube[targetTube.length - 1] === blockToMove) {
+          // 이미 튜브 안의 모든 색상이 blockToMove 와 동일한지 체크 (Pure)
+          const isPure = targetTube.every(c => c === blockToMove)
+          candidates.push({ idx: i, type: isPure ? 'same-pure' : 'same-dirty' })
+        }
+      }
+
+      // 명확한 자동 목적지 판별
+      let targetIndex: number | null = null
+
+      if (candidates.length === 1) {
+        // 후보가 단 한 군데뿐인 경우 -> 100% 명확한 이동
+        targetIndex = candidates[0].idx
+      } else if (candidates.length > 1) {
+        // 후보가 여러 개 있을 때, 우선순위 규칙에 따른 유일한 명확지 체크
+        const pures = candidates.filter(c => c.type === 'same-pure')
+        const dirties = candidates.filter(c => c.type === 'same-dirty')
+        const empties = candidates.filter(c => c.type === 'empty')
+
+        if (pures.length === 1) {
+          // '같은 색상만 채워져 있는 튜브'가 단 1개 있으면 거기가 우선순위 최상위
+          targetIndex = pures[0].idx
+        } else if (pures.length === 0 && dirties.length === 1) {
+          // 그런 게 없고 '맨 위만 같은 색인 혼합 튜브'가 1개뿐이면 그리로 감
+          targetIndex = dirties[0].idx
+        } else if (pures.length === 0 && dirties.length === 0 && empties.length > 0) {
+          // 다른 쌓인 곳은 없고 비어있는 튜브들만 존재할 경우 (개수가 1개이든 2개이든),
+          // 어차피 대칭적이므로 첫 번째 빈 튜브로 자동 이동 실행!
+          targetIndex = empties[0].idx
+        }
+      }
+
+      if (targetIndex !== null) {
+        // 명확한 목적지가 있으므로 클릭 한 번으로 자동 이동 실행!
+        executeMove(index, targetIndex, blockToMove)
+      } else {
+        // 명확한 단일 목적지가 없으면 기존처럼 수동 선택 모드 유지
+        setSelectedTubeIndex(index)
+        playSound('select')
+      }
     }
-    // 2) 이미 하나의 튜브가 선택되어 있는 상태
+    // 2) 이미 하나의 튜브가 선택되어 있는 상태 (두 번째 터치 - 수동 이동)
     else {
       const srcIndex = selectedTubeIndex
       const srcTube = tubes[srcIndex]
@@ -353,90 +485,13 @@ export default function BlockSortGame() {
       const blockToMove = srcTube[srcTube.length - 1]
       const destTube = tubes[index]
 
-      // 이동 가능 조건 검사:
-      // a) 대상 튜브가 가득 차있지 않음
-      // b) 대상 튜브가 비어있거나, 대상 튜브의 맨 위 블록이 이동할 블록과 색이 같음
+      // 수동 이동 가능 조건 검사
       const canMove = 
         destTube.length < config.capacity &&
         (destTube.length === 0 || destTube[destTube.length - 1] === blockToMove)
 
       if (canMove) {
-        // DOM 좌표 측정 및 비행 시작
-        const boardEl = boardRef.current
-        const srcEl = document.getElementById(`tube-wrapper-${srcIndex}`)
-        const destEl = document.getElementById(`tube-wrapper-${index}`)
-
-        if (boardEl && srcEl && destEl) {
-          const boardRect = boardEl.getBoundingClientRect()
-          const srcRect = srcEl.getBoundingClientRect()
-          const destRect = destEl.getBoundingClientRect()
-
-          // 튜브의 가로폭 및 임시 블록 넓이
-          const tubeWidth = srcRect.width
-          const blockWidth = 56 // sm:w-16 기준 대략적인 블록 넓이 (56px)
-          
-          // 소스 튜브 X, Y 좌표 계산
-          const startX = srcRect.left - boardRect.left + (tubeWidth - blockWidth) / 2
-          const startY = srcRect.top - boardRect.top - 24
-
-          // 대상 튜브 X, Y 좌표 계산
-          const endX = destRect.left - boardRect.left + (tubeWidth - blockWidth) / 2
-          const endY = destRect.top - boardRect.top - 24
-
-          // 1) 비행 데이터 및 임시 숨김 설정
-          setFlyingBlock({
-            color: blockToMove,
-            start: { x: startX, y: startY },
-            end: { x: endX, y: endY }
-          })
-          setAnimatingMove({ src: srcIndex, dest: index, color: blockToMove })
-          setSelectedTubeIndex(null)
-          playSound('move')
-
-          // 2) 브라우저 렌더 큐에 맞춰 즉시 transition 시작
-          setTimeout(() => {
-            setIsFlying(true)
-          }, 10)
-
-          // 3) 300ms 비행 후 실제 튜브 상태 업데이트
-          setTimeout(() => {
-            const newTubes = tubes.map((tube, idx) => {
-              if (idx === srcIndex) {
-                return tube.slice(0, -1)
-              }
-              if (idx === index) {
-                return [...tube, blockToMove]
-              }
-              return tube
-            })
-
-            setHistory(prev => [...prev, JSON.parse(JSON.stringify(tubes))])
-            setTubes(newTubes)
-            
-            // 상태 복구
-            setFlyingBlock(null)
-            setIsFlying(false)
-            setAnimatingMove(null)
-            
-            checkVictory(newTubes)
-          }, 300)
-        } else {
-          // DOM을 못 찾았을 경우 Fallback
-          setHistory(prev => [...prev, JSON.parse(JSON.stringify(tubes))])
-          const newTubes = tubes.map((tube, idx) => {
-            if (idx === srcIndex) {
-              return tube.slice(0, -1)
-            }
-            if (idx === index) {
-              return [...tube, blockToMove]
-            }
-            return tube
-          })
-          setTubes(newTubes)
-          setSelectedTubeIndex(null)
-          playSound('move')
-          checkVictory(newTubes)
-        }
+        executeMove(srcIndex, index, blockToMove)
       } else {
         // 이동 실패 시 선택을 대상 튜브로 넘기기
         if (destTube.length > 0) {
@@ -646,6 +701,7 @@ export default function BlockSortGame() {
                 </p>
                 <div className="bg-neutral-900/50 p-3 rounded border border-neutral-700/50 flex flex-col gap-1.5 text-xs text-amber-300">
                   <span className="font-semibold text-neutral-300">💡 꿀팁:</span>
+                  <span>- 목적지가 **명확하거나 단 한 곳인 경우** 블록 선택 시 자동으로 알아서 이동합니다!</span>
                   <span>- 잘못 움직였다면 **되돌리기(Undo)** 버튼을 눌러 이전 상태로 돌릴 수 있습니다.</span>
                   <span>- 도저히 풀 수 없을 때는 **재시작(Restart)**을 누르면 맵이 처음 상태로 복원됩니다.</span>
                 </div>
