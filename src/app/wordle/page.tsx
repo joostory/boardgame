@@ -68,9 +68,11 @@ export default function WordleGame() {
   };
 
   useEffect(() => {
-    startNewGame();
-    // 최초 실행 시 안내창 띄우기
-    setShowGuide(true);
+    queueMicrotask(() => {
+      startNewGame();
+      // 최초 실행 시 안내창 띄우기
+      setShowGuide(true);
+    });
   }, [isMobile]); // isMobile 값 설정 후 새 게임 처리 재확인
 
   // 화면 클릭 시 항상 인풋 포커스 유지 (모바일 제외)

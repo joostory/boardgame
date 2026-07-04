@@ -6,7 +6,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useAtom } from "jotai"
 import { gamesAtom } from "@/atom/modoo-atom"
 import { getGame } from "@/storage/modoo-storage"
@@ -29,15 +29,14 @@ function makeStatisticData(item: any) {
 
 export default function GameStatistics() {
   const [games, setGames] = useAtom(gamesAtom)
-  const [gameDetails, setGameDetails] = useState<any>([])
-  const [chartData, setChartData] = useState<any>([])
-  const [chartConfig, setChartConfig] = useState<ChartConfig>({})
 
-  useEffect(() => {
-    const list = games.map(it => getGame(it.id))
-    setGameDetails(list)
+  const gameDetails = useMemo(() => {
+    return games.map(it => getGame(it.id))
+  }, [games])
+
+  const chartData = useMemo(() => {
     const playerMap: any = {}
-    const datas = list.map(makeStatisticData)
+    const datas = gameDetails.map(makeStatisticData)
     datas.forEach(it => {
       if (playerMap[it.topPlayer]) {
         playerMap[it.topPlayer] += 1
@@ -45,23 +44,20 @@ export default function GameStatistics() {
         playerMap[it.topPlayer] = 1
       }
     })
-    setChartData(Object.entries(playerMap).map((entry) => {
+    return Object.entries(playerMap).map((entry) => {
       return {
         name: entry[0],
         value: entry[1]
       }
-    }))
-
-  }, [games])
-
-  useEffect(() => {
-    setChartConfig({
-      value: {
-        label: "승리수",
-        color: "#666",
-      }
     })
-  }, [])
+  }, [gameDetails])
+
+  const chartConfig: ChartConfig = {
+    value: {
+      label: "승리수",
+      color: "#666",
+    }
+  }
 
 
   return (

@@ -68,27 +68,22 @@ const findConnectedItem = (startIndex: number, items: string[], horizontalLines:
 };
 
 const LadderGame = () => {
-  const [items, setItems] = useState<string[]>([]);
+  const [items, setItems] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      const storedItems = localStorage.getItem('ladderItems');
+      return storedItems ? JSON.parse(storedItems) : [];
+    }
+    return [];
+  });
   const [inputValue, setInputValue] = useState<string>('');
-  const [horizontalLines, setHorizontalLines] = useState<HorizontalLine[]>([]);
-
-  // localStorage에서 항목 로드
-  useEffect(() => {
-    const storedItems = localStorage.getItem('ladderItems');
-    if (storedItems) {
-      setItems(JSON.parse(storedItems));
+  const [horizontalLines, setHorizontalLines] = useState<HorizontalLine[]>(() => {
+    if (typeof window !== 'undefined') {
+      const storedItems = localStorage.getItem('ladderItems');
+      const initialItems = storedItems ? JSON.parse(storedItems) : [];
+      return initialItems.length > 0 ? generateHorizontalLines(initialItems.length, 600) : [];
     }
-  }, []);
-
-  // 항목 변경 시 수평선 생성
-  useEffect(() => {
-    if (items.length > 0) {
-      const lines = generateHorizontalLines(items.length, 600);
-      setHorizontalLines(lines);
-    } else {
-      setHorizontalLines([]);
-    }
-  }, [items]);
+    return [];
+  });
 
   const handleAddItem = () => {
     if (inputValue.trim() === '') return;
@@ -96,12 +91,16 @@ const LadderGame = () => {
     setItems(newItems);
     localStorage.setItem('ladderItems', JSON.stringify(newItems));
     setInputValue('');
+    const lines = generateHorizontalLines(newItems.length, 600);
+    setHorizontalLines(lines);
   };
 
   const handleDeleteItem = (index: number) => {
     const newItems = items.filter((_, i) => i !== index);
     setItems(newItems);
     localStorage.setItem('ladderItems', JSON.stringify(newItems));
+    const lines = newItems.length > 0 ? generateHorizontalLines(newItems.length, 600) : [];
+    setHorizontalLines(lines);
   };
 
   const handleNumberClick = (index: number) => {

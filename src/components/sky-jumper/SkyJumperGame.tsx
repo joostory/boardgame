@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
@@ -31,11 +31,18 @@ const PLATFORM_HEIGHT = 20
 const PLAYER_SIZE = 40
 
 export default function SkyJumperGame() {
-    const [gameState, setGameState] = useState<GameState>({
-        isPlaying: false,
-        isGameOver: false,
-        score: 0,
-        highScore: 0,
+    const [gameState, setGameState] = useState<GameState>(() => {
+        let savedHighScore = 0
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('sky-jumper-highscore')
+            if (saved) savedHighScore = parseInt(saved, 10)
+        }
+        return {
+            isPlaying: false,
+            isGameOver: false,
+            score: 0,
+            highScore: savedHighScore,
+        }
     })
 
     // We use state for platforms to render them initially and when they change (add/remove)
@@ -59,49 +66,9 @@ export default function SkyJumperGame() {
     // Refs for direct DOM manipulation
     const playerElemRef = useRef<HTMLDivElement>(null)
     const platformElemsRef = useRef<Map<number, HTMLDivElement>>(new Map())
+    const gameLoopRef = useRef<(time: number) => void>(() => {})
 
-    // Load high score
-    useEffect(() => {
-        const saved = localStorage.getItem('sky-jumper-highscore')
-        if (saved) {
-            setGameState(prev => ({ ...prev, highScore: parseInt(saved) }))
-        }
-    }, [])
-
-    const initGame = () => {
-        playerRef.current = {
-            x: GAME_WIDTH / 2 - PLAYER_SIZE / 2,
-            y: GAME_HEIGHT - 150,
-            vx: 0,
-            vy: 0,
-        }
-        scoreRef.current = 0
-        cameraYRef.current = 0
-        playingRef.current = true
-        lastTimeRef.current = performance.now()
-
-        // Initial platforms
-        const initialPlatforms = [
-            { id: 1, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 50, width: 100 },
-            { id: 2, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 200, width: 100 },
-            { id: 3, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 350, width: 100 },
-            { id: 4, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 500, width: 100 },
-        ]
-        platformsRef.current = initialPlatforms
-        setPlatforms(initialPlatforms)
-
-        setGameState(prev => ({
-            ...prev,
-            isPlaying: true,
-            isGameOver: false,
-            score: 0,
-        }))
-
-        if (requestRef.current) cancelAnimationFrame(requestRef.current)
-        requestRef.current = requestAnimationFrame(gameLoop)
-    }
-
-    const generatePlatform = (minY: number) => {
+    const generatePlatform = useCallback((minY: number) => {
         // Dynamic difficulty based on score
         const score = scoreRef.current
 
@@ -128,9 +95,27 @@ export default function SkyJumperGame() {
             y,
             width,
         }
-    }
+    }, [])
 
-    const gameLoop = (time: number) => {
+    const gameOver = useCallback(() => {
+        playingRef.current = false
+        const finalScore = scoreRef.current
+
+        setGameState(prev => {
+            const newHighScore = Math.max(prev.highScore, finalScore)
+            localStorage.setItem('sky-jumper-highscore', newHighScore.toString())
+            return {
+                ...prev,
+                isPlaying: false,
+                isGameOver: true,
+                score: finalScore,
+                highScore: newHighScore
+            }
+        })
+        cancelAnimationFrame(requestRef.current)
+    }, [])
+
+    const gameLoop = useCallback((time: number) => {
         if (!playingRef.current) return
 
         // Calculate delta time
@@ -219,24 +204,46 @@ export default function SkyJumperGame() {
         const scoreEl = document.getElementById('score-display')
         if (scoreEl) scoreEl.innerText = `Score: ${scoreRef.current}`
 
-        requestRef.current = requestAnimationFrame(gameLoop)
-    }
+        requestRef.current = requestAnimationFrame(gameLoopRef.current)
+    }, [generatePlatform, gameOver])
 
-    const gameOver = () => {
-        playingRef.current = false
-        const finalScore = scoreRef.current
-        const newHighScore = Math.max(gameState.highScore, finalScore)
-        localStorage.setItem('sky-jumper-highscore', newHighScore.toString())
+    // keep gameLoopRef up-to-date
+    useEffect(() => {
+        gameLoopRef.current = gameLoop
+    }, [gameLoop])
+
+    const initGame = useCallback(() => {
+        playerRef.current = {
+            x: GAME_WIDTH / 2 - PLAYER_SIZE / 2,
+            y: GAME_HEIGHT - 150,
+            vx: 0,
+            vy: 0,
+        }
+        scoreRef.current = 0
+        cameraYRef.current = 0
+        playingRef.current = true
+        lastTimeRef.current = performance.now()
+
+        // Initial platforms
+        const initialPlatforms = [
+            { id: 1, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 50, width: 100 },
+            { id: 2, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 200, width: 100 },
+            { id: 3, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 350, width: 100 },
+            { id: 4, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 500, width: 100 },
+        ]
+        platformsRef.current = initialPlatforms
+        setPlatforms(initialPlatforms)
 
         setGameState(prev => ({
             ...prev,
-            isPlaying: false,
-            isGameOver: true,
-            score: finalScore,
-            highScore: newHighScore
+            isPlaying: true,
+            isGameOver: false,
+            score: 0,
         }))
-        cancelAnimationFrame(requestRef.current)
-    }
+
+        if (requestRef.current) cancelAnimationFrame(requestRef.current)
+        requestRef.current = requestAnimationFrame(gameLoopRef.current)
+    }, [])
 
     // Input handling
     useEffect(() => {
@@ -328,9 +335,9 @@ export default function SkyJumperGame() {
                     style={{
                         width: PLAYER_SIZE,
                         height: PLAYER_SIZE,
-                        left: playerRef.current.x,
-                        top: playerRef.current.y,
-                        transform: `scaleX(${playerRef.current.vx < 0 ? -1 : 1})`
+                        left: `${GAME_WIDTH / 2 - PLAYER_SIZE / 2}px`,
+                        top: `${GAME_HEIGHT - 150}px`,
+                        transform: 'scaleX(1)'
                     }}
                 >
                     {/* Simple face */}

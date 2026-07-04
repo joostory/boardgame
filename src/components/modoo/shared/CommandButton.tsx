@@ -24,10 +24,13 @@ function CommandCard({command}: {command: ModooCommand}) {
   }, [command])
 
   useEffect(() => {
-    setAnimationName('hflip')
-    setTimeout(() => {
+    queueMicrotask(() => {
+      setAnimationName('hflip')
+    })
+    const timer = setTimeout(() => {
       setAnimationName('')
     }, 2000)
+    return () => clearTimeout(timer)
   }, [command])
 
   return (
@@ -56,7 +59,7 @@ function CommandCard({command}: {command: ModooCommand}) {
 function RandomCommand() {
   const [commands, setCommands] = useAtom(commandsAtom)
   const [command, setCommand] = useState<ModooCommand>()
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(() => !commands || commands.length === 0)
 
   function selectRandomCommand() {
     const index = Math.floor(Math.random() * commands.length)
@@ -65,11 +68,12 @@ function RandomCommand() {
 
   useEffect(() => {
     if (commands && commands.length > 0) {
-      selectRandomCommand()
+      queueMicrotask(() => {
+        selectRandomCommand()
+      })
       return
     }
 
-    setLoading(true)
     axios.get('/modoo/api/command')
       .then(r => r.data)
       .then(data => setCommands(data))

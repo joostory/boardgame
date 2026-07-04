@@ -98,8 +98,8 @@ function LandCard({land}: {land: ModooLand}) {
 }
 
 export default function LandList() {
-  const [loading, setLoading] = useState<boolean>(false)
   const [lands, setLands] = useAtom(landsAtom)
+  const [loading, setLoading] = useState<boolean>(() => lands.length === 0)
   const setBuildings = useSetAtom(buildingsAtom)
   const [selectedLand, setSelectedLand] = useState<ModooLand>()
 
@@ -113,7 +113,6 @@ export default function LandList() {
 
   useEffect(() => {
     if (lands.length == 0) {
-      setLoading(true)
       loadData().finally(() => setLoading(false))
     }
   }, [])

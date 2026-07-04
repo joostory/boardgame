@@ -40,15 +40,11 @@ export default function JigsawGame() {
     const [isDragging, setIsDragging] = useState(false);
     const [draggedPieceId, setDraggedPieceId] = useState<number | null>(null);
     const [offset, setOffset] = useState({ x: 0, y: 0 });
-    const [gameWon, setGameWon] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const [containerSize, setContainerSize] = useState({ width: 600, height: 400 });
 
-    // Initialize game
-    useEffect(() => {
-        initializeGame();
-    }, [selectedImage, difficulty]);
+    const gameWon = pieces.length > 0 && pieces.every(p => p.isSolved);
 
     const initializeGame = () => {
         const { rows, cols } = difficulty;
@@ -77,8 +73,14 @@ export default function JigsawGame() {
             }
         }
         setPieces(newPieces);
-        setGameWon(false);
     };
+
+    // Initialize game
+    useEffect(() => {
+        queueMicrotask(() => {
+            initializeGame();
+        });
+    }, [selectedImage, difficulty]);
 
     const handlePointerDown = (e: React.PointerEvent, piece: Piece) => {
         if (piece.isSolved) return;
@@ -140,11 +142,6 @@ export default function JigsawGame() {
     };
 
     // Check win condition
-    useEffect(() => {
-        if (pieces.length > 0 && pieces.every(p => p.isSolved)) {
-            setGameWon(true);
-        }
-    }, [pieces]);
 
     // SVG Path Generator for Jigsaw Piece
     const getPiecePath = (width: number, height: number, shape: Piece['shape']) => {

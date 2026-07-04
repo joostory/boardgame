@@ -31,7 +31,19 @@ export default function MahjonggPage() {
   const [soundEnabled, setSoundEnabled] = useState(true);
 
   // Highest Scores (Map Name -> best time in seconds)
-  const [highScores, setHighScores] = useState<Record<string, number>>({});
+  const [highScores, setHighScores] = useState<Record<string, number>>(() => {
+    if (typeof window !== 'undefined') {
+      const savedScores = localStorage.getItem('mahjongg_highscores');
+      if (savedScores) {
+        try {
+          return JSON.parse(savedScores);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+    return {};
+  });
 
   // Responsive scaling elements
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,17 +52,25 @@ export default function MahjonggPage() {
   // Audio References for game sounds using Web Audio API (or synthesizer oscillator to ensure zero-dependency sound)
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Load High Scores from localStorage
-  useEffect(() => {
-    const savedScores = localStorage.getItem('mahjongg_highscores');
-    if (savedScores) {
-      try {
-        setHighScores(JSON.parse(savedScores));
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }, []);
+  // Find board bounds for responsive centering
+  const getBoardDimensions = () => {
+    if (tiles.length === 0) return { width: 800, height: 600 };
+    
+    // Find min/max values
+    let maxX = 0;
+    let maxY = 0;
+    
+    tiles.forEach(t => {
+      if (t.x > maxX) maxX = t.x;
+      if (t.y > maxY) maxY = t.y;
+    });
+
+    // Scaled to match new 72x96 size
+    return {
+      width: maxX * 36 + 72 + 80,
+      height: maxY * 48 + 96 + 100,
+    };
+  };
 
   // Responsive Scaling Logic
   const handleResize = () => {
@@ -362,24 +382,6 @@ export default function MahjonggPage() {
   };
 
   // Find board bounds for responsive centering
-  const getBoardDimensions = () => {
-    if (tiles.length === 0) return { width: 800, height: 600 };
-    
-    // Find min/max values
-    let maxX = 0;
-    let maxY = 0;
-    
-    tiles.forEach(t => {
-      if (t.x > maxX) maxX = t.x;
-      if (t.y > maxY) maxY = t.y;
-    });
-
-    // Scaled to match new 72x96 size
-    return {
-      width: maxX * 36 + 72 + 80,
-      height: maxY * 48 + 96 + 100,
-    };
-  };
 
   const dimensions = getBoardDimensions();
   const activeTilesCount = tiles.filter(t => !t.isRemoved).length;

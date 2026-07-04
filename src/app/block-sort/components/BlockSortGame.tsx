@@ -40,39 +40,39 @@ interface ColorStyle {
 
 const COLORS: Record<ColorKey, ColorStyle> = {
   red: {
-    bgClass: 'bg-rose-500',
-    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(244,63,94,0.4)]',
-    borderClass: 'border-rose-600',
+    bgClass: 'bg-red-600',
+    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(220,38,38,0.4)]',
+    borderClass: 'border-red-700',
     label: '빨강',
-    gradient: 'from-rose-400 to-rose-600',
+    gradient: 'from-red-500 to-red-700',
   },
   green: {
-    bgClass: 'bg-emerald-500',
-    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(16,185,129,0.4)]',
-    borderClass: 'border-emerald-600',
+    bgClass: 'bg-green-600',
+    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(22,163,74,0.4)]',
+    borderClass: 'border-green-700',
     label: '초록',
-    gradient: 'from-emerald-400 to-emerald-600',
+    gradient: 'from-green-500 to-green-700',
   },
   blue: {
-    bgClass: 'bg-sky-500',
-    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(14,165,233,0.4)]',
-    borderClass: 'border-sky-600',
+    bgClass: 'bg-blue-600',
+    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(37,99,235,0.4)]',
+    borderClass: 'border-blue-700',
     label: '파랑',
-    gradient: 'from-sky-400 to-sky-600',
+    gradient: 'from-blue-500 to-blue-700',
   },
   yellow: {
-    bgClass: 'bg-amber-400',
-    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(251,191,36,0.4)]',
-    borderClass: 'border-amber-500',
+    bgClass: 'bg-yellow-400',
+    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(234,179,8,0.4)]',
+    borderClass: 'border-yellow-500',
     label: '노랑',
-    gradient: 'from-amber-300 to-amber-500',
+    gradient: 'from-yellow-300 to-yellow-500',
   },
   purple: {
-    bgClass: 'bg-violet-500',
-    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(139,92,246,0.4)]',
-    borderClass: 'border-violet-600',
+    bgClass: 'bg-purple-600',
+    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(147,51,234,0.4)]',
+    borderClass: 'border-purple-700',
     label: '보라',
-    gradient: 'from-violet-400 to-violet-600',
+    gradient: 'from-purple-400 to-purple-600',
   },
   orange: {
     bgClass: 'bg-orange-500',
@@ -82,32 +82,32 @@ const COLORS: Record<ColorKey, ColorStyle> = {
     gradient: 'from-orange-400 to-orange-600',
   },
   pink: {
-    bgClass: 'bg-pink-500',
-    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(236,72,153,0.4)]',
-    borderClass: 'border-pink-600',
+    bgClass: 'bg-pink-400',
+    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(244,114,182,0.4)]',
+    borderClass: 'border-pink-500',
     label: '분홍',
-    gradient: 'from-pink-400 to-pink-600',
+    gradient: 'from-pink-300 to-pink-500',
   },
   teal: {
-    bgClass: 'bg-teal-500',
-    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(20,184,166,0.4)]',
-    borderClass: 'border-teal-600',
+    bgClass: 'bg-cyan-500',
+    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(6,182,212,0.4)]',
+    borderClass: 'border-cyan-600',
     label: '민트',
-    gradient: 'from-teal-400 to-teal-600',
+    gradient: 'from-cyan-400 to-cyan-600',
   },
   indigo: {
-    bgClass: 'bg-indigo-500',
-    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(99,102,241,0.4)]',
-    borderClass: 'border-indigo-600',
+    bgClass: 'bg-indigo-800',
+    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.3),0_4px_10px_rgba(55,48,163,0.4)]',
+    borderClass: 'border-indigo-900',
     label: '남색',
-    gradient: 'from-indigo-400 to-indigo-600',
+    gradient: 'from-indigo-700 to-indigo-900',
   },
   lime: {
-    bgClass: 'bg-lime-500',
-    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(132,204,22,0.4)]',
-    borderClass: 'border-lime-600',
+    bgClass: 'bg-lime-400',
+    shadowClass: 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(163,230,53,0.4)]',
+    borderClass: 'border-lime-500',
     label: '연두',
-    gradient: 'from-lime-400 to-lime-600',
+    gradient: 'from-lime-300 to-lime-500',
   },
 };
 
@@ -135,7 +135,13 @@ export default function BlockSortGame() {
   
   // 게임 설정 상태
   const [difficulty, setDifficulty] = useState<Difficulty>('normal')
-  const [level, setLevel] = useState<number>(1)
+  const [level, setLevel] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      const savedLevel = localStorage.getItem('block-sort-level-normal')
+      return savedLevel ? parseInt(savedLevel, 10) : 1
+    }
+    return 1
+  })
   
   // 게임 판 상태
   const [tubes, setTubes] = useState<string[][]>([])
@@ -232,20 +238,10 @@ export default function BlockSortGame() {
     }
   }, [soundEnabled])
 
-  // 2. 로컬 스토리지 데이터 로드
-  useEffect(() => {
-    const savedLevel = localStorage.getItem(`block-sort-level-${difficulty}`)
-    if (savedLevel) {
-      setLevel(parseInt(savedLevel, 10))
-    } else {
-      setLevel(1)
-    }
-  }, [difficulty])
-
-  // 3. 퍼즐 생성 함수
-  const generatePuzzle = useCallback(() => {
+  // 2. generatePuzzle 함수 정의 (diff와 lvl을 직접 파라미터로 받을 수 있게 함)
+  const generatePuzzle = useCallback((diff: Difficulty = difficulty, lvl: number = level) => {
     setIsGenerating(true)
-    const config = DIFFICULTY_CONFIGS[difficulty]
+    const config = DIFFICULTY_CONFIGS[diff]
     const { tubesCount, capacity, colorsCount } = config
 
     // 사용할 색상들을 랜덤하게 픽
@@ -290,10 +286,12 @@ export default function BlockSortGame() {
     setIsGenerating(false)
   }, [difficulty, level])
 
-  // level이나 difficulty가 바뀔 때 퍼즐 재생성
+  // level이나 difficulty가 바뀔 때 퍼즐 재생성하는 useEffect 대신 최초 마운트 시 1회 퍼즐 생성
   useEffect(() => {
-    generatePuzzle()
-  }, [difficulty, level, generatePuzzle])
+    queueMicrotask(() => {
+      generatePuzzle(difficulty, level)
+    })
+  }, [])
 
   // 4. 튜브 클리어 여부 개별 검사
   const isTubeCompleteState = (tube: string[], capacity: number): boolean => {
@@ -529,6 +527,7 @@ export default function BlockSortGame() {
     const nextLvl = level + 1
     setLevel(nextLvl)
     localStorage.setItem(`block-sort-level-${difficulty}`, String(nextLvl))
+    generatePuzzle(difficulty, nextLvl)
   }
 
   // 10. 이전 레벨 진입
@@ -537,11 +536,17 @@ export default function BlockSortGame() {
     const prevLvl = level - 1
     setLevel(prevLvl)
     localStorage.setItem(`block-sort-level-${difficulty}`, String(prevLvl))
+    generatePuzzle(difficulty, prevLvl)
   }
 
   // 11. 난이도 변경
   const handleDifficultyChange = (val: string) => {
-    setDifficulty(val as Difficulty)
+    const nextDiff = val as Difficulty
+    setDifficulty(nextDiff)
+    const savedLevel = localStorage.getItem(`block-sort-level-${nextDiff}`)
+    const nextLvl = savedLevel ? parseInt(savedLevel, 10) : 1
+    setLevel(nextLvl)
+    generatePuzzle(nextDiff, nextLvl)
   }
 
   // 개별 튜브 렌더링 헬퍼 함수
@@ -589,10 +594,10 @@ export default function BlockSortGame() {
           <div
             className={`absolute -top-1.5 left-[-2px] right-[-2px] h-3.5 rounded-[50%] border-2 pointer-events-none z-10 transition-colors duration-300 ${
               isSelected
-                ? 'border-amber-400 bg-neutral-800/80 shadow-[0_-2px_6px_rgba(245,158,11,0.4)]'
+                ? 'border-amber-400 bg-transparent shadow-[0_-2px_6px_rgba(245,158,11,0.4)]'
                 : isComplete && tube.length > 0
-                ? 'border-emerald-400 bg-neutral-800/80'
-                : 'border-neutral-600 bg-neutral-900/60'
+                ? 'border-emerald-400 bg-transparent'
+                : 'border-neutral-600 bg-transparent'
             }`}
           />
 
@@ -624,10 +629,7 @@ export default function BlockSortGame() {
                 } ${
                   isAnimatingSrc ? 'opacity-0 scale-0 pointer-events-none' : 'opacity-100'
                 }`}
-              >
-                {/* 블록 내부 광택 효과 */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/20 rounded-xl pointer-events-none" />
-              </div>
+              />
             )
           })}
         </div>
@@ -776,7 +778,7 @@ export default function BlockSortGame() {
           </Button>
 
           <Button
-            onClick={generatePuzzle}
+            onClick={() => generatePuzzle()}
             variant="default"
             className="flex items-center gap-1 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-semibold h-9 px-4 text-sm"
           >
@@ -832,9 +834,7 @@ export default function BlockSortGame() {
             } ${COLORS[flyingBlock.color as ColorKey].borderClass} ${
               COLORS[flyingBlock.color as ColorKey].shadowClass
             }`}
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/20 rounded-xl pointer-events-none" />
-          </div>
+          />
         )}
 
         {/* 승리 오버레이 모달 */}
