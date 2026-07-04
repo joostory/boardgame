@@ -19,7 +19,9 @@ export default function Timer() {
         setDiff(DateTime.now().diff(startTime).toFormat("hh:mm:ss"))
       }, 1000)
 
-      setDiff(DateTime.now().diff(startTime).toFormat("hh:mm:ss"))
+      queueMicrotask(() => {
+        setDiff(DateTime.now().diff(startTime).toFormat("hh:mm:ss"))
+      })
     }
 
     return () => {

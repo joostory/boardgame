@@ -135,7 +135,13 @@ export default function BlockSortGame() {
   
   // 게임 설정 상태
   const [difficulty, setDifficulty] = useState<Difficulty>('normal')
-  const [level, setLevel] = useState<number>(1)
+  const [level, setLevel] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      const savedLevel = localStorage.getItem('block-sort-level-normal')
+      return savedLevel ? parseInt(savedLevel, 10) : 1
+    }
+    return 1
+  })
   
   // 게임 판 상태
   const [tubes, setTubes] = useState<string[][]>([])
@@ -232,20 +238,10 @@ export default function BlockSortGame() {
     }
   }, [soundEnabled])
 
-  // 2. 로컬 스토리지 데이터 로드
-  useEffect(() => {
-    const savedLevel = localStorage.getItem(`block-sort-level-${difficulty}`)
-    if (savedLevel) {
-      setLevel(parseInt(savedLevel, 10))
-    } else {
-      setLevel(1)
-    }
-  }, [difficulty])
-
-  // 3. 퍼즐 생성 함수
-  const generatePuzzle = useCallback(() => {
+  // 2. generatePuzzle 함수 정의 (diff와 lvl을 직접 파라미터로 받을 수 있게 함)
+  const generatePuzzle = useCallback((diff: Difficulty = difficulty, lvl: number = level) => {
     setIsGenerating(true)
-    const config = DIFFICULTY_CONFIGS[difficulty]
+    const config = DIFFICULTY_CONFIGS[diff]
     const { tubesCount, capacity, colorsCount } = config
 
     // 사용할 색상들을 랜덤하게 픽
@@ -290,10 +286,12 @@ export default function BlockSortGame() {
     setIsGenerating(false)
   }, [difficulty, level])
 
-  // level이나 difficulty가 바뀔 때 퍼즐 재생성
+  // level이나 difficulty가 바뀔 때 퍼즐 재생성하는 useEffect 대신 최초 마운트 시 1회 퍼즐 생성
   useEffect(() => {
-    generatePuzzle()
-  }, [difficulty, level, generatePuzzle])
+    queueMicrotask(() => {
+      generatePuzzle(difficulty, level)
+    })
+  }, [])
 
   // 4. 튜브 클리어 여부 개별 검사
   const isTubeCompleteState = (tube: string[], capacity: number): boolean => {
@@ -529,6 +527,7 @@ export default function BlockSortGame() {
     const nextLvl = level + 1
     setLevel(nextLvl)
     localStorage.setItem(`block-sort-level-${difficulty}`, String(nextLvl))
+    generatePuzzle(difficulty, nextLvl)
   }
 
   // 10. 이전 레벨 진입
@@ -537,11 +536,17 @@ export default function BlockSortGame() {
     const prevLvl = level - 1
     setLevel(prevLvl)
     localStorage.setItem(`block-sort-level-${difficulty}`, String(prevLvl))
+    generatePuzzle(difficulty, prevLvl)
   }
 
   // 11. 난이도 변경
   const handleDifficultyChange = (val: string) => {
-    setDifficulty(val as Difficulty)
+    const nextDiff = val as Difficulty
+    setDifficulty(nextDiff)
+    const savedLevel = localStorage.getItem(`block-sort-level-${nextDiff}`)
+    const nextLvl = savedLevel ? parseInt(savedLevel, 10) : 1
+    setLevel(nextLvl)
+    generatePuzzle(nextDiff, nextLvl)
   }
 
   // 개별 튜브 렌더링 헬퍼 함수

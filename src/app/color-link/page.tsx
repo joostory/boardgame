@@ -25,13 +25,30 @@ export default function ColorLinkGame() {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // 게임 초기화
+  const resetGame = (userTriggered = true) => {
+    setPaths({});
+    setCompletedColors([]);
+    setGameState('playing');
+    if (userTriggered) {
+      setMoves((prev) => prev + 1); // 리셋도 1회 움직임으로 침
+    } else {
+      setMoves(0);
+      setTime(0);
+      setIsTimerActive(false);
+    }
+    setHistory([]);
+  };
+
   // 새로운 레벨 선택 시 초기화
   useEffect(() => {
-    resetGame(false);
-    // 최초 실행 시 안내 가이드 띄움 (1번 레벨일 때만)
-    if (currentLevelIdx === 0) {
-      setShowGuideModal(true);
-    }
+    queueMicrotask(() => {
+      resetGame(false);
+      // 최초 실행 시 안내 가이드 띄움 (1번 레벨일 때만)
+      if (currentLevelIdx === 0) {
+        setShowGuideModal(true);
+      }
+    });
   }, [currentLevelIdx]);
 
   // 타이머 작동 로직
@@ -68,21 +85,6 @@ export default function ColorLinkGame() {
     setHistory((prev) => prev.slice(0, -1));
   };
 
-  // 게임 초기화
-  const resetGame = (userTriggered = true) => {
-    setPaths({});
-    setCompletedColors([]);
-    setGameState('playing');
-    if (userTriggered) {
-      setMoves((prev) => prev + 1); // 리셋도 1회 움직임으로 침
-    } else {
-      setMoves(0);
-      setTime(0);
-      setIsTimerActive(false);
-    }
-    setHistory([]);
-  };
-
   // 선 충돌 시 즉시 탈락(Game Over) 처리
   const handleCrash = () => {
     setIsTimerActive(false);
@@ -94,7 +96,9 @@ export default function ColorLinkGame() {
     const allConnected = completedColors.length === dots.length && dots.length > 0;
 
     if (allConnected && gameState === 'playing') {
-      setIsTimerActive(false);
+      queueMicrotask(() => {
+        setIsTimerActive(false);
+      });
       // 축하 이펙트/모달 띄우기
       setTimeout(() => {
         setGameState('won');
