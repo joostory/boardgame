@@ -1,16 +1,16 @@
-import { gameStartTimeAtom, gameStateAtom } from "@/atom/memory-atom"
 import { useAtom, useAtomValue } from "jotai"
 import { DateTime } from "luxon"
 import { useEffect, useState } from "react"
+import { gameStartTimeAtom, gameStateAtom } from "@/atom/memory-atom"
 
 export default function Timer() {
   const [diff, setDiff] = useState("")
-  const [startTime, setStartTime] = useAtom(gameStartTimeAtom)
+  const [startTime, _setStartTime] = useAtom(gameStartTimeAtom)
   const gameState = useAtomValue(gameStateAtom)
 
   useEffect(() => {
-    let id = undefined
-    if (gameState == 'STARTED') {
+    let id: ReturnType<typeof setInterval> | undefined
+    if (gameState === "STARTED") {
       if (!startTime) {
         return
       }
@@ -31,9 +31,5 @@ export default function Timer() {
     }
   }, [startTime, gameState])
 
-  return (
-    <div className="text-4xl items-center">
-      {diff}
-    </div>
-  )
+  return <div className="text-4xl items-center">{diff}</div>
 }

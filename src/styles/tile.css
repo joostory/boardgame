@@ -10,7 +10,7 @@
   background: radial-gradient(circle, #1a4a2f 0%, #0c2618 100%);
   border: 12px solid #2e1d11;
   border-radius: 16px;
-  box-shadow: 
+  box-shadow:
     inset 0 0 40px rgba(0, 0, 0, 0.8),
     0 10px 30px rgba(0, 0, 0, 0.5);
   overflow: hidden;
@@ -20,7 +20,7 @@
 /* Base Mahjong Tile structure */
 .mahjong-tile {
   position: absolute;
-  width: 72px;  /* Resized from 44px to 72px */
+  width: 72px; /* Resized from 44px to 72px */
   height: 96px; /* Resized from 56px to 96px */
   display: flex;
   flex-direction: column;
@@ -30,7 +30,8 @@
   cursor: default;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   transform-style: preserve-3d;
-  font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+  font-family:
+    "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
 }
 
 /* Tile Material Design (Ivory Front + Jade Green Back) */
@@ -178,7 +179,7 @@
 }
 
 .z-layer-4 {
-  filter: brightness(1.10);
+  filter: brightness(1.1);
 }
 .z-layer-4 .mahjong-tile-inner {
   box-shadow:
@@ -237,7 +238,7 @@
 /* Hint Animation - Pulsating Golden Aura */
 @keyframes hint-pulse {
   0% {
-    box-shadow: 
+    box-shadow:
       0 0 0px #3b82f6,
       1px 1px 0px #e0dbcb,
       2px 2px 0px #ccc7b6,
@@ -247,7 +248,7 @@
       6px 6px 4px rgba(0, 0, 0, 0.4);
   }
   50% {
-    box-shadow: 
+    box-shadow:
       0 0 20px #3b82f6,
       0 0 35px rgba(59, 130, 246, 0.6),
       1px 1px 0px #ffffff,
@@ -259,7 +260,7 @@
     transform: translate(-2px, -2px);
   }
   100% {
-    box-shadow: 
+    box-shadow:
       0 0 0px #3b82f6,
       1px 1px 0px #e0dbcb,
       2px 2px 0px #ccc7b6,
@@ -306,21 +307,45 @@
 
 /* Dynamic Z-Layer offset - enhanced depth with larger step for clear layer separation */
 /* Each layer lifts -3px in X/Y to create isometric stacking effect */
-.z-layer-0 { transform: translate3d(0, 0, 0px); }
-.z-layer-1 { transform: translate3d(-3px, -3px, 10px); }
-.z-layer-2 { transform: translate3d(-6px, -6px, 20px); }
-.z-layer-3 { transform: translate3d(-9px, -9px, 30px); }
-.z-layer-4 { transform: translate3d(-12px, -12px, 40px); }
-.z-layer-5 { transform: translate3d(-15px, -15px, 50px); }
-.z-layer-6 { transform: translate3d(-18px, -18px, 60px); }
-.z-layer-7 { transform: translate3d(-21px, -21px, 70px); }
+.z-layer-0 {
+  transform: translate3d(0, 0, 0px);
+}
+.z-layer-1 {
+  transform: translate3d(-3px, -3px, 10px);
+}
+.z-layer-2 {
+  transform: translate3d(-6px, -6px, 20px);
+}
+.z-layer-3 {
+  transform: translate3d(-9px, -9px, 30px);
+}
+.z-layer-4 {
+  transform: translate3d(-12px, -12px, 40px);
+}
+.z-layer-5 {
+  transform: translate3d(-15px, -15px, 50px);
+}
+.z-layer-6 {
+  transform: translate3d(-18px, -18px, 60px);
+}
+.z-layer-7 {
+  transform: translate3d(-21px, -21px, 70px);
+}
 
 /* Shimmer shine effect overlay on the tiles */
 .mahjong-tile-inner::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.03) 100%);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(0, 0, 0, 0.03) 100%
+  );
   border-radius: 4px;
   pointer-events: none;
 }

@@ -1,22 +1,22 @@
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import { ResetIcon } from "@radix-ui/react-icons"
 import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 function getRandomCubeValue() {
-  return Math.round(Math.random() * 100) % 6 + 1
+  return (Math.round(Math.random() * 100) % 6) + 1
 }
 
-function Cube({value}: {value: number}) {
+function Cube({ value }: { value: number }) {
   const [showClass, setShowClass] = useState<string>(`show-${value}`)
 
   useEffect(() => {
-    [...Array(6)].forEach((_, index) => {
+    ;[...Array(6)].forEach((_, index) => {
       setTimeout(() => {
         setShowClass(`show-${getRandomCubeValue()}`)
       }, index * 300)
     })
-  }, [value])
+  }, [])
 
   return (
     <div className="scene mx-auto my-10">
@@ -42,11 +42,11 @@ export default function CubeSpace() {
   return (
     <>
       <div className="flex">
-        <Cube value={cubeNumber}/>
-        <Cube value={cubeNumber}/>
+        <Cube value={cubeNumber} />
+        <Cube value={cubeNumber} />
       </div>
 
-      <Button variant={'secondary'} onClick={handleReset}>
+      <Button variant={"secondary"} onClick={handleReset}>
         <ResetIcon /> 다시 던지기
       </Button>
     </>

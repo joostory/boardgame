@@ -1,12 +1,8 @@
-import { selectedCountAtom } from "@/atom/memory-atom"
 import { useAtomValue } from "jotai"
+import { selectedCountAtom } from "@/atom/memory-atom"
 
 export default function Counter() {
   const count = useAtomValue(selectedCountAtom)
 
-  return (
-    <div className="text-4xl">
-      시도: {count}
-    </div>
-  )
+  return <div className="text-4xl">시도: {count}</div>
 }

@@ -1,7 +1,7 @@
-import { ModooGame } from '@/domain/modoo'
+import type { ModooGame } from "@/domain/modoo"
 
-export function getGame(id: string) {
-  if (typeof localStorage === 'undefined') {
+export function getGame(id: string): ModooGame | null {
+  if (typeof localStorage === "undefined") {
     return null
   }
 
@@ -13,14 +13,14 @@ export function getGame(id: string) {
 }
 
 export function setGame(id: string, value: ModooGame) {
-  if (typeof localStorage === 'undefined') {
+  if (typeof localStorage === "undefined") {
     return
   }
   localStorage.setItem(`modooGame-${id}`, JSON.stringify(value))
 }
 
 export function removeGame(id: string) {
-  if (typeof localStorage === 'undefined') {
+  if (typeof localStorage === "undefined") {
     return
   }
   localStorage.removeItem(`modooGame-${id}`)

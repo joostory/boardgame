@@ -1,112 +1,132 @@
 // pages/ladder-game.tsx
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from "react"
 
 interface HorizontalLine {
-  startX: number;
-  endX: number;
-  y: number;
+  startX: number
+  endX: number
+  y: number
 }
 
-const LadderCanvas = ({ items, horizontalLines }: { items: string[]; horizontalLines: HorizontalLine[] }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+const LadderCanvas = ({
+  items,
+  horizontalLines,
+}: {
+  items: string[]
+  horizontalLines: HorizontalLine[]
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasRef.current
     if (canvas) {
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d")
       if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-        const itemCount = items.length;
-        const ladderWidth = canvas.width / (itemCount + 1);
+        const itemCount = items.length
+        const ladderWidth = canvas.width / (itemCount + 1)
 
         // 수직선 그리기
         for (let i = 1; i <= itemCount; i++) {
-          ctx.beginPath();
-          ctx.moveTo(i * ladderWidth, 0);
-          ctx.lineTo(i * ladderWidth, canvas.height);
-          ctx.stroke();
+          ctx.beginPath()
+          ctx.moveTo(i * ladderWidth, 0)
+          ctx.lineTo(i * ladderWidth, canvas.height)
+          ctx.stroke()
         }
 
         // 수평선 그리기
         horizontalLines.forEach((line) => {
-          ctx.beginPath();
-          ctx.moveTo((line.startX + 1) * ladderWidth, line.y);
-          ctx.lineTo((line.endX + 1) * ladderWidth, line.y);
-          ctx.stroke();
-        });
+          ctx.beginPath()
+          ctx.moveTo((line.startX + 1) * ladderWidth, line.y)
+          ctx.lineTo((line.endX + 1) * ladderWidth, line.y)
+          ctx.stroke()
+        })
       }
     }
-  }, [items, horizontalLines]);
+  }, [items, horizontalLines])
 
-  return <canvas ref={canvasRef} width={800} height={600} className="border" />;
-};
+  return <canvas ref={canvasRef} width={800} height={600} className="border" />
+}
 
-const generateHorizontalLines = (itemCount: number, canvasHeight: number): HorizontalLine[] => {
-  const lines: HorizontalLine[] = [];
-  const lineCount = Math.floor(Math.random() * 10) + 5; // 5~14개의 수평선 생성
+const generateHorizontalLines = (
+  itemCount: number,
+  canvasHeight: number,
+): HorizontalLine[] => {
+  const lines: HorizontalLine[] = []
+  const lineCount = Math.floor(Math.random() * 10) + 5 // 5~14개의 수평선 생성
   for (let i = 0; i < lineCount; i++) {
-    const startX = Math.floor(Math.random() * (itemCount - 1));
-    const endX = startX + 1;
-    const y = Math.floor(Math.random() * canvasHeight);
-    lines.push({ startX, endX, y });
+    const startX = Math.floor(Math.random() * (itemCount - 1))
+    const endX = startX + 1
+    const y = Math.floor(Math.random() * canvasHeight)
+    lines.push({ startX, endX, y })
   }
-  return lines;
-};
+  return lines
+}
 
-const findConnectedItem = (startIndex: number, items: string[], horizontalLines: HorizontalLine[]): string => {
-  let currentIndex = startIndex;
-  const sortedLines = [...horizontalLines].sort((a, b) => a.y - b.y); // y축 기준 정렬
+const findConnectedItem = (
+  startIndex: number,
+  items: string[],
+  horizontalLines: HorizontalLine[],
+): string => {
+  let currentIndex = startIndex
+  const sortedLines = [...horizontalLines].sort((a, b) => a.y - b.y) // y축 기준 정렬
   sortedLines.forEach((line) => {
     if (line.startX === currentIndex) {
-      currentIndex = line.endX;
+      currentIndex = line.endX
     } else if (line.endX === currentIndex) {
-      currentIndex = line.startX;
+      currentIndex = line.startX
     }
-  });
-  return items[currentIndex];
-};
+  })
+  return items[currentIndex]
+}
 
 const LadderGame = () => {
   const [items, setItems] = useState<string[]>(() => {
-    if (typeof window !== 'undefined') {
-      const storedItems = localStorage.getItem('ladderItems');
-      return storedItems ? JSON.parse(storedItems) : [];
+    if (typeof window !== "undefined") {
+      const storedItems = localStorage.getItem("ladderItems")
+      return storedItems ? JSON.parse(storedItems) : []
     }
-    return [];
-  });
-  const [inputValue, setInputValue] = useState<string>('');
-  const [horizontalLines, setHorizontalLines] = useState<HorizontalLine[]>(() => {
-    if (typeof window !== 'undefined') {
-      const storedItems = localStorage.getItem('ladderItems');
-      const initialItems = storedItems ? JSON.parse(storedItems) : [];
-      return initialItems.length > 0 ? generateHorizontalLines(initialItems.length, 600) : [];
-    }
-    return [];
-  });
+    return []
+  })
+  const [inputValue, setInputValue] = useState<string>("")
+  const [horizontalLines, setHorizontalLines] = useState<HorizontalLine[]>(
+    () => {
+      if (typeof window !== "undefined") {
+        const storedItems = localStorage.getItem("ladderItems")
+        const initialItems = storedItems ? JSON.parse(storedItems) : []
+        return initialItems.length > 0
+          ? generateHorizontalLines(initialItems.length, 600)
+          : []
+      }
+      return []
+    },
+  )
 
   const handleAddItem = () => {
-    if (inputValue.trim() === '') return;
-    const newItems = [...items, inputValue];
-    setItems(newItems);
-    localStorage.setItem('ladderItems', JSON.stringify(newItems));
-    setInputValue('');
-    const lines = generateHorizontalLines(newItems.length, 600);
-    setHorizontalLines(lines);
-  };
+    if (inputValue.trim() === "") return
+    const newItems = [...items, inputValue]
+    setItems(newItems)
+    localStorage.setItem("ladderItems", JSON.stringify(newItems))
+    setInputValue("")
+    const lines = generateHorizontalLines(newItems.length, 600)
+    setHorizontalLines(lines)
+  }
 
   const handleDeleteItem = (index: number) => {
-    const newItems = items.filter((_, i) => i !== index);
-    setItems(newItems);
-    localStorage.setItem('ladderItems', JSON.stringify(newItems));
-    const lines = newItems.length > 0 ? generateHorizontalLines(newItems.length, 600) : [];
-    setHorizontalLines(lines);
-  };
+    const newItems = items.filter((_, i) => i !== index)
+    setItems(newItems)
+    localStorage.setItem("ladderItems", JSON.stringify(newItems))
+    const lines =
+      newItems.length > 0 ? generateHorizontalLines(newItems.length, 600) : []
+    setHorizontalLines(lines)
+  }
 
   const handleNumberClick = (index: number) => {
-    const connectedItem = findConnectedItem(index, items, horizontalLines);
-    alert(`선택한 번호 ${index + 1}은(는) "${connectedItem}"와(과) 연결되었습니다!`);
-  };
+    const connectedItem = findConnectedItem(index, items, horizontalLines)
+    alert(
+      `선택한 번호 ${index + 1}은(는) "${connectedItem}"와(과) 연결되었습니다!`,
+    )
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -121,7 +141,10 @@ const LadderGame = () => {
           className="border p-2 flex-grow"
           placeholder="항목을 입력하세요"
         />
-        <button onClick={handleAddItem} className="bg-blue-500 text-white p-2 rounded">
+        <button
+          onClick={handleAddItem}
+          className="bg-blue-500 text-white p-2 rounded"
+        >
           추가
         </button>
       </div>
@@ -157,7 +180,9 @@ const LadderGame = () => {
       )}
 
       {/* 사다리타기 캔버스 */}
-      {items.length > 0 && <LadderCanvas items={items} horizontalLines={horizontalLines} />}
+      {items.length > 0 && (
+        <LadderCanvas items={items} horizontalLines={horizontalLines} />
+      )}
 
       {/* 하단 항목 */}
       {items.length > 0 && (
@@ -170,7 +195,7 @@ const LadderGame = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default LadderGame;
+export default LadderGame

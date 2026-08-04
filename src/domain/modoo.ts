@@ -15,7 +15,8 @@ export interface ModooGame {
 }
 
 export enum ModooGameStatus {
-  STARTED, ENDED
+  STARTED,
+  ENDED,
 }
 
 export interface ModooGameOption {
@@ -62,27 +63,33 @@ export interface ModooLand {
   color: string
 }
 
+export interface ModooGameExport {
+  list: ModooGameMeta[]
+  option: ModooGameOption
+  games: ModooGame[]
+}
+
 export function getLandColorBgClass(color: string) {
-  switch(color) {
-    case 'green':
+  switch (color) {
+    case "green":
       return "bg-green-700"
-    case 'red':
+    case "red":
       return "bg-red-500"
-    case 'orange':
+    case "orange":
       return "bg-amber-500"
-    case 'deep-pink':
+    case "deep-pink":
       return "bg-pink-600"
-    case 'purple':
+    case "purple":
       return "bg-purple-500"
-    case 'light-blue':
+    case "light-blue":
       return "bg-blue-400"
-    case 'blue':
+    case "blue":
       return "bg-blue-600"
-    case 'light-green':
+    case "light-green":
       return "bg-green-500"
-    case 'pink':
+    case "pink":
       return "bg-pink-400"
-    case 'sky':
+    case "sky":
       return "bg-blue-300"
     default:
       return "bg-slate-600"
@@ -100,19 +107,23 @@ export interface ModooBuilding {
   acquisitionable: boolean
 }
 
-export function updatePlayer(players: ModooPlayer[], id: string, money: number): ModooPlayer {
-  const index = players.findIndex(it => it.id == id)
+export function updatePlayer(
+  players: ModooPlayer[],
+  id: string,
+  money: number,
+): ModooPlayer {
+  const index = players.findIndex((it) => it.id === id)
   const updatedPlayer = players[index]
 
   players.splice(index, 1, {
     ...updatedPlayer,
-    money: updatedPlayer.money + money
+    money: updatedPlayer.money + money,
   })
   return updatedPlayer
 }
 
 export function getTopPlayer(players: ModooPlayer[]): ModooPlayer {
   return players.reduce((prev, current) => {
-    return prev.money > current.money? prev : current
+    return prev.money > current.money ? prev : current
   })
 }

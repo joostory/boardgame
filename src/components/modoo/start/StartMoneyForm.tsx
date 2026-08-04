@@ -1,6 +1,6 @@
+import { useAtom } from "jotai"
 import { gameOptionAtom } from "@/atom/modoo-atom"
 import MoneyInput from "@/components/common/MoneyInput"
-import { useAtom } from "jotai"
 
 export default function StartMoneyForm() {
   const [gameOptions, setGameOptions] = useAtom(gameOptionAtom)

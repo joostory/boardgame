@@ -1,25 +1,25 @@
-'use client'
+"use client"
 
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from "lucide-react"
+import Link from "next/link"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
 interface Platform {
-    id: number
-    x: number
-    y: number
-    width: number
-    isMoving?: boolean
-    speed?: number
+  id: number
+  x: number
+  y: number
+  width: number
+  isMoving?: boolean
+  speed?: number
 }
 
 interface GameState {
-    isPlaying: boolean
-    isGameOver: boolean
-    score: number
-    highScore: number
+  isPlaying: boolean
+  isGameOver: boolean
+  score: number
+  highScore: number
 }
 
 const GRAVITY = 0.4
@@ -31,339 +31,353 @@ const PLATFORM_HEIGHT = 20
 const PLAYER_SIZE = 40
 
 export default function SkyJumperGame() {
-    const [gameState, setGameState] = useState<GameState>(() => {
-        let savedHighScore = 0
-        if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('sky-jumper-highscore')
-            if (saved) savedHighScore = parseInt(saved, 10)
-        }
-        return {
-            isPlaying: false,
-            isGameOver: false,
-            score: 0,
-            highScore: savedHighScore,
-        }
+  const [gameState, setGameState] = useState<GameState>(() => {
+    let savedHighScore = 0
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("sky-jumper-highscore")
+      if (saved) savedHighScore = parseInt(saved, 10)
+    }
+    return {
+      isPlaying: false,
+      isGameOver: false,
+      score: 0,
+      highScore: savedHighScore,
+    }
+  })
+
+  // We use state for platforms to render them initially and when they change (add/remove)
+  // But we'll use refs for their *positions* during the game loop to avoid re-renders
+  const [platforms, setPlatforms] = useState<Platform[]>([])
+
+  const _containerRef = useRef<HTMLDivElement>(null)
+  const requestRef = useRef<number>(0)
+  const playerRef = useRef({
+    x: GAME_WIDTH / 2 - PLAYER_SIZE / 2,
+    y: GAME_HEIGHT - 150,
+    vx: 0,
+    vy: 0,
+  })
+  const platformsRef = useRef<Platform[]>([])
+  const scoreRef = useRef(0)
+  const cameraYRef = useRef(0)
+  const playingRef = useRef(false)
+  const lastTimeRef = useRef<number>(0)
+
+  // Refs for direct DOM manipulation
+  const playerElemRef = useRef<HTMLDivElement>(null)
+  const platformElemsRef = useRef<Map<number, HTMLDivElement>>(new Map())
+  const gameLoopRef = useRef<(time: number) => void>(() => {})
+
+  const generatePlatform = useCallback((minY: number) => {
+    // Dynamic difficulty based on score
+    const score = scoreRef.current
+
+    // Width decreases as score increases (min 40px)
+    // Starts at ~100px, decreases by 5px every 500 score
+    const widthReduction = Math.min(60, Math.floor(score / 500) * 5)
+    const minWidth = 40
+    const maxWidth = 100 - widthReduction
+    const width = Math.random() * (maxWidth - minWidth) + minWidth
+
+    // Gap increases as score increases (max 200px)
+    // Starts at ~100px, increases by 5px every 500 score
+    const gapIncrease = Math.min(100, Math.floor(score / 500) * 5)
+    const minGap = 60 + gapIncrease
+    const maxGap = 120 + gapIncrease
+    const gap = Math.random() * (maxGap - minGap) + minGap
+
+    const x = Math.random() * (GAME_WIDTH - width)
+    const y = minY - gap
+
+    return {
+      id: Date.now() + Math.random(),
+      x,
+      y,
+      width,
+    }
+  }, [])
+
+  const gameOver = useCallback(() => {
+    playingRef.current = false
+    const finalScore = scoreRef.current
+
+    setGameState((prev) => {
+      const newHighScore = Math.max(prev.highScore, finalScore)
+      localStorage.setItem("sky-jumper-highscore", newHighScore.toString())
+      return {
+        ...prev,
+        isPlaying: false,
+        isGameOver: true,
+        score: finalScore,
+        highScore: newHighScore,
+      }
     })
+    cancelAnimationFrame(requestRef.current)
+  }, [])
 
-    // We use state for platforms to render them initially and when they change (add/remove)
-    // But we'll use refs for their *positions* during the game loop to avoid re-renders
-    const [platforms, setPlatforms] = useState<Platform[]>([])
+  const gameLoop = useCallback(
+    (time: number) => {
+      if (!playingRef.current) return
 
-    const containerRef = useRef<HTMLDivElement>(null)
-    const requestRef = useRef<number>(0)
-    const playerRef = useRef({
-        x: GAME_WIDTH / 2 - PLAYER_SIZE / 2,
-        y: GAME_HEIGHT - 150,
-        vx: 0,
-        vy: 0,
-    })
-    const platformsRef = useRef<Platform[]>([])
-    const scoreRef = useRef(0)
-    const cameraYRef = useRef(0)
-    const playingRef = useRef(false)
-    const lastTimeRef = useRef<number>(0)
+      // Calculate delta time
+      // Target 60 FPS (16.67ms per frame)
+      const deltaTime = (time - lastTimeRef.current) / (1000 / 60)
+      lastTimeRef.current = time
 
-    // Refs for direct DOM manipulation
-    const playerElemRef = useRef<HTMLDivElement>(null)
-    const platformElemsRef = useRef<Map<number, HTMLDivElement>>(new Map())
-    const gameLoopRef = useRef<(time: number) => void>(() => {})
+      // Cap deltaTime to prevent huge jumps
+      const cappedDeltaTime = Math.min(deltaTime, 3)
 
-    const generatePlatform = useCallback((minY: number) => {
-        // Dynamic difficulty based on score
-        const score = scoreRef.current
+      const player = playerRef.current
+      const currentPlatforms = platformsRef.current
 
-        // Width decreases as score increases (min 40px)
-        // Starts at ~100px, decreases by 5px every 500 score
-        const widthReduction = Math.min(60, Math.floor(score / 500) * 5)
-        const minWidth = 40
-        const maxWidth = 100 - widthReduction
-        const width = Math.random() * (maxWidth - minWidth) + minWidth
+      // Physics
+      player.vy += GRAVITY * cappedDeltaTime
+      player.y += player.vy * cappedDeltaTime
+      player.x += player.vx * cappedDeltaTime
 
-        // Gap increases as score increases (max 200px)
-        // Starts at ~100px, increases by 5px every 500 score
-        const gapIncrease = Math.min(100, Math.floor(score / 500) * 5)
-        const minGap = 60 + gapIncrease
-        const maxGap = 120 + gapIncrease
-        const gap = Math.random() * (maxGap - minGap) + minGap
+      // Wall collision (wrap around)
+      if (player.x < -PLAYER_SIZE / 2) player.x = GAME_WIDTH - PLAYER_SIZE / 2
+      if (player.x > GAME_WIDTH - PLAYER_SIZE / 2) player.x = -PLAYER_SIZE / 2
 
-        const x = Math.random() * (GAME_WIDTH - width)
-        const y = minY - gap
+      // Camera movement
+      let needsPlatformUpdate = false
+      if (player.y < GAME_HEIGHT / 2) {
+        const diff = GAME_HEIGHT / 2 - player.y
+        player.y = GAME_HEIGHT / 2
+        cameraYRef.current += diff
+        scoreRef.current += Math.floor(diff)
 
-        return {
-            id: Date.now() + Math.random(),
-            x,
-            y,
-            width,
-        }
-    }, [])
-
-    const gameOver = useCallback(() => {
-        playingRef.current = false
-        const finalScore = scoreRef.current
-
-        setGameState(prev => {
-            const newHighScore = Math.max(prev.highScore, finalScore)
-            localStorage.setItem('sky-jumper-highscore', newHighScore.toString())
-            return {
-                ...prev,
-                isPlaying: false,
-                isGameOver: true,
-                score: finalScore,
-                highScore: newHighScore
-            }
-        })
-        cancelAnimationFrame(requestRef.current)
-    }, [])
-
-    const gameLoop = useCallback((time: number) => {
-        if (!playingRef.current) return
-
-        // Calculate delta time
-        // Target 60 FPS (16.67ms per frame)
-        const deltaTime = (time - lastTimeRef.current) / (1000 / 60)
-        lastTimeRef.current = time
-
-        // Cap deltaTime to prevent huge jumps
-        const cappedDeltaTime = Math.min(deltaTime, 3)
-
-        const player = playerRef.current
-        const currentPlatforms = platformsRef.current
-
-        // Physics
-        player.vy += GRAVITY * cappedDeltaTime
-        player.y += player.vy * cappedDeltaTime
-        player.x += player.vx * cappedDeltaTime
-
-        // Wall collision (wrap around)
-        if (player.x < -PLAYER_SIZE / 2) player.x = GAME_WIDTH - PLAYER_SIZE / 2
-        if (player.x > GAME_WIDTH - PLAYER_SIZE / 2) player.x = -PLAYER_SIZE / 2
-
-        // Camera movement
-        let needsPlatformUpdate = false
-        if (player.y < GAME_HEIGHT / 2) {
-            const diff = GAME_HEIGHT / 2 - player.y
-            player.y = GAME_HEIGHT / 2
-            cameraYRef.current += diff
-            scoreRef.current += Math.floor(diff)
-
-            // Move platforms down
-            currentPlatforms.forEach(p => p.y += diff)
-
-            // Remove platforms below screen
-            const activePlatforms = currentPlatforms.filter(p => p.y < GAME_HEIGHT)
-
-            // Add new platforms
-            const highestPlatform = activePlatforms[activePlatforms.length - 1]
-            if (highestPlatform && highestPlatform.y > 100) {
-                activePlatforms.push(generatePlatform(highestPlatform.y))
-                needsPlatformUpdate = true
-            }
-
-            platformsRef.current = activePlatforms
-            if (needsPlatformUpdate) {
-                setPlatforms([...activePlatforms]) // Trigger render for new DOM elements
-            }
-        }
-
-        // Platform collision
-        if (player.vy > 0) { // Only check when falling
-            currentPlatforms.forEach(p => {
-                if (
-                    player.x + PLAYER_SIZE * 0.8 > p.x &&
-                    player.x + PLAYER_SIZE * 0.2 < p.x + p.width &&
-                    player.y + PLAYER_SIZE > p.y &&
-                    player.y + PLAYER_SIZE < p.y + PLATFORM_HEIGHT + player.vy + 5 // +5 margin
-                ) {
-                    player.vy = JUMP_FORCE
-                }
-            })
-        }
-
-        // Game Over
-        if (player.y > GAME_HEIGHT) {
-            gameOver()
-            return
-        }
-
-        // Update DOM directly
-        if (playerElemRef.current) {
-            playerElemRef.current.style.left = `${player.x}px`
-            playerElemRef.current.style.top = `${player.y}px`
-            playerElemRef.current.style.transform = `scaleX(${player.vx < 0 ? -1 : 1})`
-        }
-
-        currentPlatforms.forEach(p => {
-            const el = platformElemsRef.current.get(p.id)
-            if (el) {
-                el.style.top = `${p.y}px`
-                // x and width don't change usually, but good to be safe if we add moving platforms later
-                el.style.left = `${p.x}px`
-            }
+        // Move platforms down
+        currentPlatforms.forEach((p) => {
+          p.y += diff
         })
 
-        const scoreEl = document.getElementById('score-display')
-        if (scoreEl) scoreEl.innerText = `Score: ${scoreRef.current}`
+        // Remove platforms below screen
+        const activePlatforms = currentPlatforms.filter(
+          (p) => p.y < GAME_HEIGHT,
+        )
 
-        requestRef.current = requestAnimationFrame(gameLoopRef.current)
-    }, [generatePlatform, gameOver])
-
-    // keep gameLoopRef up-to-date
-    useEffect(() => {
-        gameLoopRef.current = gameLoop
-    }, [gameLoop])
-
-    const initGame = useCallback(() => {
-        playerRef.current = {
-            x: GAME_WIDTH / 2 - PLAYER_SIZE / 2,
-            y: GAME_HEIGHT - 150,
-            vx: 0,
-            vy: 0,
-        }
-        scoreRef.current = 0
-        cameraYRef.current = 0
-        playingRef.current = true
-        lastTimeRef.current = performance.now()
-
-        // Initial platforms
-        const initialPlatforms = [
-            { id: 1, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 50, width: 100 },
-            { id: 2, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 200, width: 100 },
-            { id: 3, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 350, width: 100 },
-            { id: 4, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 500, width: 100 },
-        ]
-        platformsRef.current = initialPlatforms
-        setPlatforms(initialPlatforms)
-
-        setGameState(prev => ({
-            ...prev,
-            isPlaying: true,
-            isGameOver: false,
-            score: 0,
-        }))
-
-        if (requestRef.current) cancelAnimationFrame(requestRef.current)
-        requestRef.current = requestAnimationFrame(gameLoopRef.current)
-    }, [])
-
-    // Input handling
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'ArrowLeft') playerRef.current.vx = -MOVEMENT_SPEED
-            if (e.key === 'ArrowRight') playerRef.current.vx = MOVEMENT_SPEED
+        // Add new platforms
+        const highestPlatform = activePlatforms[activePlatforms.length - 1]
+        if (highestPlatform && highestPlatform.y > 100) {
+          activePlatforms.push(generatePlatform(highestPlatform.y))
+          needsPlatformUpdate = true
         }
 
-        const handleKeyUp = (e: KeyboardEvent) => {
-            if (e.key === 'ArrowLeft' && playerRef.current.vx < 0) playerRef.current.vx = 0
-            if (e.key === 'ArrowRight' && playerRef.current.vx > 0) playerRef.current.vx = 0
+        platformsRef.current = activePlatforms
+        if (needsPlatformUpdate) {
+          setPlatforms([...activePlatforms]) // Trigger render for new DOM elements
         }
+      }
 
-        const handleTouchStart = (e: TouchEvent) => {
-            if (!playingRef.current) return
+      // Platform collision
+      if (player.vy > 0) {
+        // Only check when falling
+        currentPlatforms.forEach((p) => {
+          if (
+            player.x + PLAYER_SIZE * 0.8 > p.x &&
+            player.x + PLAYER_SIZE * 0.2 < p.x + p.width &&
+            player.y + PLAYER_SIZE > p.y &&
+            player.y + PLAYER_SIZE < p.y + PLATFORM_HEIGHT + player.vy + 5 // +5 margin
+          ) {
+            player.vy = JUMP_FORCE
+          }
+        })
+      }
 
-            e.preventDefault() // Prevent scrolling
-            const touchX = e.touches[0].clientX
-            const screenWidth = window.innerWidth
+      // Game Over
+      if (player.y > GAME_HEIGHT) {
+        gameOver()
+        return
+      }
 
-            if (touchX < screenWidth / 2) {
-                playerRef.current.vx = -MOVEMENT_SPEED
-            } else {
-                playerRef.current.vx = MOVEMENT_SPEED
-            }
+      // Update DOM directly
+      if (playerElemRef.current) {
+        playerElemRef.current.style.left = `${player.x}px`
+        playerElemRef.current.style.top = `${player.y}px`
+        playerElemRef.current.style.transform = `scaleX(${player.vx < 0 ? -1 : 1})`
+      }
+
+      currentPlatforms.forEach((p) => {
+        const el = platformElemsRef.current.get(p.id)
+        if (el) {
+          el.style.top = `${p.y}px`
+          // x and width don't change usually, but good to be safe if we add moving platforms later
+          el.style.left = `${p.x}px`
         }
+      })
 
-        const handleTouchEnd = (e: TouchEvent) => {
-            if (!playingRef.current) return
-            e.preventDefault()
-            playerRef.current.vx = 0
-        }
+      const scoreEl = document.getElementById("score-display")
+      if (scoreEl) scoreEl.innerText = `Score: ${scoreRef.current}`
 
-        window.addEventListener('keydown', handleKeyDown)
-        window.addEventListener('keyup', handleKeyUp)
-        // Add touch listeners to the container or window. Window is safer for full screen play.
-        // Using non-passive listener to allow preventDefault
-        window.addEventListener('touchstart', handleTouchStart, { passive: false })
-        window.addEventListener('touchend', handleTouchEnd)
+      requestRef.current = requestAnimationFrame(gameLoopRef.current)
+    },
+    [generatePlatform, gameOver],
+  )
 
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown)
-            window.removeEventListener('keyup', handleKeyUp)
-            window.removeEventListener('touchstart', handleTouchStart)
-            window.removeEventListener('touchend', handleTouchEnd)
-        }
-    }, [])
+  // keep gameLoopRef up-to-date
+  useEffect(() => {
+    gameLoopRef.current = gameLoop
+  }, [gameLoop])
 
-    return (
-        <div className="flex flex-col items-center justify-center min-h-[600px] w-full max-w-[800px] mx-auto p-4">
-            <div className="flex justify-between w-full max-w-[400px] mb-4 items-center">
-                <Link href="/">
-                    <Button variant="ghost" size="icon">
-                        <ArrowLeft className="h-6 w-6" />
-                    </Button>
-                </Link>
-                <div className="text-xl font-bold" id="score-display">Score: {gameState.score}</div>
-                <div className="text-xl font-bold text-yellow-500">High: {gameState.highScore}</div>
-            </div>
+  const initGame = useCallback(() => {
+    playerRef.current = {
+      x: GAME_WIDTH / 2 - PLAYER_SIZE / 2,
+      y: GAME_HEIGHT - 150,
+      vx: 0,
+      vy: 0,
+    }
+    scoreRef.current = 0
+    cameraYRef.current = 0
+    playingRef.current = true
+    lastTimeRef.current = performance.now()
 
-            <Card
-                className="relative overflow-hidden bg-sky-100 border-4 border-sky-300"
-                style={{ width: GAME_WIDTH, height: GAME_HEIGHT }}
-            >
-                {!gameState.isPlaying && !gameState.isGameOver && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 z-10 text-white">
-                        <h1 className="text-4xl font-bold mb-4">Sky Jumper</h1>
-                        <p className="mb-8">Use Arrow Keys to Move</p>
-                        <Button onClick={initGame} size="lg" className="text-xl px-8">
-                            Start Game
-                        </Button>
-                    </div>
-                )}
+    // Initial platforms
+    const initialPlatforms = [
+      { id: 1, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 50, width: 100 },
+      { id: 2, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 200, width: 100 },
+      { id: 3, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 350, width: 100 },
+      { id: 4, x: GAME_WIDTH / 2 - 50, y: GAME_HEIGHT - 500, width: 100 },
+    ]
+    platformsRef.current = initialPlatforms
+    setPlatforms(initialPlatforms)
 
-                {gameState.isGameOver && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 z-10 text-white">
-                        <h2 className="text-3xl font-bold mb-2">Game Over!</h2>
-                        <p className="text-xl mb-6">Score: {gameState.score}</p>
-                        <Button onClick={initGame} size="lg" className="text-xl px-8">
-                            Try Again
-                        </Button>
-                    </div>
-                )}
+    setGameState((prev) => ({
+      ...prev,
+      isPlaying: true,
+      isGameOver: false,
+      score: 0,
+    }))
 
-                {/* Player */}
-                <div
-                    ref={playerElemRef}
-                    className="absolute bg-red-500 rounded-full transition-transform"
-                    style={{
-                        width: PLAYER_SIZE,
-                        height: PLAYER_SIZE,
-                        left: `${GAME_WIDTH / 2 - PLAYER_SIZE / 2}px`,
-                        top: `${GAME_HEIGHT - 150}px`,
-                        transform: 'scaleX(1)'
-                    }}
-                >
-                    {/* Simple face */}
-                    <div className="absolute top-2 left-2 w-2 h-2 bg-white rounded-full" />
-                    <div className="absolute top-2 right-2 w-2 h-2 bg-white rounded-full" />
-                    <div className="absolute bottom-2 left-3 w-4 h-1 bg-white rounded-full" />
-                </div>
+    if (requestRef.current) cancelAnimationFrame(requestRef.current)
+    requestRef.current = requestAnimationFrame(gameLoopRef.current)
+  }, [])
 
-                {/* Platforms */}
-                {platforms.map(platform => (
-                    <div
-                        key={platform.id}
-                        ref={(el) => {
-                            if (el) platformElemsRef.current.set(platform.id, el)
-                            else platformElemsRef.current.delete(platform.id)
-                        }}
-                        className="absolute bg-green-500 rounded-full border-b-4 border-green-700"
-                        style={{
-                            left: platform.x,
-                            top: platform.y,
-                            width: platform.width,
-                            height: PLATFORM_HEIGHT,
-                        }}
-                    />
-                ))}
-            </Card>
+  // Input handling
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") playerRef.current.vx = -MOVEMENT_SPEED
+      if (e.key === "ArrowRight") playerRef.current.vx = MOVEMENT_SPEED
+    }
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft" && playerRef.current.vx < 0)
+        playerRef.current.vx = 0
+      if (e.key === "ArrowRight" && playerRef.current.vx > 0)
+        playerRef.current.vx = 0
+    }
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (!playingRef.current) return
+
+      e.preventDefault() // Prevent scrolling
+      const touchX = e.touches[0].clientX
+      const screenWidth = window.innerWidth
+
+      if (touchX < screenWidth / 2) {
+        playerRef.current.vx = -MOVEMENT_SPEED
+      } else {
+        playerRef.current.vx = MOVEMENT_SPEED
+      }
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!playingRef.current) return
+      e.preventDefault()
+      playerRef.current.vx = 0
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    window.addEventListener("keyup", handleKeyUp)
+    // Add touch listeners to the container or window. Window is safer for full screen play.
+    // Using non-passive listener to allow preventDefault
+    window.addEventListener("touchstart", handleTouchStart, { passive: false })
+    window.addEventListener("touchend", handleTouchEnd)
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+      window.removeEventListener("keyup", handleKeyUp)
+      window.removeEventListener("touchstart", handleTouchStart)
+      window.removeEventListener("touchend", handleTouchEnd)
+    }
+  }, [])
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[600px] w-full max-w-[800px] mx-auto p-4">
+      <div className="flex justify-between w-full max-w-[400px] mb-4 items-center">
+        <Link href="/">
+          <Button variant="ghost" size="icon">
+            <ArrowLeft className="h-6 w-6" />
+          </Button>
+        </Link>
+        <div className="text-xl font-bold" id="score-display">
+          Score: {gameState.score}
         </div>
-    )
+        <div className="text-xl font-bold text-yellow-500">
+          High: {gameState.highScore}
+        </div>
+      </div>
+
+      <Card
+        className="relative overflow-hidden bg-sky-100 border-4 border-sky-300"
+        style={{ width: GAME_WIDTH, height: GAME_HEIGHT }}
+      >
+        {!gameState.isPlaying && !gameState.isGameOver && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 z-10 text-white">
+            <h1 className="text-4xl font-bold mb-4">Sky Jumper</h1>
+            <p className="mb-8">Use Arrow Keys to Move</p>
+            <Button onClick={initGame} size="lg" className="text-xl px-8">
+              Start Game
+            </Button>
+          </div>
+        )}
+
+        {gameState.isGameOver && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 z-10 text-white">
+            <h2 className="text-3xl font-bold mb-2">Game Over!</h2>
+            <p className="text-xl mb-6">Score: {gameState.score}</p>
+            <Button onClick={initGame} size="lg" className="text-xl px-8">
+              Try Again
+            </Button>
+          </div>
+        )}
+
+        {/* Player */}
+        <div
+          ref={playerElemRef}
+          className="absolute bg-red-500 rounded-full transition-transform"
+          style={{
+            width: PLAYER_SIZE,
+            height: PLAYER_SIZE,
+            left: `${GAME_WIDTH / 2 - PLAYER_SIZE / 2}px`,
+            top: `${GAME_HEIGHT - 150}px`,
+            transform: "scaleX(1)",
+          }}
+        >
+          {/* Simple face */}
+          <div className="absolute top-2 left-2 w-2 h-2 bg-white rounded-full" />
+          <div className="absolute top-2 right-2 w-2 h-2 bg-white rounded-full" />
+          <div className="absolute bottom-2 left-3 w-4 h-1 bg-white rounded-full" />
+        </div>
+
+        {/* Platforms */}
+        {platforms.map((platform) => (
+          <div
+            key={platform.id}
+            ref={(el) => {
+              if (el) platformElemsRef.current.set(platform.id, el)
+              else platformElemsRef.current.delete(platform.id)
+            }}
+            className="absolute bg-green-500 rounded-full border-b-4 border-green-700"
+            style={{
+              left: platform.x,
+              top: platform.y,
+              width: platform.width,
+              height: PLATFORM_HEIGHT,
+            }}
+          />
+        ))}
+      </Card>
+    </div>
+  )
 }

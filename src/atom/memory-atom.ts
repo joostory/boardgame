@@ -1,6 +1,6 @@
-import { MemoryCard } from "@/domain/memory"
 import { atom } from "jotai"
-import { DateTime } from "luxon"
+import type { DateTime } from "luxon"
+import type { MemoryCard } from "@/domain/memory"
 
 export const memoryCardsAtom = atom<MemoryCard[]>([])
 export const revealedCardValuesAtom = atom<string[]>([])
