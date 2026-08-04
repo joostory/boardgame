@@ -1,5 +1,4 @@
-import Link from 'next/link'
-
+import Link from "next/link"
 
 interface BoardGame {
   title: string
@@ -8,34 +7,52 @@ interface BoardGame {
 }
 
 const GAME_LIST: BoardGame[] = [
-  { title: '모두의 마블', iconPath: '/modoo/modoo.png', path: '/modoo' },
-  { title: '메모리 게임', iconPath: '/memory/memory_icon.png', path: '/memory' },
-  { title: '사다리 타기', iconPath: '/ladder/ladder_icon.png', path: '/ladder' },
-  { title: '스카이 점퍼', iconPath: '/sky-jumper/icon.png', path: '/sky-jumper' },
-  { title: '직소 퍼즐', iconPath: '/jigsaw/icon.png', path: '/jigsaw' },
-  { title: '마작 솔리테어', iconPath: '/mahjongg/icon.png', path: '/mahjongg' },
-  { title: '단어 추리', iconPath: '/wordle/icon.png', path: '/wordle' },
-  { title: '색상 선 연결', iconPath: '/color-link/icon.png', path: '/color-link' },
-  { title: '블록 정렬', iconPath: '/block-sort/icon.png', path: '/block-sort' },
+  { title: "모두의 마블", iconPath: "/modoo/modoo.png", path: "/modoo" },
+  {
+    title: "메모리 게임",
+    iconPath: "/memory/memory_icon.png",
+    path: "/memory",
+  },
+  {
+    title: "사다리 타기",
+    iconPath: "/ladder/ladder_icon.png",
+    path: "/ladder",
+  },
+  {
+    title: "스카이 점퍼",
+    iconPath: "/sky-jumper/icon.png",
+    path: "/sky-jumper",
+  },
+  { title: "직소 퍼즐", iconPath: "/jigsaw/icon.png", path: "/jigsaw" },
+  { title: "마작 솔리테어", iconPath: "/mahjongg/icon.png", path: "/mahjongg" },
+  { title: "단어 추리", iconPath: "/wordle/icon.png", path: "/wordle" },
+  {
+    title: "색상 선 연결",
+    iconPath: "/color-link/icon.png",
+    path: "/color-link",
+  },
+  { title: "블록 정렬", iconPath: "/block-sort/icon.png", path: "/block-sort" },
 ]
 
 export default function Home() {
   return (
     <main className="min-h-screen flex items-center justify-center">
       <div>
-        <div className='text-center'>
-          <h1 className='text-4xl font-bold'>보드게임 도우미</h1>
-          <p className='py-6 mb-6'>
-            보드게임을 위한 도구들입니다.
-          </p>
+        <div className="text-center">
+          <h1 className="text-4xl font-bold">보드게임 도우미</h1>
+          <p className="py-6 mb-6">보드게임을 위한 도구들입니다.</p>
         </div>
 
-        <div className='flex gap-4 max-w-[620px] flex-wrap justify-center'>
-          {GAME_LIST.map(it =>
-            <Link key={it.path} href={it.path} className='transition-all flex items-center justify-center rounded-lg bg-neutral-800 w-[150px] h-[150px] shadow-xs hover:shadow-lg hover:scale-105 hover:bg-neutral-700'>
-              <img src={it.iconPath} className='w-[180px]' alt={it.title} />
+        <div className="flex gap-4 max-w-[620px] flex-wrap justify-center">
+          {GAME_LIST.map((it) => (
+            <Link
+              key={it.path}
+              href={it.path}
+              className="transition-all flex items-center justify-center rounded-lg bg-neutral-800 w-[150px] h-[150px] shadow-xs hover:shadow-lg hover:scale-105 hover:bg-neutral-700"
+            >
+              <img src={it.iconPath} className="w-[180px]" alt={it.title} />
             </Link>
-          )}
+          ))}
         </div>
       </div>
     </main>

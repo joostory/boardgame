@@ -1,15 +1,14 @@
-'use client';
+"use client"
 
-import React from 'react';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw } from "lucide-react"
 
 interface ResultModalProps {
-  gameStatus: 'won' | 'lost' | 'playing';
-  currentAttempt: number;
-  targetWord: string;
-  targetJasos: string[];
-  onStartNewGame: () => void;
-  onClose: () => void;
+  gameStatus: "won" | "lost" | "playing"
+  currentAttempt: number
+  targetWord: string
+  targetJasos: string[]
+  onStartNewGame: () => void
+  onClose: () => void
 }
 
 export default function ResultModal({
@@ -24,17 +23,25 @@ export default function ResultModal({
     <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="bg-neutral-900 border border-neutral-800 max-w-sm w-full rounded-2xl p-6 shadow-2xl flex flex-col gap-5 text-center animate-scaleUp">
         <div>
-          {gameStatus === 'won' ? (
+          {gameStatus === "won" ? (
             <div>
               <div className="text-5xl mb-2">🎉</div>
-              <h2 className="text-xl font-bold text-emerald-400">성공적으로 맞췄습니다!</h2>
-              <p className="text-xs text-neutral-400 mt-1">{currentAttempt + 1}번째 시도 만에 정답을 알아냈습니다.</p>
+              <h2 className="text-xl font-bold text-emerald-400">
+                성공적으로 맞췄습니다!
+              </h2>
+              <p className="text-xs text-neutral-400 mt-1">
+                {currentAttempt + 1}번째 시도 만에 정답을 알아냈습니다.
+              </p>
             </div>
           ) : (
             <div>
               <div className="text-5xl mb-2">😢</div>
-              <h2 className="text-xl font-bold text-rose-400">아쉽게 실패했습니다!</h2>
-              <p className="text-xs text-neutral-400 mt-1">5번의 기회를 모두 사용하셨습니다.</p>
+              <h2 className="text-xl font-bold text-rose-400">
+                아쉽게 실패했습니다!
+              </h2>
+              <p className="text-xs text-neutral-400 mt-1">
+                5번의 기회를 모두 사용하셨습니다.
+              </p>
             </div>
           )}
         </div>
@@ -45,7 +52,7 @@ export default function ResultModal({
             {targetWord}
           </span>
           <span className="text-xs text-neutral-500 tracking-wider mt-1">
-            {targetJasos.join(' ')}
+            {targetJasos.join(" ")}
           </span>
         </div>
 
@@ -67,5 +74,5 @@ export default function ResultModal({
         </div>
       </div>
     </div>
-  );
+  )
 }

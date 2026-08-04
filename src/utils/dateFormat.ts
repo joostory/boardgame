@@ -1,13 +1,13 @@
-import { DateTime } from 'luxon'
+import { DateTime } from "luxon"
 
 export function toTimeFormat(d: Date): string {
-  return DateTime.fromJSDate(d).toFormat('T')
+  return DateTime.fromJSDate(d).toFormat("T")
 }
 
 export function toDateTimeFormat(d: Date): string {
-  return DateTime.fromJSDate(d).toFormat('yyyy-MM-dd HH:mm')
+  return DateTime.fromJSDate(d).toFormat("yyyy-MM-dd HH:mm")
 }
 
 export function toDateFormat(d: Date): string {
-  return DateTime.fromJSDate(d).toFormat('yyyy-MM-dd')
+  return DateTime.fromJSDate(d).toFormat("yyyy-MM-dd")
 }

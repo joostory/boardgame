@@ -1,9 +1,13 @@
-'use client'
+"use client"
 
-import { Provider, useAtom, useAtomValue } from 'jotai'
-import Start from '@/components/modoo/start/Start'
-import Game from '@/components/modoo/game/Game'
-import { currentGameAtom, currentGameEffect, gamesEffect } from '@/atom/modoo-atom'
+import { Provider, useAtom, useAtomValue } from "jotai"
+import {
+  currentGameAtom,
+  currentGameEffect,
+  gamesEffect,
+} from "@/atom/modoo-atom"
+import Game from "@/components/modoo/game/Game"
+import Start from "@/components/modoo/start/Start"
 
 function App() {
   useAtom(currentGameEffect)

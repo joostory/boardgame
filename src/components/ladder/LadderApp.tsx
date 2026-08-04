@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import LadderGame from "@/components/ladder/game/LadderGame"
 
