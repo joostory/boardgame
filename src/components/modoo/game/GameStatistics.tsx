@@ -1,71 +1,66 @@
-
+import { useAtom } from "jotai"
+import { useMemo } from "react"
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
+import { gamesAtom } from "@/atom/modoo-atom"
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import { useEffect, useState, useMemo } from "react"
-import { useAtom } from "jotai"
-import { gamesAtom } from "@/atom/modoo-atom"
+import type { ModooGame, ModooPlayer } from "@/domain/modoo"
 import { getGame } from "@/storage/modoo-storage"
 
-
-function makeStatisticData(item: any) {
-  const topPlayerId = item.topPlayerId
-  let topPlayer
+function makeStatisticData(item: ModooGame | null) {
+  if (!item) {
+    return null
+  }
+  let topPlayer: ModooPlayer | undefined
   if (item.topPlayerId) {
-    topPlayer = item.players.find((it: any) => it.id == item.topPlayerId)
-  } else {
-    topPlayer = item.players.sort((a: any, b: any) => a.money > b.money)[0]
+    topPlayer = item.players.find((it) => it.id === item.topPlayerId)
+  } else if (item.players && item.players.length > 0) {
+    topPlayer = [...item.players].sort((a, b) => b.money - a.money)[0]
   }
   return {
-    topPlayer: topPlayer.name,
+    topPlayer: topPlayer?.name ?? "알 수 없음",
     started: item.started,
   }
 }
 
-
 export default function GameStatistics() {
-  const [games, setGames] = useAtom(gamesAtom)
+  const [games, _setGames] = useAtom(gamesAtom)
 
   const gameDetails = useMemo(() => {
-    return games.map(it => getGame(it.id))
+    return games.map((it) => getGame(it.id))
   }, [games])
 
   const chartData = useMemo(() => {
-    const playerMap: any = {}
+    const playerMap: Record<string, number> = {}
     const datas = gameDetails.map(makeStatisticData)
-    datas.forEach(it => {
-      if (playerMap[it.topPlayer]) {
-        playerMap[it.topPlayer] += 1
-      } else {
-        playerMap[it.topPlayer] = 1
+    datas.forEach((it) => {
+      if (it?.topPlayer) {
+        playerMap[it.topPlayer] = (playerMap[it.topPlayer] || 0) + 1
       }
     })
-    return Object.entries(playerMap).map((entry) => {
-      return {
-        name: entry[0],
-        value: entry[1]
-      }
-    })
+    return Object.entries(playerMap).map(([name, value]) => ({
+      name,
+      value,
+    }))
   }, [gameDetails])
 
   const chartConfig: ChartConfig = {
     value: {
       label: "승리수",
       color: "#666",
-    }
+    },
   }
-
 
   return (
     <ChartContainer config={chartConfig}>
       <BarChart
         accessibilityLayer
         data={chartData}
-        layout='vertical'
+        layout="vertical"
         margin={{
           right: 16,
         }}
@@ -85,11 +80,7 @@ export default function GameStatistics() {
           cursor={false}
           content={<ChartTooltipContent indicator="dashed" />}
         />
-        <Bar
-          dataKey="value"
-          fill="var(--color-value)"
-          radius={4}
-        >
+        <Bar dataKey="value" fill="var(--color-value)" radius={4}>
           <LabelList
             dataKey="name"
             position="right"
