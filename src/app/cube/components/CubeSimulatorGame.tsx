@@ -543,7 +543,7 @@ export default function CubeSimulatorGame() {
 
         <div className="flex items-center gap-2">
           <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 tracking-tight">
-            3×3 큐브 시뮬레이터 & 해법 마스터
+            3×3 큐브
           </h1>
           <span className="bg-amber-500/20 text-amber-300 text-xs px-2 py-0.5 rounded-full font-bold">
             3D
