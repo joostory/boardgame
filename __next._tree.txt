@@ -11,4 +11,4 @@
 :HL["/color-link/icon.png","image"]
 :HL["/block-sort/icon.png","image"]
 :HL["/cube/icon.png","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}},"staleTime":300,"buildId":"yep-EySFh8yR5WS9F-N_x"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}},"staleTime":300,"buildId":"pbQBQS2sc5N6_1RIY2OTd"}
