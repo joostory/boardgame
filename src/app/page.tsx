@@ -33,6 +33,7 @@ const GAME_LIST: BoardGame[] = [
   },
   { title: "블록 정렬", iconPath: "/block-sort/icon.png", path: "/block-sort" },
   { title: "3×3 큐브", iconPath: "/cube/icon.png", path: "/cube" },
+  { title: "Bow & Bastion", iconPath: "/defense/icon.png", path: "/defense" },
 ]
 
 export default function Home() {
