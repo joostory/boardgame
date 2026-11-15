@@ -5,9 +5,7 @@ import {
   dist,
   ENEMY_TYPES,
   getBowTier,
-  MAP_WAYPOINTS,
   ROAD_WIDTH,
-  TOWER_SLOTS,
   TOWER_TYPES,
 } from "./data"
 import type {
@@ -15,6 +13,8 @@ import type {
   Coin,
   Effect,
   EnemyInstance,
+  MapDefinition,
+  MapId,
   Projectile,
   RenderableGameState,
   TowerInstance,
@@ -217,7 +217,7 @@ export class Camera3D {
   }
 }
 
-function buildEnvironmentProps(): EnvProp[] {
+function buildEnvironmentProps(map: MapDefinition): EnvProp[] {
   const props: EnvProp[] = []
   const candidates: EnvProp[] = [
     { kind: "tree", x: 75, y: 235, scale: 1.05 },
@@ -234,16 +234,20 @@ function buildEnvironmentProps(): EnvProp[] {
     { kind: "crystal", x: 840, y: 150, scale: 0.95 },
     { kind: "tree", x: 215, y: 525, scale: 0.95 },
     { kind: "rock", x: 575, y: 295, scale: 0.85 },
+    { kind: "tree", x: 48, y: 310, scale: 1.0 },
+    { kind: "crystal", x: 460, y: 40, scale: 0.9 },
+    { kind: "rock", x: 880, y: 300, scale: 1.0 },
+    { kind: "tree", x: 875, y: 535, scale: 1.05 },
   ]
 
   for (const c of candidates) {
     let ok = true
-    for (const slot of TOWER_SLOTS) {
+    for (const slot of map.slots) {
       if (dist(c.x, c.y, slot.x, slot.y) < 52) ok = false
     }
-    for (let i = 0; i < MAP_WAYPOINTS.length - 1; i++) {
-      const a = MAP_WAYPOINTS[i]
-      const b = MAP_WAYPOINTS[i + 1]
+    for (let i = 0; i < map.waypoints.length - 1; i++) {
+      const a = map.waypoints[i]
+      const b = map.waypoints[i + 1]
       const abx = b.x - a.x
       const aby = b.y - a.y
       const lenSq = abx * abx + aby * aby || 1
@@ -264,7 +268,8 @@ export class Renderer3D {
   public canvas: HTMLCanvasElement
   public ctx: CanvasRenderingContext2D
   public camera: Camera3D
-  private envProps: EnvProp[]
+  private envProps: EnvProp[] = []
+  private cachedMapId: MapId | null = null
   private drawQueue: DrawItem[] = []
 
   constructor(canvas: HTMLCanvasElement) {
@@ -275,7 +280,6 @@ export class Renderer3D {
     }
     this.ctx = ctx
     this.camera = new Camera3D()
-    this.envProps = buildEnvironmentProps()
   }
 
   screenToGround(sx: number, sy: number): { x: number; y: number } {
@@ -560,21 +564,26 @@ export class Renderer3D {
   render(game: RenderableGameState): void {
     const ctx = this.ctx
     const time = performance.now() * 0.001
+    const map = game.currentMap
+    if (this.cachedMapId !== map.id) {
+      this.cachedMapId = map.id
+      this.envProps = buildEnvironmentProps(map)
+    }
     this.drawQueue.length = 0
 
     this.drawSkyBackdrop(ctx)
-    this.drawTerrainIsland(ctx)
-    this.drawStoneRoad(ctx)
+    this.drawTerrainIsland(ctx, map)
+    this.drawStoneRoad(ctx, map)
     this.drawTowerSlots3D(ctx, game)
 
     for (const prop of this.envProps) {
-      this.queueEnvProp(prop, time)
+      this.queueEnvProp(prop, map, time)
     }
-    this.queueSpawnPortal(time)
+    this.queueSpawnPortal(map, time)
     this.queueCoreCitadel(game, time)
 
     for (const tower of game.towers.values()) {
-      this.queueTower3D(tower, time)
+      this.queueTower3D(tower, map, time)
     }
     for (const c of game.coins) {
       this.queueCoin3D(c, time)
@@ -610,7 +619,10 @@ export class Renderer3D {
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
   }
 
-  private drawTerrainIsland(ctx: CanvasRenderingContext2D): void {
+  private drawTerrainIsland(
+    ctx: CanvasRenderingContext2D,
+    map: MapDefinition,
+  ): void {
     const x0 = 10
     const y0 = 14
     const x1 = CANVAS_WIDTH - 10
@@ -663,9 +675,9 @@ export class Renderer3D {
       0,
       topCorners[2].y,
     )
-    turfGrad.addColorStop(0, "#132a2c")
-    turfGrad.addColorStop(0.5, "#112233")
-    turfGrad.addColorStop(1, "#0d1b2a")
+    turfGrad.addColorStop(0, map.theme.turfColors[0])
+    turfGrad.addColorStop(0.5, map.theme.turfColors[1])
+    turfGrad.addColorStop(1, map.theme.turfColors[2])
     ctx.beginPath()
     ctx.moveTo(topCorners[0].x, topCorners[0].y)
     ctx.lineTo(topCorners[1].x, topCorners[1].y)
@@ -674,7 +686,7 @@ export class Renderer3D {
     ctx.closePath()
     ctx.fillStyle = turfGrad
     ctx.fill()
-    ctx.strokeStyle = "rgba(56, 189, 248, 0.32)"
+    ctx.strokeStyle = map.theme.borderColor
     ctx.lineWidth = 2
     ctx.stroke()
 
@@ -698,11 +710,14 @@ export class Renderer3D {
     }
   }
 
-  private drawStoneRoad(ctx: CanvasRenderingContext2D): void {
+  private drawStoneRoad(
+    ctx: CanvasRenderingContext2D,
+    map: MapDefinition,
+  ): void {
     const roadHalf = ROAD_WIDTH / 2
-    for (let i = 0; i < MAP_WAYPOINTS.length - 1; i++) {
-      const a = MAP_WAYPOINTS[i]
-      const b = MAP_WAYPOINTS[i + 1]
+    for (let i = 0; i < map.waypoints.length - 1; i++) {
+      const a = map.waypoints[i]
+      const b = map.waypoints[i + 1]
       const dx = b.x - a.x
       const dy = b.y - a.y
       const len = Math.hypot(dx, dy) || 1
@@ -730,7 +745,7 @@ export class Renderer3D {
         else ctx.lineTo(p.x, p.y)
       }
       ctx.closePath()
-      ctx.fillStyle = "#334155"
+      ctx.fillStyle = map.theme.curbColor
       ctx.fill()
 
       const rPts = [
@@ -746,7 +761,7 @@ export class Renderer3D {
         else ctx.lineTo(p.x, p.y)
       }
       ctx.closePath()
-      ctx.fillStyle = "#475569"
+      ctx.fillStyle = map.theme.roadColor
       ctx.fill()
 
       const mA = this.camera.project(a.x, a.y, 0.8)
@@ -767,7 +782,7 @@ export class Renderer3D {
     ctx: CanvasRenderingContext2D,
     game: RenderableGameState,
   ): void {
-    for (const slot of TOWER_SLOTS) {
+    for (const slot of game.currentMap.slots) {
       const isSelected = game.selectedSlotId === slot.id
       const isHovered = game.hoveredSlotId === slot.id
       const tower = game.towers.get(slot.id)
@@ -863,8 +878,26 @@ export class Renderer3D {
     }
   }
 
-  private queueEnvProp(prop: EnvProp, time: number): void {
+  private queueEnvProp(prop: EnvProp, map: MapDefinition, time: number): void {
     const s = prop.scale
+    const style = map.theme.propStyle
+    const treeColors =
+      style === "frost"
+        ? { c1: "#bae6fd", c2: "#38bdf8", c3: "#e0f2fe", c4: "#0284c7" }
+        : style === "canyon"
+          ? { c1: "#d97706", c2: "#78350f", c3: "#f59e0b", c4: "#92400e" }
+          : style === "lava"
+            ? { c1: "#991b1b", c2: "#450a0a", c3: "#ef4444", c4: "#7f1d1d" }
+            : { c1: "#15803d", c2: "#052e16", c3: "#22c55e", c4: "#14532d" }
+    const crystalColors =
+      style === "frost"
+        ? { main: "#7dd3fc", edge: "#f0f9ff" }
+        : style === "canyon"
+          ? { main: "#fb923c", edge: "#ffedd5" }
+          : style === "lava"
+            ? { main: "#f43f5e", edge: "#ffe4e6" }
+            : { main: "#38bdf8", edge: "#bae6fd" }
+
     if (prop.kind === "tree") {
       this.addGroundShadow(prop.x, prop.y, 16 * s)
       this.addPrism(
@@ -888,8 +921,8 @@ export class Renderer3D {
         2 * s,
         6,
         0.2,
-        "#15803d",
-        "#052e16",
+        treeColors.c1,
+        treeColors.c2,
       )
       this.addPrism(
         prop.x,
@@ -900,10 +933,22 @@ export class Renderer3D {
         0,
         6,
         0.6,
-        "#22c55e",
-        "#14532d",
+        treeColors.c3,
+        treeColors.c4,
       )
     } else if (prop.kind === "rock") {
+      const rockTop =
+        style === "canyon"
+          ? "#9a3412"
+          : style === "lava"
+            ? "#44403c"
+            : "#64748b"
+      const rockSide =
+        style === "canyon"
+          ? "#7c2d12"
+          : style === "lava"
+            ? "#1c1917"
+            : "#334155"
       this.addGroundShadow(prop.x, prop.y, 14 * s)
       this.addPrism(
         prop.x,
@@ -914,8 +959,8 @@ export class Renderer3D {
         7 * s,
         5,
         0.4,
-        "#64748b",
-        "#334155",
+        rockTop,
+        rockSide,
       )
       this.addPrism(
         prop.x + 7 * s,
@@ -926,7 +971,7 @@ export class Renderer3D {
         4 * s,
         5,
         1.1,
-        "#475569",
+        rockSide,
         "#1e293b",
       )
     } else if (prop.kind === "crystal") {
@@ -950,15 +995,15 @@ export class Renderer3D {
         7 * s,
         13 * s,
         time * 0.8,
-        "#38bdf8",
-        "#bae6fd",
+        crystalColors.main,
+        crystalColors.edge,
         0.88,
       )
     }
   }
 
-  private queueSpawnPortal(time: number): void {
-    const start = MAP_WAYPOINTS[0]
+  private queueSpawnPortal(map: MapDefinition, time: number): void {
+    const start = map.waypoints[0]
     this.addGroundShadow(start.x, start.y, 28)
     this.addPrism(
       start.x - 18,
@@ -999,7 +1044,7 @@ export class Renderer3D {
   }
 
   private queueCoreCitadel(game: RenderableGameState, time: number): void {
-    const end = MAP_WAYPOINTS[MAP_WAYPOINTS.length - 1]
+    const end = game.currentMap.waypoints[game.currentMap.waypoints.length - 1]
     const hit = game.state.coreFlash > 0
     this.addGroundShadow(end.x, end.y, 34)
 
@@ -1052,8 +1097,13 @@ export class Renderer3D {
     this.addRing(end.x, end.y, 38, 22, crystalColor, 2, 0.65)
   }
 
-  private queueTower3D(tower: TowerInstance, time: number): void {
-    const slot = TOWER_SLOTS[tower.slotId]
+  private queueTower3D(
+    tower: TowerInstance,
+    map: MapDefinition,
+    time: number,
+  ): void {
+    const slot = map.slots[tower.slotId]
+    if (!slot) return
     const def = TOWER_TYPES[tower.typeId]
     const lv = tower.level
     const x = slot.x
@@ -1294,6 +1344,45 @@ export class Renderer3D {
           1,
         )
       }
+    } else if (tower.typeId === "poison") {
+      this.addPrism(x, y, 5, 19, 15, 13, 6, 0, "#14532d", "#22c55e")
+      this.addPrism(x, y, 19, 32, 12, 9, 6, time * 0.7, "#166534", "#86efac")
+      const orbZ = 38 + lv * 2 + Math.sin(time * 3) * 2
+      this.addOrb(x, y, orbZ, 7 + lv * 0.6, "#22c55e", "#dcfce7")
+      this.addRing(x, y, orbZ - 2, 13 + lv, "#4ade80", 2, 0.75, 16)
+    } else if (tower.typeId === "ballista") {
+      this.addBox(x, y, 5, 17, 26, 26, 0, "#4c0519", "#f43f5e")
+      const dirX = Math.cos(tower.angle)
+      const dirY = Math.sin(tower.angle)
+      const px = -dirY
+      const py = dirX
+      const recoil = tower.recoil * 5
+      const bx = x - dirX * recoil
+      const by = y - dirY * recoil
+      this.addLine(
+        [bx - dirX * 14, by - dirY * 14, 24],
+        [bx + dirX * 22, by + dirY * 22, 24],
+        "#e2e8f0",
+        4.5,
+      )
+      this.addLine(
+        [bx + dirX * 10 + px * 17, by + dirY * 10 + py * 17, 24],
+        [bx + dirX * 10 - px * 17, by + dirY * 10 - py * 17, 24],
+        "#fb7185",
+        4,
+      )
+      this.addLine(
+        [bx + dirX * 10 + px * 17, by + dirY * 10 + py * 17, 24],
+        [bx - dirX * 10, by - dirY * 10, 24],
+        "#fecdd3",
+        1.8,
+      )
+      this.addLine(
+        [bx + dirX * 10 - px * 17, by + dirY * 10 - py * 17, 24],
+        [bx - dirX * 10, by - dirY * 10, 24],
+        "#fecdd3",
+        1.8,
+      )
     }
   }
 
@@ -1772,11 +1861,28 @@ export class Renderer3D {
         p.color,
         p.isCrit ? 3.2 : 2.2,
       )
-    } else if (p.kind === "shell") {
+    } else if (p.kind === "spear") {
+      const z = 24
+      const dx = Math.cos(p.angle)
+      const dy = Math.sin(p.angle)
+      this.addLine(
+        [p.x - dx * 24, p.y - dy * 24, z],
+        [p.x + dx * 10, p.y + dy * 10, z],
+        "#fecdd3",
+        p.isCrit ? 4.5 : 3.5,
+      )
+    } else if (p.kind === "chakram") {
+      const spin = performance.now() * 0.02
+      this.addRing(p.x, p.y, 20, 6.5, p.color, 2.5, 0.95, 8, spin)
+    } else if (p.kind === "shell" || p.kind === "poison") {
       const t = clamp(p.progress || 0, 0, 1)
       const z = 26 * (1 - t) + 4 * 90 * t * (1 - t)
       this.addGroundShadow(p.x, p.y, 7, 6, 0.28)
-      this.addOrb(p.x, p.y, z, 6.5, "#f97316", "#fef08a")
+      if (p.kind === "poison") {
+        this.addOrb(p.x, p.y, z, 6.2, "#22c55e", "#bbf7d0")
+      } else {
+        this.addOrb(p.x, p.y, z, 6.5, "#f97316", "#fef08a")
+      }
     } else if (p.kind === "frost") {
       this.addOctahedron(p.x, p.y, 24, 5, 8, p.angle, "#67e8f9", "#ecfeff")
     }
@@ -1912,7 +2018,8 @@ export class Renderer3D {
     }
 
     for (const tower of game.towers.values()) {
-      const slot = TOWER_SLOTS[tower.slotId]
+      const slot = game.currentMap.slots[tower.slotId]
+      if (!slot) continue
       const p = this.camera.project(slot.x, slot.y, 4)
       ctx.fillStyle = "rgba(15, 23, 42, 0.88)"
       ctx.fillRect(p.x - 14, p.y + 8, 28, 12)

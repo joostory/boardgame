@@ -9,7 +9,37 @@ export interface TowerSlot {
   y: number
 }
 
-export type TowerTypeId = "crossbow" | "cannon" | "frost" | "tesla" | "sunburst"
+export type MapId = "bastion" | "spiral" | "canyon" | "citadel"
+
+export type GameMode = "single" | "campaign"
+
+export interface MapTheme {
+  turfColors: [string, string, string]
+  borderColor: string
+  roadColor: string
+  curbColor: string
+  propStyle: "forest" | "frost" | "canyon" | "lava"
+}
+
+export interface MapDefinition {
+  id: MapId
+  name: string
+  subtitle: string
+  difficulty: string
+  waypoints: Point2D[]
+  slots: TowerSlot[]
+  championSpawn: Point2D
+  theme: MapTheme
+}
+
+export type TowerTypeId =
+  | "crossbow"
+  | "cannon"
+  | "frost"
+  | "tesla"
+  | "sunburst"
+  | "poison"
+  | "ballista"
 
 export interface TowerLevelSpec {
   weaponName: string
@@ -27,6 +57,26 @@ export interface TowerLevelSpec {
   chainRange?: number
   auraRange?: number
   auraBuff?: number
+  poisonDps?: number
+  poisonDuration?: number
+  poisonSplash?: number
+  critChance?: number
+  ignoreArmor?: boolean
+}
+
+export type ChampionWeaponId = "longbow" | "handcannon" | "chakram"
+
+export interface ChampionWeaponDef {
+  id: ChampionWeaponId
+  name: string
+  shortDesc: string
+  color: string
+  damageMult: number
+  fireRateMult: number
+  rangeMult: number
+  speedBonus: number
+  splashRadius: number
+  pierceBonus: number
 }
 
 export interface TowerDefinition {
@@ -134,13 +184,15 @@ export interface EnemyInstance {
   slowTimer: number
   burnDps: number
   burnTimer: number
+  poisonDps: number
+  poisonTimer: number
   hitFlash: number
   healPulseTimer: number
 }
 
 export type Projectile =
   | {
-      kind: "arrow" | "bolt"
+      kind: "arrow" | "bolt" | "chakram" | "spear"
       towerSlotId?: number
       x: number
       y: number
@@ -149,6 +201,8 @@ export type Projectile =
       angle: number
       damage: number
       isCrit?: boolean
+      ignoreArmor?: boolean
+      splashRadius?: number
       pierceLeft: number
       hitIds: Set<string>
       color: string
@@ -156,7 +210,7 @@ export type Projectile =
       life: number
     }
   | {
-      kind: "shell"
+      kind: "shell" | "poison"
       towerSlotId: number
       x: number
       y: number
@@ -170,6 +224,8 @@ export type Projectile =
       damage: number
       splashRadius: number
       burnDps: number
+      poisonDps?: number
+      poisonDuration?: number
       color: string
     }
   | {
@@ -277,10 +333,15 @@ export interface ChampionState {
   walkPhase: number
   arrowRainCooldown: number
   arrowRainMaxCooldown: number
+  weaponId: ChampionWeaponId
   levels: Record<ChampionUpgradeKey, number>
 }
 
 export interface GameState {
+  mode: GameMode
+  mapId: MapId
+  campaignMapIndex: number
+  campaignVictory: boolean
   stage: number
   coreHp: number
   maxCoreHp: number
@@ -304,6 +365,7 @@ export interface GameState {
 export type CameraPresetKey = "quarter" | "high" | "dramatic"
 
 export interface RenderableGameState {
+  currentMap: MapDefinition
   state: GameState
   champion: ChampionState
   towers: Map<number, TowerInstance>
@@ -319,6 +381,12 @@ export interface RenderableGameState {
 }
 
 export interface HudSnapshot {
+  mode: GameMode
+  mapId: MapId
+  mapName: string
+  campaignMapIndex: number
+  campaignTotalMaps: number
+  campaignVictory: boolean
   stage: number
   remainingText: string
   coreHp: number
@@ -337,6 +405,7 @@ export interface HudSnapshot {
   soundEnabled: boolean
   paused: boolean
   gameOver: boolean
+  championWeaponId: ChampionWeaponId
   championLevels: Record<ChampionUpgradeKey, number>
   championStats: ChampionStats
   championBowName: string

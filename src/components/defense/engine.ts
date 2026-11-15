@@ -1,17 +1,20 @@
 import {
+  CAMPAIGN_STAGES_PER_MAP,
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
   CHAMPION_UPGRADES,
+  CHAMPION_WEAPONS,
   clamp,
   dist,
   distSq,
   ENEMY_TYPES,
   getBowTier,
+  getCampaignMapIndex,
+  getMapById,
   getStageConfig,
   getUpgradeCost,
-  MAP_WAYPOINTS,
+  MAP_ORDER,
   TOWER_ORDER,
-  TOWER_SLOTS,
   TOWER_TYPES,
 } from "./data"
 import { CAMERA_PRESET_ORDER, CAMERA_PRESETS, Renderer3D } from "./renderer3d"
@@ -21,13 +24,17 @@ import type {
   ChampionState,
   ChampionStats,
   ChampionUpgradeKey,
+  ChampionWeaponId,
   Coin,
   Effect,
   EnemyInstance,
   EnemyTypeId,
   FloatingText,
+  GameMode,
   GameState,
   HudSnapshot,
+  MapDefinition,
+  MapId,
   Point2D,
   Projectile,
   RenderableGameState,
@@ -52,6 +59,10 @@ export class DefenseEngine implements RenderableGameState {
   private isModalOpen = false
 
   public state!: GameState
+  public currentMap: MapDefinition = getMapById("bastion")
+  private selectedMode: GameMode = "single"
+  private selectedMapId: MapId = "bastion"
+  private selectedWeaponId: ChampionWeaponId = "longbow"
   public champion!: ChampionState
   public towers = new Map<number, TowerInstance>()
   public enemies: EnemyInstance[] = []
@@ -101,8 +112,39 @@ export class DefenseEngine implements RenderableGameState {
     this.unbindEvents()
   }
 
+  public setModeAndMap(mode: GameMode, mapId?: MapId): void {
+    this.selectedMode = mode
+    if (mapId) {
+      this.selectedMapId = mapId
+    }
+    this.resetGame()
+  }
+
+  public setChampionWeapon(weaponId: ChampionWeaponId): void {
+    this.selectedWeaponId = weaponId
+    if (this.champion) {
+      this.champion.weaponId = weaponId
+      const weapon = CHAMPION_WEAPONS[weaponId]
+      this.spawnFloatingText(
+        this.champion.x,
+        this.champion.y - 30,
+        `무기 교체: ${weapon.name}`,
+        weapon.color,
+      )
+      this.emitSnapshot(true)
+    }
+  }
+
   public resetGame(): void {
+    const startMapId =
+      this.selectedMode === "campaign" ? MAP_ORDER[0] : this.selectedMapId
+    this.currentMap = getMapById(startMapId)
+
     this.state = {
+      mode: this.selectedMode,
+      mapId: this.currentMap.id,
+      campaignMapIndex: 0,
+      campaignVictory: false,
       stage: 1,
       coreHp: 20,
       maxCoreHp: 20,
@@ -119,13 +161,16 @@ export class DefenseEngine implements RenderableGameState {
       spawnIndex: 0,
       spawnTimer: 0,
       coreFlash: 0,
-      bannerText: "Stage 1 준비 — 건물을 세우고 챔피언으로 적을 요격하세요!",
+      bannerText:
+        this.selectedMode === "campaign"
+          ? `원정대 1/${MAP_ORDER.length} [${this.currentMap.name}] — Stage 1 준비!`
+          : `[${this.currentMap.name}] Stage 1 준비 — 건물을 세우고 적을 요격하세요!`,
       bannerTimer: 3.5,
     }
 
     this.champion = {
-      x: 470,
-      y: 295,
+      x: this.currentMap.championSpawn.x,
+      y: this.currentMap.championSpawn.y,
       radius: 16,
       facingAngle: Math.PI,
       fireCooldown: 0,
@@ -133,6 +178,7 @@ export class DefenseEngine implements RenderableGameState {
       walkPhase: 0,
       arrowRainCooldown: 0,
       arrowRainMaxCooldown: 12,
+      weaponId: this.selectedWeaponId,
       levels: {
         damage: 1,
         fireRate: 1,
@@ -155,15 +201,22 @@ export class DefenseEngine implements RenderableGameState {
 
   public getChampionStats(): ChampionStats {
     const lv = this.champion.levels
+    const weapon = CHAMPION_WEAPONS[this.champion.weaponId]
+    const baseDamage = 24 + (lv.damage - 1) * 14
+    const baseFireRate = 1.6 + (lv.fireRate - 1) * 0.35
+    const baseRange = 185 + (lv.fireRate - 1) * 18
+    const basePierce = lv.multishot >= 5 ? 3 : lv.multishot >= 3 ? 2 : 1
+    const baseMoveSpeed = 195 + (lv.magnet - 1) * 16
+
     return {
-      damage: 24 + (lv.damage - 1) * 14,
+      damage: Math.round(baseDamage * weapon.damageMult),
       critChance: Math.min(0.45, 0.05 + (lv.damage - 1) * 0.05),
-      fireRate: 1.6 + (lv.fireRate - 1) * 0.35,
-      range: 185 + (lv.fireRate - 1) * 18,
+      fireRate: baseFireRate * weapon.fireRateMult,
+      range: Math.round(baseRange * weapon.rangeMult),
       arrows: lv.multishot,
-      pierce: lv.multishot >= 5 ? 3 : lv.multishot >= 3 ? 2 : 1,
+      pierce: basePierce + weapon.pierceBonus,
       pickupRadius: 68 + (lv.magnet - 1) * 26,
-      moveSpeed: 195 + (lv.magnet - 1) * 16,
+      moveSpeed: Math.max(120, baseMoveSpeed + weapon.speedBonus),
     }
   }
 
@@ -171,8 +224,8 @@ export class DefenseEngine implements RenderableGameState {
     let bestBonus = 0
     for (const other of this.towers.values()) {
       if (other.typeId !== "sunburst") continue
-      const otherSlot = TOWER_SLOTS[other.slotId]
-      if (otherSlot.id === slot.id) continue
+      const otherSlot = this.currentMap.slots[other.slotId]
+      if (!otherSlot || otherSlot.id === slot.id) continue
       const spec = TOWER_TYPES.sunburst.levels[other.level - 1]
       const auraRange = spec.auraRange ?? 150
       const auraBuff = spec.auraBuff ?? 0
@@ -282,8 +335,8 @@ export class DefenseEngine implements RenderableGameState {
 
     if (this.state.gold < def.cost) {
       this.spawnFloatingText(
-        TOWER_SLOTS[targetSlotId].x,
-        TOWER_SLOTS[targetSlotId].y - 20,
+        this.currentMap.slots[targetSlotId].x,
+        this.currentMap.slots[targetSlotId].y - 20,
         "골드 부족!",
         "#fb7185",
       )
@@ -305,7 +358,7 @@ export class DefenseEngine implements RenderableGameState {
       beamTimer: 0,
     })
 
-    const slot = TOWER_SLOTS[targetSlotId]
+    const slot = this.currentMap.slots[targetSlotId]
     this.sfx.build()
     this.spawnBurst(slot.x, slot.y, def.color, 14)
     this.spawnFloatingText(slot.x, slot.y - 24, `${def.name} 건설!`, def.color)
@@ -323,7 +376,7 @@ export class DefenseEngine implements RenderableGameState {
     if (!currentSpec || currentSpec.upgradeCost === null) return
 
     if (this.state.gold < currentSpec.upgradeCost) {
-      const slot = TOWER_SLOTS[tower.slotId]
+      const slot = this.currentMap.slots[tower.slotId]
       this.spawnFloatingText(slot.x, slot.y - 26, "골드 부족!", "#fb7185")
       return
     }
@@ -333,7 +386,7 @@ export class DefenseEngine implements RenderableGameState {
     tower.level += 1
 
     const nextSpec = def.levels[tower.level - 1]
-    const slot = TOWER_SLOTS[tower.slotId]
+    const slot = this.currentMap.slots[tower.slotId]
     this.sfx.upgrade()
     this.spawnBurst(slot.x, slot.y, "#facc15", 16)
     this.spawnFloatingText(
@@ -352,7 +405,7 @@ export class DefenseEngine implements RenderableGameState {
     if (!tower) return
 
     const refund = Math.round(tower.totalInvested * 0.7)
-    const slot = TOWER_SLOTS[tower.slotId]
+    const slot = this.currentMap.slots[tower.slotId]
     this.state.gold += refund
     this.towers.delete(this.selectedSlotId)
     this.selectedSlotId = null
@@ -509,7 +562,7 @@ export class DefenseEngine implements RenderableGameState {
       this.upgradeSelectedTower()
     } else if (code === "Escape") {
       this.deselectSlot()
-    } else if (code >= "Digit1" && code <= "Digit5") {
+    } else if (code >= "Digit1" && code <= "Digit7") {
       const idx = Number(code.replace("Digit", "")) - 1
       const towerId = TOWER_ORDER[idx]
       if (towerId) this.handleBuildTowerClick(towerId)
@@ -533,7 +586,7 @@ export class DefenseEngine implements RenderableGameState {
   private findSlotAt(x: number, y: number, maxRadius = 34): number | null {
     let bestId: number | null = null
     let bestDistSq = maxRadius * maxRadius
-    for (const slot of TOWER_SLOTS) {
+    for (const slot of this.currentMap.slots) {
       const dSq = distSq(x, y, slot.x, slot.y)
       if (dSq <= bestDistSq) {
         bestDistSq = dSq
@@ -550,7 +603,7 @@ export class DefenseEngine implements RenderableGameState {
 
     let bestId: number | null = null
     let bestDistSq = 28 * 28
-    for (const slot of TOWER_SLOTS) {
+    for (const slot of this.currentMap.slots) {
       const zMid = this.towers.has(slot.id) ? 20 : 4
       const p = this.renderer3d.project(slot.x, slot.y, zMid)
       const dSq = distSq(sx, sy, p.x, p.y)
@@ -565,7 +618,7 @@ export class DefenseEngine implements RenderableGameState {
   private findNearestEmptySlotToChampion(): number | null {
     let bestId: number | null = null
     let bestDistSq = Number.POSITIVE_INFINITY
-    for (const slot of TOWER_SLOTS) {
+    for (const slot of this.currentMap.slots) {
       if (this.towers.has(slot.id)) continue
       const dSq = distSq(this.champion.x, this.champion.y, slot.x, slot.y)
       if (dSq < bestDistSq) {
@@ -603,7 +656,11 @@ export class DefenseEngine implements RenderableGameState {
 
     this.updateCamera(rawDt)
 
-    if (!this.state.paused && !this.state.gameOver) {
+    if (
+      !this.state.paused &&
+      !this.state.gameOver &&
+      !this.state.campaignVictory
+    ) {
       const dt = rawDt * this.state.speedMultiplier
       this.update(dt, timestamp)
     }
@@ -677,10 +734,56 @@ export class DefenseEngine implements RenderableGameState {
         "#facc15",
       )
 
+      const totalCampaignStages = MAP_ORDER.length * CAMPAIGN_STAGES_PER_MAP
+      if (
+        this.state.mode === "campaign" &&
+        this.state.stage >= totalCampaignStages
+      ) {
+        this.state.campaignVictory = true
+        this.state.bannerText = "축하합니다! 모든 전장을 정복했습니다!"
+        this.state.bannerTimer = 6.0
+        this.emitSnapshot(true)
+        return
+      }
+
       this.state.stage += 1
       this.state.stageConfig = getStageConfig(this.state.stage)
       this.state.spawnIndex = 0
       this.state.waveCountdown = 3.2
+
+      if (this.state.mode === "campaign") {
+        const nextMapIdx = getCampaignMapIndex(this.state.stage)
+        if (nextMapIdx !== this.state.campaignMapIndex) {
+          let refund = 0
+          for (const t of this.towers.values()) {
+            refund += t.totalInvested
+          }
+          this.towers.clear()
+          this.selectedSlotId = null
+          this.hoveredSlotId = null
+          this.projectiles = []
+          this.coins = []
+          this.effects = []
+          this.arrowRainEvents = []
+
+          this.state.gold += refund
+          this.state.coreHp = Math.min(
+            this.state.maxCoreHp,
+            this.state.coreHp + 3,
+          )
+          this.state.campaignMapIndex = nextMapIdx
+          this.currentMap = getMapById(MAP_ORDER[nextMapIdx])
+          this.state.mapId = this.currentMap.id
+          this.champion.x = this.currentMap.championSpawn.x
+          this.champion.y = this.currentMap.championSpawn.y
+          this.state.waveCountdown = 5.0
+
+          this.state.bannerText = `원정대 ${nextMapIdx + 1}/${MAP_ORDER.length} [${this.currentMap.name}] 이동! (타워 ${refund}G 전액 환급 · 체력 +3)`
+          this.state.bannerTimer = 4.5
+          this.emitSnapshot(true)
+          return
+        }
+      }
 
       const unlocked = TOWER_ORDER.filter(
         (id) => TOWER_TYPES[id].unlockStage === this.state.stage,
@@ -704,7 +807,8 @@ export class DefenseEngine implements RenderableGameState {
   ): void {
     const def = ENEMY_TYPES[typeId]
     const hpScale = this.state.stageConfig.hpScale
-    const wp = MAP_WAYPOINTS[waypointIndex] || MAP_WAYPOINTS[0]
+    const wp =
+      this.currentMap.waypoints[waypointIndex] || this.currentMap.waypoints[0]
     const maxHp = Math.round(def.hp * hpScale)
 
     this.enemies.push({
@@ -727,6 +831,8 @@ export class DefenseEngine implements RenderableGameState {
       slowTimer: 0,
       burnDps: 0,
       burnTimer: 0,
+      poisonDps: 0,
+      poisonTimer: 0,
       hitFlash: 0,
       healPulseTimer: 0,
     })
@@ -804,9 +910,16 @@ export class DefenseEngine implements RenderableGameState {
 
   private fireChampionBow(baseAngle: number, stats: ChampionStats): void {
     const tier = getBowTier(this.champion.levels.damage)
+    const weapon = CHAMPION_WEAPONS[this.champion.weaponId]
     const arrowCount = stats.arrows
-    const spreadStep = 0.14
+    const spreadStep = this.champion.weaponId === "chakram" ? 0.19 : 0.14
     const startOffset = -((arrowCount - 1) * spreadStep) / 2
+    const speed =
+      this.champion.weaponId === "chakram"
+        ? 630
+        : this.champion.weaponId === "handcannon"
+          ? 470
+          : 560
 
     for (let i = 0; i < arrowCount; i++) {
       const angle = baseAngle + startOffset + i * spreadStep
@@ -814,23 +927,32 @@ export class DefenseEngine implements RenderableGameState {
       const dmg = Math.round(stats.damage * (isCrit ? 1.8 : 1))
 
       this.projectiles.push({
-        kind: "arrow",
+        kind: this.champion.weaponId === "chakram" ? "chakram" : "arrow",
         x: this.champion.x + Math.cos(angle) * 14,
         y: this.champion.y + Math.sin(angle) * 14,
-        vx: Math.cos(angle) * 560,
-        vy: Math.sin(angle) * 560,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
         angle,
         damage: dmg,
         isCrit,
+        splashRadius: weapon.splashRadius > 0 ? weapon.splashRadius : undefined,
         pierceLeft: stats.pierce,
         hitIds: new Set(),
-        color: tier.arrowColor,
-        trailColor: tier.trailColor,
-        life: 0.9,
+        color:
+          this.champion.weaponId === "longbow" ? tier.arrowColor : weapon.color,
+        trailColor:
+          this.champion.weaponId === "longbow"
+            ? tier.trailColor
+            : `${weapon.color}88`,
+        life: this.champion.weaponId === "chakram" ? 0.65 : 0.9,
       })
     }
 
-    this.sfx.bow()
+    if (this.champion.weaponId === "handcannon") {
+      this.sfx.cannon()
+    } else {
+      this.sfx.bow()
+    }
   }
 
   private updateArrowRain(dt: number): void {
@@ -875,7 +997,7 @@ export class DefenseEngine implements RenderableGameState {
 
   private updateTowers(dt: number): void {
     for (const tower of this.towers.values()) {
-      const slot = TOWER_SLOTS[tower.slotId]
+      const slot = this.currentMap.slots[tower.slotId]
       const def = TOWER_TYPES[tower.typeId]
       const spec = def.levels[tower.level - 1]
 
@@ -1003,6 +1125,53 @@ export class DefenseEngine implements RenderableGameState {
       if (killed) tower.kills += 1
       this.spawnBurst(primary.x, primary.y, "#fef08a", 6)
       this.sfx.sunburst()
+    } else if (tower.typeId === "poison") {
+      const angle = Math.atan2(primary.y - slot.y, primary.x - slot.x)
+      const startX = slot.x + Math.cos(angle) * 14
+      const startY = slot.y + Math.sin(angle) * 14
+      const totalDist = Math.max(1, dist(startX, startY, primary.x, primary.y))
+      this.projectiles.push({
+        kind: "poison",
+        towerSlotId: tower.slotId,
+        x: startX,
+        y: startY,
+        startX,
+        startY,
+        targetX: primary.x,
+        targetY: primary.y,
+        totalDist,
+        progress: 0,
+        speed: 350,
+        damage: spec.damage,
+        splashRadius: spec.poisonSplash ?? 56,
+        burnDps: 0,
+        poisonDps: spec.poisonDps ?? 18,
+        poisonDuration: spec.poisonDuration ?? 4.0,
+        color: defColor,
+      })
+      this.sfx.frost()
+    } else if (tower.typeId === "ballista") {
+      const angle = Math.atan2(primary.y - slot.y, primary.x - slot.x)
+      const isCrit = Math.random() < (spec.critChance ?? 0.2)
+      const dmg = Math.round(spec.damage * (isCrit ? 1.85 : 1))
+      this.projectiles.push({
+        kind: "spear",
+        towerSlotId: tower.slotId,
+        x: slot.x + Math.cos(angle) * 20,
+        y: slot.y + Math.sin(angle) * 20,
+        vx: Math.cos(angle) * 760,
+        vy: Math.sin(angle) * 760,
+        angle,
+        damage: dmg,
+        isCrit,
+        ignoreArmor: spec.ignoreArmor ?? true,
+        pierceLeft: spec.pierce ?? 3,
+        hitIds: new Set(),
+        color: defColor,
+        trailColor: "rgba(244, 63, 94, 0.55)",
+        life: 0.9,
+      })
+      this.sfx.bow()
     }
   }
 
@@ -1052,7 +1221,12 @@ export class DefenseEngine implements RenderableGameState {
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
       const p = this.projectiles[i]
 
-      if (p.kind === "arrow" || p.kind === "bolt") {
+      if (
+        p.kind === "arrow" ||
+        p.kind === "bolt" ||
+        p.kind === "chakram" ||
+        p.kind === "spear"
+      ) {
         p.x += p.vx * dt
         p.y += p.vy * dt
         p.life -= dt
@@ -1068,10 +1242,43 @@ export class DefenseEngine implements RenderableGameState {
             if (e.hp <= 0 || p.hitIds.has(e.id)) continue
             if (distSq(p.x, p.y, e.x, e.y) <= (e.radius + 7) * (e.radius + 7)) {
               p.hitIds.add(e.id)
-              const killed = this.damageEnemy(e, p.damage, !!p.isCrit, false)
-              if (killed && p.towerSlotId !== undefined) {
-                const t = this.towers.get(p.towerSlotId)
-                if (t) t.kills += 1
+              if (p.splashRadius && p.splashRadius > 0) {
+                this.effects.push({
+                  kind: "explosion",
+                  x: p.x,
+                  y: p.y,
+                  radius: p.splashRadius,
+                  life: 0.22,
+                  maxLife: 0.22,
+                  color: p.color,
+                })
+                const rSq = p.splashRadius * p.splashRadius
+                for (const splashTarget of this.enemies) {
+                  if (splashTarget.hp <= 0) continue
+                  if (distSq(p.x, p.y, splashTarget.x, splashTarget.y) <= rSq) {
+                    const dmgAmount =
+                      splashTarget.id === e.id
+                        ? p.damage
+                        : Math.round(p.damage * 0.65)
+                    this.damageEnemy(
+                      splashTarget,
+                      dmgAmount,
+                      splashTarget.id === e.id ? !!p.isCrit : false,
+                      !!p.ignoreArmor,
+                    )
+                  }
+                }
+              } else {
+                const killed = this.damageEnemy(
+                  e,
+                  p.damage,
+                  !!p.isCrit,
+                  !!p.ignoreArmor,
+                )
+                if (killed && p.towerSlotId !== undefined) {
+                  const t = this.towers.get(p.towerSlotId)
+                  if (t) t.kills += 1
+                }
               }
               this.spawnBurst(p.x, p.y, p.color, 4)
               p.pierceLeft -= 1
@@ -1083,7 +1290,7 @@ export class DefenseEngine implements RenderableGameState {
           }
         }
         if (remove) this.projectiles.splice(i, 1)
-      } else if (p.kind === "shell") {
+      } else if (p.kind === "shell" || p.kind === "poison") {
         const dx = p.targetX - p.x
         const dy = p.targetY - p.y
         const d = Math.hypot(dx, dy)
@@ -1125,7 +1332,9 @@ export class DefenseEngine implements RenderableGameState {
     }
   }
 
-  private explodeShell(p: Extract<Projectile, { kind: "shell" }>): void {
+  private explodeShell(
+    p: Extract<Projectile, { kind: "shell" | "poison" }>,
+  ): void {
     this.effects.push({
       kind: "explosion",
       x: p.targetX,
@@ -1135,7 +1344,12 @@ export class DefenseEngine implements RenderableGameState {
       maxLife: 0.28,
       color: p.color,
     })
-    this.spawnBurst(p.targetX, p.targetY, "#fb923c", 12)
+    this.spawnBurst(
+      p.targetX,
+      p.targetY,
+      p.kind === "poison" ? "#4ade80" : "#fb923c",
+      12,
+    )
 
     const rSq = p.splashRadius * p.splashRadius
     const ownerTower = this.towers.get(p.towerSlotId)
@@ -1146,7 +1360,11 @@ export class DefenseEngine implements RenderableGameState {
           e.burnDps = Math.max(e.burnDps, p.burnDps)
           e.burnTimer = 3.0
         }
-        const killed = this.damageEnemy(e, p.damage, false, false)
+        if (p.poisonDps && p.poisonDps > 0) {
+          e.poisonDps = Math.max(e.poisonDps, p.poisonDps)
+          e.poisonTimer = Math.max(e.poisonTimer, p.poisonDuration ?? 4.0)
+        }
+        const killed = this.damageEnemy(e, p.damage, false, p.kind === "poison")
         if (killed && ownerTower) ownerTower.kills += 1
       }
     }
@@ -1248,6 +1466,16 @@ export class DefenseEngine implements RenderableGameState {
         }
       }
 
+      if (e.poisonTimer > 0) {
+        e.poisonTimer -= dt
+        e.hp -= e.poisonDps * dt
+        if (e.hp <= 0) {
+          this.onEnemyKilled(e)
+          this.enemies.splice(i, 1)
+          continue
+        }
+      }
+
       if (e.slowTimer > 0) {
         e.slowTimer -= dt
         if (e.slowTimer <= 0) e.slowFactor = 0
@@ -1275,13 +1503,13 @@ export class DefenseEngine implements RenderableGameState {
 
       while (remainingMove > 0) {
         const nextIdx = e.waypointIndex + 1
-        if (nextIdx >= MAP_WAYPOINTS.length) {
+        if (nextIdx >= this.currentMap.waypoints.length) {
           reachedCore = true
           break
         }
 
-        const p1 = MAP_WAYPOINTS[e.waypointIndex]
-        const p2 = MAP_WAYPOINTS[nextIdx]
+        const p1 = this.currentMap.waypoints[e.waypointIndex]
+        const p2 = this.currentMap.waypoints[nextIdx]
         e.facingAngle = Math.atan2(p2.y - p1.y, p2.x - p1.x)
         const segLen = dist(p1.x, p1.y, p2.x, p2.y)
         const leftOnSeg = segLen - e.segmentDist
@@ -1292,7 +1520,7 @@ export class DefenseEngine implements RenderableGameState {
           e.segmentDist = 0
           e.x = p2.x
           e.y = p2.y
-          if (e.waypointIndex >= MAP_WAYPOINTS.length - 1) {
+          if (e.waypointIndex >= this.currentMap.waypoints.length - 1) {
             reachedCore = true
             break
           }
@@ -1311,7 +1539,8 @@ export class DefenseEngine implements RenderableGameState {
         this.state.coreHp = Math.max(0, this.state.coreHp - def.coreDamage)
         this.state.coreFlash = 1
         this.sfx.damageCore()
-        const endPt = MAP_WAYPOINTS[MAP_WAYPOINTS.length - 1]
+        const endPt =
+          this.currentMap.waypoints[this.currentMap.waypoints.length - 1]
         this.spawnFloatingText(
           endPt.x - 16,
           endPt.y - 28,
@@ -1453,6 +1682,7 @@ export class DefenseEngine implements RenderableGameState {
     const presetKey = CAMERA_PRESET_ORDER[this.cameraPresetIndex]
     const stats = this.getChampionStats()
     const tier = getBowTier(this.champion.levels.damage)
+    const weapon = CHAMPION_WEAPONS[this.champion.weaponId]
 
     const selectedTowerObj =
       this.selectedSlotId !== null
@@ -1460,6 +1690,12 @@ export class DefenseEngine implements RenderableGameState {
         : null
 
     return {
+      mode: this.state.mode,
+      mapId: this.currentMap.id,
+      mapName: this.currentMap.name,
+      campaignMapIndex: this.state.campaignMapIndex,
+      campaignTotalMaps: MAP_ORDER.length,
+      campaignVictory: this.state.campaignVictory,
       stage: this.state.stage,
       remainingText: this.state.waveActive
         ? `남은 적 ${remaining}`
@@ -1482,9 +1718,11 @@ export class DefenseEngine implements RenderableGameState {
       soundEnabled: this.sfx.enabled,
       paused: this.state.paused,
       gameOver: this.state.gameOver,
+      championWeaponId: this.champion.weaponId,
       championLevels: { ...this.champion.levels },
       championStats: stats,
-      championBowName: tier.name,
+      championBowName:
+        this.champion.weaponId === "longbow" ? tier.name : weapon.name,
       selectedSlotId: this.selectedSlotId,
       selectedTower: selectedTowerObj
         ? {
@@ -1495,7 +1733,7 @@ export class DefenseEngine implements RenderableGameState {
             kills: selectedTowerObj.kills,
             totalInvested: selectedTowerObj.totalInvested,
             speedMult: this.getTowerAuraSpeedBonus(
-              TOWER_SLOTS[selectedTowerObj.slotId],
+              this.currentMap.slots[selectedTowerObj.slotId],
             ),
           }
         : null,

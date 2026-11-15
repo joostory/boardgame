@@ -806,6 +806,137 @@
   justify-content: flex-end;
 }
 
+.defense-root .mode-map-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 14px;
+  margin-bottom: 10px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+}
+
+.defense-root .mode-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.defense-root .mode-tab {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+}
+
+.defense-root .map-selector-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.defense-root .map-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.defense-root .map-pill:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+  color: var(--text-primary);
+}
+
+.defense-root .map-pill.active {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: var(--accent-sky);
+  color: #e0f2fe;
+}
+
+.defense-root .map-pill-diff {
+  font-size: 0.68rem;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.7);
+  color: var(--accent-gold);
+}
+
+.defense-root .campaign-status-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+}
+
+.defense-root .campaign-badge {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(250, 204, 21, 0.18);
+  border: 1px solid rgba(250, 204, 21, 0.45);
+  color: var(--accent-gold);
+  font-weight: 700;
+  font-size: 0.74rem;
+}
+
+.defense-root .campaign-map-name {
+  color: var(--text-primary);
+}
+
+.defense-root .campaign-stage-hint {
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+}
+
+.defense-root .weapon-switch-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.defense-root .weapon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 6px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.defense-root .weapon-chip:hover {
+  border-color: rgba(148, 163, 184, 0.5);
+  color: var(--text-primary);
+}
+
+.defense-root .weapon-chip.active {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: var(--accent-sky);
+  color: #f8fafc;
+}
+
+.defense-root .weapon-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
 @media (max-width: 1120px) {
   .defense-root .game-layout {
     grid-template-columns: 1fr;

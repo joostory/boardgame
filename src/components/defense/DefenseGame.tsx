@@ -4,18 +4,29 @@ import Link from "next/link"
 import type { CSSProperties } from "react"
 import { useEffect, useRef, useState } from "react"
 import {
+  CAMPAIGN_STAGES_PER_MAP,
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
   CHAMPION_UPGRADE_ORDER,
   CHAMPION_UPGRADES,
+  CHAMPION_WEAPON_ORDER,
+  CHAMPION_WEAPONS,
   ENEMY_TYPES,
   GUIDE_ENEMY_ORDER,
   getUpgradeCost,
+  MAP_ORDER,
+  MAPS,
   TOWER_ORDER,
   TOWER_TYPES,
 } from "./data"
 import { DefenseEngine } from "./engine"
-import type { HudSnapshot, TargetPriority } from "./types"
+import type {
+  ChampionWeaponId,
+  GameMode,
+  HudSnapshot,
+  MapId,
+  TargetPriority,
+} from "./types"
 
 const PRIORITY_OPTIONS: { key: TargetPriority; label: string }[] = [
   { key: "first", label: "선두" },
@@ -70,6 +81,25 @@ export default function DefenseGame() {
     selectedTower && selectedTowerDef && selectedTowerSpec?.upgradeCost !== null
       ? selectedTowerDef.levels[selectedTower.level]
       : null
+
+  const handleModeChange = (mode: GameMode) => {
+    engineRef.current?.sfx.unlock()
+    engineRef.current?.setModeAndMap(mode, hud?.mapId)
+  }
+
+  const handleMapSelect = (mapId: MapId) => {
+    engineRef.current?.sfx.unlock()
+    engineRef.current?.setModeAndMap("single", mapId)
+  }
+
+  const handleWeaponSelect = (weaponId: ChampionWeaponId) => {
+    engineRef.current?.sfx.unlock()
+    engineRef.current?.setChampionWeapon(weaponId)
+  }
+
+  const totalCampaignStages = MAP_ORDER.length * CAMPAIGN_STAGES_PER_MAP
+  const currentMode = hud?.mode ?? "single"
+  const currentMapId = hud?.mapId ?? "bastion"
 
   return (
     <div ref={rootRef} className="defense-root">
@@ -189,6 +219,71 @@ export default function DefenseGame() {
         </nav>
       </header>
 
+      <section className="mode-map-bar" aria-label="게임 모드 및 전장 선택">
+        <div className="mode-tabs" role="tablist" aria-label="게임 모드">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={currentMode === "single"}
+            className={`btn-chip mode-tab ${currentMode === "single" ? "active" : ""}`}
+            onClick={() => handleModeChange("single")}
+          >
+            자유 맵 선택
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={currentMode === "campaign"}
+            className={`btn-chip mode-tab ${currentMode === "campaign" ? "active" : ""}`}
+            onClick={() => handleModeChange("campaign")}
+          >
+            원정대 캠페인 (전체 {MAP_ORDER.length}맵)
+          </button>
+        </div>
+
+        {currentMode === "single" ? (
+          <div className="map-selector-group" aria-label="전장 맵 선택">
+            {MAP_ORDER.map((id) => {
+              const m = MAPS[id]
+              const active = currentMapId === id
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  className={`map-pill ${active ? "active" : ""}`}
+                  title={m.subtitle}
+                  onClick={() => handleMapSelect(id)}
+                >
+                  <span className="map-pill-name">{m.name}</span>
+                  <span className="map-pill-diff">{m.difficulty}</span>
+                </button>
+              )
+            })}
+          </div>
+        ) : (
+          <div className="campaign-status-bar">
+            <span className="campaign-badge">
+              원정대 {(hud?.campaignMapIndex ?? 0) + 1} /{" "}
+              {hud?.campaignTotalMaps ?? MAP_ORDER.length}
+            </span>
+            <strong className="campaign-map-name">
+              {hud?.mapName ?? MAPS.bastion.name}
+            </strong>
+            <span className="campaign-stage-hint">
+              Stage {hud?.stage ?? 1} / {totalCampaignStages} (맵당{" "}
+              {CAMPAIGN_STAGES_PER_MAP}스테이지)
+            </span>
+            <button
+              type="button"
+              className="btn-chip"
+              onClick={() => handleModeChange("campaign")}
+            >
+              처음부터
+            </button>
+          </div>
+        )}
+      </section>
+
       <main className="game-layout">
         <section className="arena-section" aria-label="전장 영역">
           <div className="canvas-frame">
@@ -221,7 +316,7 @@ export default function DefenseGame() {
                 <kbd>E</kbd> / 우클릭 드래그 / 휠: 3D 시점 회전·줌
               </li>
               <li>
-                <kbd>클릭</kbd>: 건설 슬롯 선택 · <kbd>1</kbd>~<kbd>5</kbd>:
+                <kbd>클릭</kbd>: 건설 슬롯 선택 · <kbd>1</kbd>~<kbd>7</kbd>:
                 건설 · <kbd>U</kbd>: 강화
               </li>
             </ul>
@@ -242,6 +337,33 @@ export default function DefenseGame() {
                 ? `공격력 ${hud.championStats.damage} · 공속 ${hud.championStats.fireRate.toFixed(2)}/s · 화살 ${hud.championStats.arrows}발 · 자석 ${hud.championStats.pickupRadius}px`
                 : "공격력 24 · 공속 1.60/s · 화살 1발 · 자석 68px"}
             </p>
+
+            <div
+              className="weapon-switch-row"
+              role="group"
+              aria-label="챔피언 무기 선택"
+            >
+              {CHAMPION_WEAPON_ORDER.map((wId) => {
+                const w = CHAMPION_WEAPONS[wId]
+                const active = (hud?.championWeaponId ?? "longbow") === wId
+                return (
+                  <button
+                    key={wId}
+                    type="button"
+                    className={`weapon-chip ${active ? "active" : ""}`}
+                    title={w.shortDesc}
+                    onClick={() => handleWeaponSelect(wId)}
+                  >
+                    <span
+                      className="weapon-dot"
+                      style={{ backgroundColor: w.color }}
+                      aria-hidden="true"
+                    />
+                    <span>{w.name}</span>
+                  </button>
+                )
+              })}
+            </div>
 
             <div className="upgrade-list">
               {CHAMPION_UPGRADE_ORDER.map((key) => {
@@ -493,6 +615,27 @@ export default function DefenseGame() {
               </header>
               <div className="dialog-body">
                 <section className="guide-section">
+                  <h3>전장 맵 목록 ({MAP_ORDER.length}종)</h3>
+                  <ul className="guide-list">
+                    {MAP_ORDER.map((id, idx) => {
+                      const m = MAPS[id]
+                      return (
+                        <li key={id} className="guide-item">
+                          <div className="guide-item-head">
+                            <span>
+                              {idx + 1}. {m.name}
+                            </span>
+                            <span className="guide-stage-tag">
+                              난이도: {m.difficulty}
+                            </span>
+                          </div>
+                          <p>{m.subtitle}</p>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </section>
+                <section className="guide-section">
                   <h3>스테이지별 건물 해금</h3>
                   <ul className="guide-list">
                     {TOWER_ORDER.map((id) => {
@@ -538,6 +681,55 @@ export default function DefenseGame() {
                     })}
                   </ul>
                 </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {hud?.campaignVictory && (
+        <div className="modal-backdrop">
+          <div
+            className="modal-dialog gameover-shell"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="victory-title"
+          >
+            <div className="dialog-shell">
+              <header className="dialog-header">
+                <h2 id="victory-title">원정대 캠페인 완전 정복!</h2>
+              </header>
+              <div className="dialog-body">
+                <p className="gameover-lead">
+                  {MAP_ORDER.length}개의 모든 전장과 총 {totalCampaignStages}
+                  스테이지의 공세를 모두 막아냈습니다!
+                </p>
+                <dl className="gameover-stats">
+                  <div>
+                    <dt>최종 전장</dt>
+                    <dd>{hud.mapName}</dd>
+                  </div>
+                  <div>
+                    <dt>처치한 적</dt>
+                    <dd>{hud.kills} 마리</dd>
+                  </div>
+                  <div>
+                    <dt>수집한 총 골드</dt>
+                    <dd>{hud.totalGoldCollected} G</dd>
+                  </div>
+                </dl>
+                <div className="gameover-actions">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => {
+                      engineRef.current?.sfx.unlock()
+                      engineRef.current?.resetGame()
+                    }}
+                  >
+                    원정대 다시 도전
+                  </button>
+                </div>
               </div>
             </div>
           </div>
